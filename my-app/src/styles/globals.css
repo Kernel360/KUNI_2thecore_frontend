@@ -24,3 +24,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+<<<<<<< Updated upstream
+=======
+
+.TopBar {
+  color: #1976d2 !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  margin-top: 40px !important;
+}
+>>>>>>> Stashed changes
