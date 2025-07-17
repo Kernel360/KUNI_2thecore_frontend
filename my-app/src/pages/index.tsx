@@ -1,14 +1,13 @@
-// 이 파일은 Vite 구조에 맞게 App.tsx로 이름이 변경될 예정입니다.
 import React from "react";
-import '../styles/globals.css';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import Typography from '@mui/material/Typography';
 import TopBar from '../components/TopBar/TopBar';
 import { Button } from "@/components/ui/button";
 
-function App() {
+export default function Home() {
   return (
     <div>
       <div>
@@ -18,5 +17,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
