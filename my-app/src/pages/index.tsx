@@ -1,9 +1,4 @@
 import React from "react";
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-import Typography from '@mui/material/Typography';
 import TopBar from '../components/TopBar/TopBar';
 import { Button } from "@/components/ui/button";
 
@@ -12,7 +7,7 @@ export default function Home() {
     <div>
       <div>
       <TopBar title="관제 시스템 메인 화면" />
-      <Button></Button>
+      <Button>안녕하세요</Button>
       </div>
     </div>
   );
