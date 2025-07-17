@@ -1,21 +1,21 @@
 {
   "name": "my-app",
-  "version": "0.1.0",
+  "version": "01",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
+    "@emotion/react": "^11.140",
+    "@emotion/styled": "^110.14",
     "@fontsource/roboto": "^5.2.6",
-    "@mui/material": "^7.2.0",
-    "next": "15.3.5",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@mui/material": "72",
+    "react": "^190",
+    "react-dom": "^190"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -23,11 +23,15 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9.31.0",
-    "eslint-config-next": "^15.3.5",
+    "@typescript-eslint/eslint-plugin": "^70",
+    "@typescript-eslint/parser": "^700",
+    "@vitejs/plugin-react": "^40.20.1",
+    "eslint": "^9.31",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-hooks": "^50.2",
+    "eslint-plugin-react-refresh": "^0.40.5",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^5.0.0"
   }
 }
