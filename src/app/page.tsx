@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import TopBar from './components/ui/topBar';
 import UserBox from './components/userBox';
-import StatusBox from './components/statusBox/statusBox';
 
 export default function Home() {
   return (
