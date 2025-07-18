@@ -10,5 +10,4 @@ const UserBox = () => {
     </div>
   )
 }
-
 export default UserBox
