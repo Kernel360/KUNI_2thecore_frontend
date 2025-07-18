@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardAction,
@@ -7,9 +7,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 
 export default function LogInPage() {
   return (
@@ -17,9 +17,7 @@ export default function LogInPage() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>로그인</CardTitle>
-          <CardDescription>
-            아이디와 비밀번호를 입력하세요.
-          </CardDescription>
+          <CardDescription>아이디와 비밀번호를 입력하세요.</CardDescription>
         </CardHeader>
         <CardContent>
           <form>
@@ -46,9 +44,11 @@ export default function LogInPage() {
           <Button type="submit" className="w-full">
             로그인
           </Button>
-          <p>새 계정을 등록하고 싶으신 분은 ooo@oooo.com으로 문의주시길 바랍니다.</p>
+          <p>
+            새 계정을 등록하고 싶으신 분은 ooo@oooo.com으로 문의주시길 바랍니다.
+          </p>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
