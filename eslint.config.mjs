@@ -21,7 +21,7 @@ export default [
     // 일반적인 ESLint 규칙 (필요에 따라 추가/수정)
     rules: {
       'indent': ['error', 2],
-      'linebreak-style': ['error', 'unix'],
+      'linebreak-style': 'off',
       'quotes': ['error', 'single'],
       'semi': ['error', 'always'],
     },
