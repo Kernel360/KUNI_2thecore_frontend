@@ -9,7 +9,7 @@ export default function TopBar({ title }: TopBarProps) {
     <header
       style={{
         width: '100%',
-        padding: '1rem 0',
+        padding: '1rem 0 0',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -24,7 +24,7 @@ export default function TopBar({ title }: TopBarProps) {
           alignItems: 'center',
         }}
       >
-        <h2 style={{ margin: 0, textAlign: 'center', fontWeight: '600',fontSize:'20px', width: '100%',paddingBottom: '8px' }}>{title}</h2>
+        <h2 style={{ margin: 0, textAlign: 'center', fontWeight: '600', fontSize: '20px', width: '100%', paddingBottom: '8px' }}>{title}</h2>
       </div>
     </header>
   );
