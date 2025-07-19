@@ -2,12 +2,11 @@ import Link from 'next/link';
 import TopBar from '@/components/ui/topBar';
 import UserBox from '@/components/userBox/userBox';
 import StatusContainer from '@/components/statusBox/statusContainer';
-import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/appSideBar"
 
-export default function Home({ children }: { children: React.ReactNode }) {
+export default function Home() {
   return (
-    <div>
+
+    <div className="flex flex-col h-screen">
       <TopBar title="차량 관제 시스템"></TopBar>
       <UserBox />
       <StatusContainer />
@@ -15,9 +14,6 @@ export default function Home({ children }: { children: React.ReactNode }) {
         display: 'flex', justifyContent: 'center', width: '100%', gap: '35px', marginTop: '20px'
       }}>
       </div>
-        <AppSidebar></AppSidebar>
-      
-
     </div>
   );
 }
