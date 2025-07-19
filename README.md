@@ -38,21 +38,3 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
-
-## TailwindCSS 설정 방법
-
-1. tailwind.config.js 파일을 프로젝트 루트에 생성하세요:
-
-```bash
-npx tailwindcss init
-```
-
-2. src/styles/globals.css 파일 상단에 아래 내용을 추가하세요:
-
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-3. next.config.ts, postcss.config.mjs는 기본 설정이면 별도 수정 없이 사용 가능합니다.

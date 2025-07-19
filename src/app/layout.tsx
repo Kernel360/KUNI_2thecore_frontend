@@ -8,7 +8,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <Script
           type="text/javascript"
-          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=d6be0249aeeb646de627a053b4ec5c47&autoload=false`}
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&autoload=false`}
           strategy="beforeInteractive"
         />
       </head>
