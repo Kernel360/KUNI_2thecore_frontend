@@ -4,7 +4,7 @@ import StatusBox from './statusBox'
 const StatusContainer = () => {
     return (
         <div style={{
-            display: 'flex', justifyContent: 'center', width: '100%', gap: '25px', marginTop: '20px'
+            display: 'flex', justifyContent: 'center', width: '100%', gap: '28px', marginTop: '20px'
         }}>
             <StatusBox num={100} text="전체 차량" />
             <StatusBox num={57} text="운행 중" />
