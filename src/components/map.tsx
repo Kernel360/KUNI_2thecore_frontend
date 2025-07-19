@@ -24,6 +24,10 @@ export default function Map({ width, height }: MapProps) {
     }, []);
 
     return (
-        <div ref={mapRef} className={styles.map}></div>
+        <div
+            ref={mapRef}
+            className={styles.map}
+            style={{ width, height }}
+        ></div>
     );
 }

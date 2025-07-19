@@ -3,7 +3,7 @@ import TopBar from '../components/ui/topBar';
 import UserBox from '../components/userBox/userBox';
 import StatusBox from '../components/statusBox/statusBox';
 import Map from '../components/map';
-import styles from './components/map.module.css';
+import styles from '../components/map.module.css';
 
 export default function Home() {
   return (
