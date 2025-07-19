@@ -6,7 +6,7 @@
     color: #000000;
     background-color: #ffffff;
     border-radius: 5px;
-    border: 1.5px solid #000000;
+    border: 1.5px solid #a7a7a7;
     cursor: pointer;
     text-align: left !important;
     padding-left: 9px !important;
@@ -27,4 +27,5 @@
     margin-top: 10px;
     border-radius: 10px;
     text-align: left;
+    height: 325px;
 }
