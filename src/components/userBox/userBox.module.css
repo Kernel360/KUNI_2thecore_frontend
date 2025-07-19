@@ -2,7 +2,6 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding-right: 70px;
 }
 
 .Button {
@@ -13,7 +12,7 @@
     font-weight: 500;
     color: #fff;
     background-color: #0070f3;
-    border-radius: 5px;
+    border-radius: 10px;
     border: none;
     cursor: pointer;
 }

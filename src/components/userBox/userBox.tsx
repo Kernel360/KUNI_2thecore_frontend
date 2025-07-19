@@ -6,7 +6,9 @@ const UserBox = () => {
   return (
     <div className={styles.div}>
       <h5>관리자님</h5>
-      <Button className={styles.Button}>로그아웃</Button>
+      <div className="flex justify-center">
+        <Button className={styles.Button}>로그아웃</Button>
+      </div>
     </div>
   )
 }
