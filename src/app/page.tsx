@@ -14,7 +14,7 @@ import Map from '@/components/map';
 import KakaoMapScript from '@/components/KakaoMapScript';
 >>>>>>> 188903e (카카오맵 API 구현 완료)
 
-export default function Home() {
+export default function Home({ children }: { children: React.ReactNode }) {
   return (
 <<<<<<< HEAD
     <div>
