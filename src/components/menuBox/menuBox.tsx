@@ -10,7 +10,7 @@ const MenuBox = () => {
     }}>
       <div className={styles.greyBox}>
         <Button className={styles.Button}>🗺️ 지도</Button>
-        <Link href="/search">
+        <Link href="/SearchPage">
           <Button className={styles.Button}>🚗 차량 검색</Button>
         </Link>
         <Button className={styles.Button}>📊 주행 기록 및 경로</Button>
