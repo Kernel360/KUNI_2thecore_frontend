@@ -10,6 +10,7 @@ export default function Home() {
   return (
 
     <div className="flex flex-col h-screen">
+
       <TopBar title="차량 관제 시스템"></TopBar>
       <div
         style={{

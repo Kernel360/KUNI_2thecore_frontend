@@ -4,7 +4,6 @@ import TopBar from '@/components/ui/topBar';
 import UserBox from '@/components/userBox/userBox';
 import StatusContainer from '@/components/statusBox/statusContainer';
 import MenuBox from '@/components/menuBox/menuBox';
-import Script from 'next/script';
 
 interface RootLayoutProps {
   children: ReactNode;

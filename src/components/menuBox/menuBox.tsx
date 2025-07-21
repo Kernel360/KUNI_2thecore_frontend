@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from "@/components/ui/button"
+import Link from 'next/link'
 import styles from './menuBox.module.css'
 
 const MenuBox = () => {
@@ -9,7 +10,9 @@ const MenuBox = () => {
     }}>
       <div className={styles.greyBox}>
         <Button className={styles.Button}>🗺️ 지도</Button>
-        <Button className={styles.Button}>🚗 차량 검색</Button>
+        <Link href="/SearchPage">
+          <Button className={styles.Button}>🚗 차량 검색</Button>
+        </Link>
         <Button className={styles.Button}>📊 주행 기록 및 경로</Button>
         <Button className={styles.Button}>⚒️ 차량 관리</Button>
       </div>
