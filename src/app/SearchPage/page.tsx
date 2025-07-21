@@ -1,5 +1,5 @@
 import TopBar from '@/components/ui/topBar';
-import CarSearchBox from '@/components/carSearchBox/carSearchBox';
+import CarSearchBox from '@/components/carSearchBox/carNumberSearchBox';
 
 export default function Search() {
   return (
