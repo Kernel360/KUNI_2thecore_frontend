@@ -1,11 +1,13 @@
-import React from 'react'
+import TopBar from '@/components/ui/topBar';
+import CarSearchBox from '@/components/carSearchBox/carSearchBox';
 
-const page = () => {
+export default function Search() {
   return (
     <div>
-      
-    </div>
-  )
-}
 
-export default page
+      <TopBar title="차량 검색"></TopBar>
+      <CarSearchBox />
+
+    </div>
+  );
+}
