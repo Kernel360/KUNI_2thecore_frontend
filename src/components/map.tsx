@@ -27,7 +27,7 @@ export default function Map({ width, height }: MapProps) {
         if (typeof window !== 'undefined' && window.kakao && window.kakao.maps) {
             window.kakao.maps.load(() => {
                 const options = {
-                    center: new window.kakao.maps.LatLng(37.610600, 126.998927),
+                    center: new window.kakao.maps.LatLng(37.611035, 126.996573),
                     level: 3,
                 };
                 new window.kakao.maps.Map(mapRef.current, options);
