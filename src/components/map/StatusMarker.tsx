@@ -4,10 +4,10 @@ import StatusMarker from "./StatusMarker";
 const ZOOM_THRESHOLD = 5;
 
 export interface Car {
-    car_id: number;
-    status: '운행중' | '대기중' | '수리중';
-    gps_latitude: number;
-    gps_longitude: number;
+    car_number: string;
+    status: 'null' | '운행중' | '대기중' | '수리중';
+    gps_latitude: string;
+    gps_longitude: string;
 }
 
 const statusToImage = {

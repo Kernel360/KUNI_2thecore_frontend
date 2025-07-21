@@ -3,8 +3,8 @@ import TopBar from '@/components/ui/topBar';
 import UserBox from '@/components/userBox/userBox';
 import StatusContainer from '@/components/statusBox/statusContainer';
 import MenuBox from '@/components/menuBox/menuBox';
-import Map from '@/components/map';
-import KakaoMapScript from '@/components/KakaoMapScript';
+import Map from '@/components/map/map';
+import KakaoMapScript from '@/components/map/KakaoMapScript';
 
 export default function Home() {
   return (
