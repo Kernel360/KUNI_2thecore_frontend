@@ -17,7 +17,7 @@ export default function TopBar({ title }: TopBarProps) {
     >
       <div
         style={{
-          width: '95%',
+          width: '100%',
           borderBottom: '2px solid #0070f3',
           display: 'flex',
           justifyContent: 'center',

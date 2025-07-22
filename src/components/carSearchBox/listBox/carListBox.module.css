@@ -1,0 +1,36 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+    width: 90%;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.num {
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: #222;
+    margin-bottom: 2px;
+}
+
+.texts {
+    font-size: 0.98rem;
+    color: #9b9b9b;
+    margin-bottom: 1px;
+}
+
+/* Status 뱃지 크기 줄이기 */
+:global(.status-badge) {
+    font-size: 0.98rem !important;
+    padding: 6px 16px !important;
+    min-width: 48px !important;
+}
