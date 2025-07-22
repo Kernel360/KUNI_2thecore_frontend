@@ -16,9 +16,10 @@ export default function RootLayout({ children, title }: RootLayoutProps) {
       <body>
         <div
           style={{
-            margin: '0px 115px',
+            margin: '0px auto',
             display: 'flex',
             flexDirection: 'column',
+            justifyContent: 'center',
             alignItems: 'center',
             width: '100%', // 추가
           }}
@@ -26,10 +27,10 @@ export default function RootLayout({ children, title }: RootLayoutProps) {
           <div
             style={{
               backgroundColor: '#f6f6f6',
-              padding: '0px 15px 100px 15px',
+              padding: '0px 10px 100px 10px',
               marginTop: '3px',
               width: '100%', // 추가
-              maxWidth: '1230px', // 필요시 최대폭 제한
+              maxWidth: '1290px', // 필요시 최대폭 제한
             }}
           >
             <UserBox />
