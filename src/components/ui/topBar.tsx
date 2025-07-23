@@ -14,7 +14,7 @@ export default function TopBar({ title }: TopBarProps) {
         justifyContent: 'center',
         alignItems: 'center',
       }}
-    >
+      >
       <div
         style={{
           width: '100%',
