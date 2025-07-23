@@ -3,8 +3,6 @@
 import { useEffect, useState, useRef } from 'react';
 import Map from './map';
 
-const ZOOM_THRESHOLD = 8;
-
 export interface Car {
     car_number: string;
     status: 'null' | '운행중' | '대기중' | '수리중';
@@ -33,36 +31,12 @@ export default function CarClustererMap({ width, height }: { width: string; heig
             disableClickZoom: true,
         });
 
-        const handleZoomChanged = () => {
-            const level = map.getLevel();
-            if (level <= ZOOM_THRESHOLD) {
-                const bounds = map.getBounds();
-                const sw = bounds.getSouthWest();
-                const ne = bounds.getNorthEast();
-                // TODO: API 호출 구현
-                // fetch(`/api/cars?swLat=${sw.getLat()}&swLng=${sw.getLng()}&neLat=${ne.getLat()}&neLng=${ne.getLng()}`)
-                //     .then(res => res.json())
-                //     .then(data => setCars(data));
-
-                // 임시 데이터로 테스트
-                const dummyCars: Car[] = [
-                    { car_number: '12가1234', status: '운행중', gps_latitude: '37.6106', gps_longitude: '126.998927' },
-                    { car_number: '23나4567', status: '대기중', gps_latitude: '37.6126', gps_longitude: '127.001927' },
-                    { car_number: '34다7890', status: '수리중', gps_latitude: '37.6086', gps_longitude: '126.996927' },
-                ];
-                setCars(dummyCars);
-
-            } else {
-                setCars([]);
-            }
-        };
-
-        window.kakao.maps.event.addListener(map, 'zoom_changed', handleZoomChanged);
-        handleZoomChanged(); // 초기 로드 시 한 번 실행
-
-        return () => {
-            window.kakao.maps.event.removeListener(map, 'zoom_changed', handleZoomChanged);
-        };
+        const dummyCars: Car[] = [
+            { car_number: '12가1234', status: '운행중', gps_latitude: '37.5665', gps_longitude: '126.9780' }, // 서울시청
+            { car_number: '23나2345', status: '대기중', gps_latitude: '37.5700', gps_longitude: '126.9830' }, // 경복궁
+            { car_number: '34라3456', status: '수리중', gps_latitude: '37.5600', gps_longitude: '126.9950' }, // 남산
+        ];
+        setCars(dummyCars);
     }, [map]);
 
     useEffect(() => {
@@ -86,7 +60,6 @@ export default function CarClustererMap({ width, height }: { width: string; heig
 
         clustererRef.current.addMarkers(markers);
     }, [cars]);
-
 
     return (
         <Map
