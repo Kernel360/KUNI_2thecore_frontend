@@ -3,8 +3,8 @@ import TopBar from '@/components/ui/topBar';
 import UserBox from '@/components/userBox/userBox';
 import StatusContainer from '@/components/statusBox/statusContainer';
 import MenuBox from '@/components/menuBox/menuBox';
-import Map from '@/components/map';
-import KakaoMapScript from '@/components/KakaoMapScript';
+import CarClustererMap from '@/components/map/CarClustererMap';
+import KakaoMapScript from '@/components/map/KakaoMapScript';
 
 export default function Home() {
   return (
@@ -30,7 +30,7 @@ export default function Home() {
         </div>
         <div style={{ position: 'relative', width: '98%', height: '500px' }}>
           <KakaoMapScript />
-          <Map width="100%" height="100%" />
+          <CarClustererMap width="100%" height="100%" />
         </div>
       </div>
     </div>
