@@ -30,7 +30,9 @@ export default function RootLayout({ children, title }: RootLayoutProps) {
               padding: '0px 10px 100px 10px',
               marginTop: '3px',
               width: '100%', // 추가
+              height: '100%',
               maxWidth: '1290px', // 필요시 최대폭 제한
+              borderRadius: '10px',
             }}
           >
             <UserBox />

@@ -24,7 +24,7 @@ export default function Home() {
         <div style={{ gridColumn: '1 / span 2' }}>
           <StatusContainer />
         </div>
-        <div style={{ backgroundColor: '#f6f6f6', zIndex: 100, padding: '0px 60px 100px 15px' }}>
+        <div style={{ backgroundColor: '#f6f6f6', zIndex: 100, padding: '0px 60px 0px 15px' }}>
           <MenuBox />
         </div>
         <div style={{ position: 'relative', width: '98%', height: '500px' }}>
