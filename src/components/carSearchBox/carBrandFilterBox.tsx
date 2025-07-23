@@ -9,7 +9,7 @@ const CarBrandFilterBox = () => {
             justifyContent: "center", width: "100%",
         }}>
             <DropDownBox />
-            <Input type="text" placeholder="차량 번호" style={{
+            <Input type="text" placeholder="차량명 입력(브랜드 + 모델명)" style={{
                 width: "50%", height: "38.5px",
                 backgroundColor: "white",
             }} />
