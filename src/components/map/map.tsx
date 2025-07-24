@@ -17,8 +17,10 @@ export default function Map({ width, height, onLoad }: MapProps) {
                 if (!mapContainer) return;
 
                 const options = {
-                    center: new window.kakao.maps.LatLng(37.610600, 126.998927),
-                    level: 3,
+                    center: new window.kakao.maps.LatLng(36.5, 127.8),
+                    level: 13,
+                    // center: new window.kakao.maps.LatLng(37.610600, 126.998927),
+                    // level: 3,
                 };
                 const mapInstance = new window.kakao.maps.Map(mapContainer, options);
                 if (onLoad) {
