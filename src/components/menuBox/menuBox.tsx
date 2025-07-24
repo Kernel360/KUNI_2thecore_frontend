@@ -14,7 +14,9 @@ const MenuBox = () => {
           <Button className={styles.Button}>🚗 차량 검색</Button>
         </Link>
         <Button className={styles.Button}>📊 주행 기록 및 경로</Button>
+        <Link href="/ManagePage">
         <Button className={styles.Button}>⚒️ 차량 관리</Button>
+        </Link>
       </div>
     </div>
   )
