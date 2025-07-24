@@ -32,9 +32,14 @@ export default function CarClustererMap({ width, height }: { width: string; heig
         });
 
         const dummyCars: Car[] = [
-            { car_number: '12가1234', status: '운행중', gps_latitude: '37.5665', gps_longitude: '126.9780' }, // 서울시청
-            { car_number: '23나2345', status: '대기중', gps_latitude: '37.5700', gps_longitude: '126.9830' }, // 경복궁
-            { car_number: '34라3456', status: '수리중', gps_latitude: '37.5600', gps_longitude: '126.9950' }, // 남산
+            { car_number: '12가1234', status: '운행중', gps_latitude: '37.5665', gps_longitude: '126.9780' }, // 서울
+            { car_number: '23나2345', status: '대기중', gps_latitude: '35.1796', gps_longitude: '129.0756' }, // 부산
+            { car_number: '34다3456', status: '수리중', gps_latitude: '35.8714', gps_longitude: '128.6014' }, // 대구
+            { car_number: '45라4567', status: '운행중', gps_latitude: '37.4563', gps_longitude: '126.7052' }, // 인천
+            { car_number: '56마5678', status: '대기중', gps_latitude: '35.1595', gps_longitude: '126.8526' }, // 광주
+            { car_number: '67바6789', status: '수리중', gps_latitude: '36.3504', gps_longitude: '127.3845' }, // 대전
+            { car_number: '78사7890', status: '운행중', gps_latitude: '35.5384', gps_longitude: '129.3114' }, // 울산
+            { car_number: '89아8901', status: '대기중', gps_latitude: '33.4996', gps_longitude: '126.5312' }, // 제주
         ];
         setCars(dummyCars);
     }, [map]);
@@ -49,7 +54,8 @@ export default function CarClustererMap({ width, height }: { width: string; heig
             .map(car => {
                 const imageSrc = statusToImage[car.status]!;
                 const imageSize = new window.kakao.maps.Size(32, 32);
-                const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize);
+                const imageOption = { offset: new window.kakao.maps.Point(16, 32) };
+                const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
                 return new window.kakao.maps.Marker({
                     position: new window.kakao.maps.LatLng(parseFloat(car.gps_latitude), parseFloat(car.gps_longitude)),
