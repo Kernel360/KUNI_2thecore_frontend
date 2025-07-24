@@ -1,7 +1,7 @@
 import React from 'react'
 import CarNumberSearchBox from './carNumberSearchBox'
 import CarBrandFilterBox from './carBrandFilterBox'
-import CarListBox from './listBox/carListBox'
+import CarListBox from './CarListBox/carListBox'
 import styles from './carListBox.module.css'
 import Status from './status'
 
