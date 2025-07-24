@@ -16,7 +16,7 @@ const statusToImage: { [key in Car['status']]?: string } = {
     '대기중': '/car_yellow.png',
 };
 
-export default function CarClustererMap({ width, height }: { width: string; height: string }) {
+export default function CarClustererMap({ width, height, carStatusFilter }: { width: string; height: string; carStatusFilter: 'null' | '운행중' | '수리중' | '대기중' }) {
     const [map, setMap] = useState<any>(null);
     const [cars, setCars] = useState<Car[]>([]);
     const clustererRef = useRef<any>(null);
@@ -49,7 +49,11 @@ export default function CarClustererMap({ width, height }: { width: string; heig
 
         clustererRef.current.clear();
 
-        const markers = cars
+        const filteredCars = carStatusFilter === 'null'
+            ? cars
+            : cars.filter(car => car.status === carStatusFilter);
+
+        const markers = filteredCars
             .filter(car => statusToImage[car.status])
             .map(car => {
                 const imageSrc = statusToImage[car.status]!;
@@ -65,7 +69,7 @@ export default function CarClustererMap({ width, height }: { width: string; heig
             });
 
         clustererRef.current.addMarkers(markers);
-    }, [cars]);
+    }, [cars, carStatusFilter]);
 
     return (
         <Map
