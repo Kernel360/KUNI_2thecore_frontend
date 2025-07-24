@@ -1,31 +1,21 @@
+"use client"
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import Status from '@/components/carSearchBox/status';
 import TopBar from '@/components/ui/topBar';
+import { useCarDetailStore } from '@/store/carDetailStore';
 
-type CarDetailProps = {
-  car_number: string;
-  brand: string;
-  model: string;
-  status: '운행중' | '대기중' | '수리중';
-  location: string;
-}
-
-type CarDetailFromDB = {
-  speed: number;
-  year: string;
-  drive_dist: string;
-};
-
-const mockDetail: CarDetailFromDB = {
+const mockDetail = {
   speed: 45,
   year: '2022년',
   drive_dist: '45,678 km',
 };
 
-const DetailPage = (CarDetailprops: CarDetailProps) => {
-  const { car_number, brand, model, status, location } = CarDetailprops;
+const DetailPage = () => {
+  const { car_number, brand, model, status, location } = useCarDetailStore();
+  // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리
+  const safeStatus = status ?? '대기중';
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: '#fafbfc' }}>
       <TopBar title={`차량 상세 정보 - ${car_number}`} />
@@ -39,7 +29,7 @@ const DetailPage = (CarDetailprops: CarDetailProps) => {
               <Label>차종</Label>
               <div>{`${brand} ${model}`}</div>
               <Label>상태</Label>
-              <Status status={status} />
+              <div>{`${status}`}</div>
               <Label>현재 위치</Label>
               <div>{location}</div>
               <Label>속도</Label>
