@@ -57,20 +57,24 @@ export default function Emulator() {
         <div>
             <TopBar title="에뮬레이터"></TopBar>
             <CarEmulNumberSearchBox />
-            <Table>
+            <Table style={{
+                margin: "0 auto", maxWidth: "600px"
+            }}>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-[100px]">차량번호</TableHead>
-                        <TableHead className="w-[100px]">에뮬레이터 ID</TableHead>
-                        <TableHead className="w-[100px]">ON/OFF</TableHead>
+                        <TableHead>차량번호</TableHead>
+                        <TableHead>에뮬레이터 ID</TableHead>
+                        <TableHead>ON/OFF</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow>
-                        <TableCell className="font-medium">12가 3456</TableCell>
-                        <TableCell className="w-[100px]">EMU001</TableCell>
-                        <TableCell className="w-[100px]">ON</TableCell>
-                    </TableRow>
+                    {dummyEmuls.map((emul) => (
+                        <TableRow key={emul.emulator_id}>
+                            <TableCell className="font-medium">{emul.car_number}</TableCell>
+                            <TableCell>{emul.emulator_id}</TableCell>
+                            <TableCell>{emul.emulator_status.toUpperCase()}</TableCell>
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
         </div>
