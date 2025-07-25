@@ -10,7 +10,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
-export function DropDownBox() {
+export function DropDown() {
     return (
         <Select>
             <SelectTrigger className="w-[26%]" style={{ backgroundColor: "white", marginRight: "2%" }}>
@@ -28,3 +28,5 @@ export function DropDownBox() {
         </ Select>
     )
 }
+
+export default DropDown;
