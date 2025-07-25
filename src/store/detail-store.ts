@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 export type CarDetail = {
-  car_number: string;
+  carNumber: string;
   brand: string;
   model: string;
   status: '운행중' | '대기중' | '수리중';
@@ -13,7 +13,7 @@ type CarDetailStore = CarDetail & {
 };
 
 export const useCarDetailStore = create<CarDetailStore>((set) => ({
-  car_number: '',
+  carNumber: '',
   brand: '',
   model: '',
   status: '' as '운행중' | '대기중' | '수리중',

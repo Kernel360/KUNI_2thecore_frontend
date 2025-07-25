@@ -1,8 +1,9 @@
 import React from 'react'
-import CarNumberSearchBox from './carNumberSearchBox'
-import CarBrandFilterBox from './carBrandFilterBox'
-import CarListBox from './CarListBox/carListBox'
-import styles from './carListBox.module.css'
+import NumberSearchBox from './number-search-box';
+import BrandFilterBox from './filter-box';
+import { DropDown } from './dropdown';
+import ListBox from './list-box/list-box'
+import styles from './list-box/list-box.module.css'
 import Status from './status'
 
 const dummyCars = [
@@ -19,14 +20,14 @@ const dummyCars = [
     { num: '23나 2345', brand: '기아', model: 'K5', location: '동작구', status: '대기중' },
 ];
 
-const CarSearchBox = () => {
+const SearchBox = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', justifyContent: 'center' }}>
-            <CarNumberSearchBox />
-            <CarBrandFilterBox />
+            <NumberSearchBox />
+            <BrandFilterBox />
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: "20px" }}>
                 {dummyCars.map((car, idx) => (
-                    <CarListBox
+                    <ListBox
                         key={idx}
                         num={car.num}
                         brand={car.brand}
@@ -40,4 +41,4 @@ const CarSearchBox = () => {
     )
 }
 
-export default CarSearchBox
+export default SearchBox;

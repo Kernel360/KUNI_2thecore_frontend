@@ -4,10 +4,10 @@ import { useEffect, useState, useRef } from 'react';
 import Map from './map';
 
 export interface Car {
-    car_number: string;
+    carNumber: string;
     status: 'null' | '운행중' | '대기중' | '수리중';
-    gps_latitude: string;
-    gps_longitude: string;
+    gpsLatitude: string;
+    gpsLongitude: string;
 }
 
 const statusToImage: { [key in Car['status']]?: string } = {
@@ -32,14 +32,14 @@ export default function CarClustererMap({ width, height, carStatusFilter }: { wi
         });
 
         const dummyCars: Car[] = [
-            { car_number: '12가1234', status: '운행중', gps_latitude: '37.5665', gps_longitude: '126.9780' }, // 서울
-            { car_number: '23나2345', status: '대기중', gps_latitude: '35.1796', gps_longitude: '129.0756' }, // 부산
-            { car_number: '34다3456', status: '수리중', gps_latitude: '35.8714', gps_longitude: '128.6014' }, // 대구
-            { car_number: '45라4567', status: '운행중', gps_latitude: '37.4563', gps_longitude: '126.7052' }, // 인천
-            { car_number: '56마5678', status: '대기중', gps_latitude: '35.1595', gps_longitude: '126.8526' }, // 광주
-            { car_number: '67바6789', status: '수리중', gps_latitude: '36.3504', gps_longitude: '127.3845' }, // 대전
-            { car_number: '78사7890', status: '운행중', gps_latitude: '35.5384', gps_longitude: '129.3114' }, // 울산
-            { car_number: '89아8901', status: '대기중', gps_latitude: '33.4996', gps_longitude: '126.5312' }, // 제주
+            { carNumber: '12가1234', status: '운행중', gpsLatitude: '37.5665', gpsLongitude: '126.9780' }, // 서울
+            { carNumber: '23나2345', status: '대기중', gpsLatitude: '35.1796', gpsLongitude: '129.0756' }, // 부산
+            { carNumber: '34다3456', status: '수리중', gpsLatitude: '35.8714', gpsLongitude: '128.6014' }, // 대구
+            { carNumber: '45라4567', status: '운행중', gpsLatitude: '37.4563', gpsLongitude: '126.7052' }, // 인천
+            { carNumber: '56마5678', status: '대기중', gpsLatitude: '35.1595', gpsLongitude: '126.8526' }, // 광주
+            { carNumber: '67바6789', status: '수리중', gpsLatitude: '36.3504', gpsLongitude: '127.3845' }, // 대전
+            { carNumber: '78사7890', status: '운행중', gpsLatitude: '35.5384', gpsLongitude: '129.3114' }, // 울산
+            { carNumber: '89아8901', status: '대기중', gpsLatitude: '33.4996', gpsLongitude: '126.5312' }, // 제주
         ];
         setCars(dummyCars);
     }, [map]);
@@ -62,9 +62,9 @@ export default function CarClustererMap({ width, height, carStatusFilter }: { wi
                 const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
                 return new window.kakao.maps.Marker({
-                    position: new window.kakao.maps.LatLng(parseFloat(car.gps_latitude), parseFloat(car.gps_longitude)),
+                    position: new window.kakao.maps.LatLng(parseFloat(car.gpsLatitude), parseFloat(car.gpsLongitude)),
                     image: markerImage,
-                    title: car.car_number
+                    title: car.carNumber
                 });
             });
 

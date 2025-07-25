@@ -2,7 +2,7 @@ import React from 'react'
 import { Input } from '../ui/input';
 import { Button } from "../ui/button";
 
-const CarNumberSearchBox = () => {
+const NumberSearchBox = () => {
     return (
         <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: 'center', }}>
             <div
@@ -37,4 +37,4 @@ const CarNumberSearchBox = () => {
     )
 }
 
-export default CarNumberSearchBox
+export default NumberSearchBox
