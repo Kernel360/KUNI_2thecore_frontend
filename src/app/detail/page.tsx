@@ -4,9 +4,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import TopBar from '@/components/ui/topBar';
-import { useCarDetailStore } from '@/store/carDetailStore';
-import Map from '@/components/map/map';
-import KakaoMapScript from '@/components/map/kakaoMapScript';
+import { useCarDetailStore } from '@/store/detail-store';
 
 const mockDetail = {
   speed: 45,
@@ -15,19 +13,19 @@ const mockDetail = {
 };
 
 const DetailPage = () => {
-  const { car_number, brand, model, status, location } = useCarDetailStore();
+  const { carNumber, brand, model, status, location } = useCarDetailStore();
   // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리
   const safeStatus = status ?? '대기중';
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: '#fafbfc' }}>
-      <TopBar title={`차량 상세 정보 - ${car_number}`} />
+      <TopBar title={`차량 상세 정보 - ${carNumber}`} />
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}>
         <Card style={{ width: 480, minWidth: 320 }}>
           <CardContent>
             <div style={{ fontWeight: 700, fontSize: 20, marginBottom: 24 }}>차량 정보</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', rowGap: 18, columnGap: 12 }}>
               <Label>차량 번호</Label>
-              <div>{car_number}</div>
+              <div>{carNumber}</div>
               <Label>차종</Label>
               <div>{`${brand} ${model}`}</div>
               <Label>상태</Label>

@@ -38,3 +38,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+
+
+code convention
+
+파일/폴더	kebab-case	예시: user-profile.tsx
+컴포넌트/클래스/타입	PascalCase	예시: UserProfile, IUserData
+props/변수/함수	camelCase	예시: userSettings, fetchData
+커스텀 훅	use+camelCase	예시: useAuthState
+상수	예시: UPPER_SNAKE	API_BASE_URL

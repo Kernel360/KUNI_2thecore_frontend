@@ -1,11 +1,11 @@
 "use client"
 
 import Status from "../status";
-import styles from "./carListBox.module.css";
+import styles from "./list-box.module.css";
 import { useRouter } from 'next/navigation';
-import { useCarDetailStore } from '@/store/carDetailStore';
+import { useCarDetailStore } from '@/store/detail-store';
 
-interface CarListBoxProps {
+interface ListBoxProps {
     num: string;
     brand: string;
     model: string;
@@ -13,13 +13,13 @@ interface CarListBoxProps {
     status: string;
 }
 
-const CarListBox: React.FC<CarListBoxProps> = ({ num, model, brand, location, status }) => {
+const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, location, status }) => {
     const setCarDetail = useCarDetailStore((state) => state.setCarDetail);
     const router = useRouter();
 
     const handleClick = () => {
         setCarDetail({
-            car_number: num,
+            carNumber: num,
             brand,
             model,
             status: status as '운행중' | '대기중' | '수리중',
@@ -39,4 +39,4 @@ const CarListBox: React.FC<CarListBoxProps> = ({ num, model, brand, location, st
     )
 }
 
-export default CarListBox;
+export default ListBox;
