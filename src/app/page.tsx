@@ -5,8 +5,8 @@ import TopBar from '@/components/ui/topBar';
 import UserBox from '@/components/userBox/userBox';
 import StatusContainer from '@/components/statusBox/statusContainer';
 import MenuBox from '@/components/menuBox/menuBox';
-import CarClustererMap from '@/components/map/CarClustererMap';
-import KakaoMapScript from '@/components/map/KakaoMapScript';
+import CarClustererMap from '@/components/map/clustererMap';
+import KakaoMapScript from '@/components/map/kakaoMapScript';
 import { useState } from 'react';
 
 export default function Home() {

@@ -5,6 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import TopBar from '@/components/ui/topBar';
 import { useCarDetailStore } from '@/store/carDetailStore';
+import Map from '@/components/map/map';
+import KakaoMapScript from '@/components/map/kakaoMapScript';
 
 const mockDetail = {
   speed: 45,
