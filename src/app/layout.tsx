@@ -15,15 +15,8 @@ export default function RootLayout({ children, title }: RootLayoutProps) {
     <html lang="ko">
       <body>
         <div
-          style={{
-            margin: '0px auto',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%', // 추가
-          }}
-        >
+            className="mx-auto flex flex-col justify-center items-center w-full"
+          >
           <div
             style={{
               backgroundColor: '#f6f6f6',

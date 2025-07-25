@@ -1,14 +1,14 @@
 import React from 'react'
-import { DropDownBox } from './dropDownBox'
+import { DropDown } from './dropdown'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
-const CarBrandFilterBox = () => {
+const BrandFilterBox = () => {
     return (
         <div style={{
             display: "flex", flexDirection: "row", alignItems: "stretch",
             justifyContent: "center", width: "100%",
         }}>
-            <DropDownBox />
+            <DropDown />
             <Input type="text" placeholder="차량명 입력(브랜드 + 모델명)" style={{
                 width: "50%", height: "38.5px",
                 backgroundColor: "white",
@@ -24,4 +24,4 @@ const CarBrandFilterBox = () => {
     )
 }
 
-export default CarBrandFilterBox
+export default BrandFilterBox

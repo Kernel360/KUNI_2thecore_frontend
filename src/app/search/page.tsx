@@ -1,11 +1,11 @@
 import TopBar from '@/components/ui/topBar';
-import CarSearchBox from '@/components/carSearchBox/carSearchBox';
+import SearchBox from '@/components/search-box/search-box';
 
 export default function SearchPage() {
   return (
     <div>
       <TopBar title="차량 검색"></TopBar>
-      <CarSearchBox />
+      <SearchBox />
     </div>
   );
 }
