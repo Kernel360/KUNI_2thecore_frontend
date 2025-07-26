@@ -18,27 +18,12 @@
 /* number-search-box 전용 스타일 */
 .numberSearchContainer {
   display: flex;
-  justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-}
-
-.numberSearchWrapper {
+  justify-content: center;
   width: 97%;
   height: 80px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: center;
   margin: 8px 0px;
-}
-
-.numberSearchInner {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
   margin-top: 21px;
 }
 
@@ -54,13 +39,14 @@
   flex-direction: row;
   align-items: stretch;
   justify-content: center;
-  width: 100%;
+  width: 97%;
 }
 
 .filterInput {
-  width: 50%;
-  height: 38.5px;
+  width: 62%;
+  height: 35.5px;
   background-color: white;
+  padding-left: 22px;
 }
 
 .filterButton {

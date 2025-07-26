@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import TopBar from '@/components/ui/topbar';
+import TopBar from '@/components/ui/topBar';
 import { useCarDetailStore } from '@/store/detail-store';
 
 const mockDetail = {

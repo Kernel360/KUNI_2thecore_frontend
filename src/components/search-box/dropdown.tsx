@@ -14,7 +14,7 @@ export function Dropdown() {
   return (
     <Select>
       <SelectTrigger
-        className="w-[26%]"
+        className="w-[15%]"
         style={{ backgroundColor: 'white', marginRight: '2%' }}
       >
         <SelectValue placeholder="전체 상태" className="bg-white" />

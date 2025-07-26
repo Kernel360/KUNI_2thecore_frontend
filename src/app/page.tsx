@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import TopBar from '@/components/ui/topbar';
+import TopBar from '@/components/ui/topBar';
 import UserBox from '@/components/user-box/user-box';
 import StatusContainer from '@/components/status-box/status-container';
 import MenuBox from '@/components/menu-box/menu-box';

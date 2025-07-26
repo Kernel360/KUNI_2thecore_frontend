@@ -4,6 +4,7 @@ import BrandFilterBox from './filter-box';
 import { Dropdown } from './dropdown';
 import ListBox from './list-box/list-box';
 import styles from './list-box/list-box.module.css';
+import searchFilterStyles from './search-filter.module.css';
 import Status from './status';
 import { Button } from '../ui/button';
 
@@ -91,27 +92,35 @@ const SearchBox = () => {
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+        gap: '4px',
         justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
       }}
     >
       <NumberSearchBox />
       <BrandFilterBox />
-      <Button
+      <div
         style={{
-          width: '80px',
-          height: '44px',
-          marginLeft: '0px',
-          backgroundColor: '#0070f3',
-          color: 'white',
-          fontSize: '14px',
-          fontWeight: 500,
+          display: 'flex',
+          justifyContent: 'center',
+          width: '100%',
         }}
       >
-        검색
-      </Button>
+        <Button
+          className={searchFilterStyles.searchButton}
+          style={{
+            fontSize: '12px',
+            fontWeight: 450,
+            width: '70%',
+            height: '30px',
+          }}
+        >
+          새 차량 등록
+        </Button>
+      </div>
       <div
         style={{
           display: 'flex',

@@ -1,4 +1,4 @@
-import TopBar from '@/components/ui/topbar';
+import TopBar from '@/components/ui/topBar';
 import SearchBox from '@/components/search-box/search-box';
 
 export default function SearchPage() {
