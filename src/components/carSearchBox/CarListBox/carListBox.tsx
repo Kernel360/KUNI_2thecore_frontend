@@ -25,7 +25,7 @@ const CarListBox: React.FC<CarListBoxProps> = ({ num, model, brand, location, st
             status: status as '운행중' | '대기중' | '수리중',
             location,
         });
-        router.push('/DetailPage');
+        router.push('/detail');
     };
 
     return (
