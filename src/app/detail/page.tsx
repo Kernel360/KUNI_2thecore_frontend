@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import TopBar from '@/components/ui/topBar';
+import TopBar from '@/components/ui/topbar';
 import { useCarDetailStore } from '@/store/detail-store';
 
 const mockDetail = {
@@ -22,8 +22,17 @@ const DetailPage = () => {
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}>
         <Card style={{ width: 480, minWidth: 320 }}>
           <CardContent>
-            <div style={{ fontWeight: 700, fontSize: 20, marginBottom: 24 }}>차량 정보</div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', rowGap: 18, columnGap: 12 }}>
+            <div style={{ fontWeight: 700, fontSize: 20, marginBottom: 24 }}>
+              차량 정보
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 2fr',
+                rowGap: 18,
+                columnGap: 12,
+              }}
+            >
               <Label>차량 번호</Label>
               <div>{carNumber}</div>
               <Label>차종</Label>

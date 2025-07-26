@@ -1,0 +1,74 @@
+/* 공통 버튼 스타일 */
+.searchButton {
+  width: 80px;
+  height: 44px;
+  margin-left: 14px;
+  background-color: #0070f3;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 공통 입력 필드 스타일 */
+.searchInput {
+  height: 38.5px;
+  background-color: white;
+}
+
+/* number-search-box 전용 스타일 */
+.numberSearchContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.numberSearchWrapper {
+  width: 97%;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 8px 0px;
+}
+
+.numberSearchInner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 21px;
+}
+
+.numberSearchInput {
+  width: 80%;
+  height: 38.5px;
+  background-color: white;
+}
+
+/* filter-box 전용 스타일 */
+.filterContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+}
+
+.filterInput {
+  width: 50%;
+  height: 38.5px;
+  background-color: white;
+}
+
+.filterButton {
+  width: 80px;
+  height: 44px;
+  margin-left: 9px;
+  background-color: #0070f3;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
