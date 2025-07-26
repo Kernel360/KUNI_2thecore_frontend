@@ -12,11 +12,11 @@ type CarDetailStore = CarDetail & {
   setCarDetail: (detail: CarDetail) => void;
 };
 
-export const useCarDetailStore = create<CarDetailStore>((set) => ({
+export const useCarDetailStore = create<CarDetailStore>(set => ({
   carNumber: '',
   brand: '',
   model: '',
   status: '' as '운행중' | '대기중' | '수리중',
   location: '',
-  setCarDetail: (detail) => set(detail),
-})); 
+  setCarDetail: detail => set(detail),
+}));

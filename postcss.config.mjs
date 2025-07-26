@@ -1,15 +1,10 @@
 const config = {
   plugins: {
-    "@tailwindcss/postcss": {
+    '@tailwindcss/postcss': {
       config: {
-        content: [
-          "./src/**/*.{js,ts,jsx,tsx}",
-          "./src/**/*.css"
-        ],
-        exclude: [
-          "./src/**/*.module.css"
-        ]
-      }
+        content: ['./src/**/*.{js,ts,jsx,tsx}', './src/**/*.css'],
+        exclude: ['./src/**/*.module.css'],
+      },
     },
     autoprefixer: {},
   },
