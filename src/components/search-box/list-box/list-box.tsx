@@ -25,7 +25,7 @@ const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, location, status }
             status: status as '운행중' | '대기중' | '수리중',
             location,
         });
-        router.push('/DetailPage');
+        router.push('/detail');
     };
 
     return (
