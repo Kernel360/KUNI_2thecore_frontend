@@ -5,6 +5,7 @@ import { Dropdown } from './dropdown';
 import ListBox from './list-box/list-box';
 import styles from './list-box/list-box.module.css';
 import searchFilterStyles from './search-filter.module.css';
+import floatingStyles from './floating.module.css';
 import Status from './status';
 import { Button } from '../ui/button';
 
@@ -90,57 +91,44 @@ const dummyCars = [
 
 const SearchBox = () => {
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        gap: '4px',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-      }}
-    >
-      <NumberSearchBox />
-      <BrandFilterBox />
+    <>
       <div
         style={{
-          display: 'flex',
+          display: 'grid',
+          gridTemplateColumns: '1fr',
+          gap: '4px',
           justifyContent: 'center',
+          alignItems: 'center',
           width: '100%',
+          position: 'relative',
         }}
       >
-        <Button
-          className={searchFilterStyles.searchButton}
+        <NumberSearchBox />
+        <BrandFilterBox />
+        <div
           style={{
-            fontSize: '12px',
-            fontWeight: 450,
-            width: '70%',
-            height: '30px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginTop: '20px',
           }}
         >
-          새 차량 등록
-        </Button>
+          {dummyCars.map((car, idx) => (
+            <ListBox
+              key={idx}
+              num={car.num}
+              brand={car.brand}
+              model={car.model}
+              location={car.location}
+              status={car.status}
+            />
+          ))}
+        </div>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          marginTop: '20px',
-        }}
-      >
-        {dummyCars.map((car, idx) => (
-          <ListBox
-            key={idx}
-            num={car.num}
-            brand={car.brand}
-            model={car.model}
-            location={car.location}
-            status={car.status}
-          />
-        ))}
+      <div className={floatingStyles.floatingContainer}>
+        <button className={floatingStyles.floatingButton}>+</button>
       </div>
-    </div>
+    </>
   );
 };
 

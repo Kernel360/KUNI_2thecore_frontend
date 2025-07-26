@@ -1,22 +1,22 @@
 import { create } from 'zustand';
 
-export type CarDetail = {
-  carNumber: string;
+export type Detail = {
+  Number: string;
   brand: string;
   model: string;
   status: '운행중' | '대기중' | '수리중';
   location: string;
 };
 
-type CarDetailStore = CarDetail & {
-  setCarDetail: (detail: CarDetail) => void;
+type DetailStore = Detail & {
+  setDetail: (detail: Detail) => void;
 };
 
-export const useCarDetailStore = create<CarDetailStore>(set => ({
-  carNumber: '',
+export const useDetailStore = create<DetailStore>(set => ({
+  Number: '',
   brand: '',
   model: '',
   status: '' as '운행중' | '대기중' | '수리중',
   location: '',
-  setCarDetail: detail => set(detail),
+  setDetail: detail => set(detail),
 }));
