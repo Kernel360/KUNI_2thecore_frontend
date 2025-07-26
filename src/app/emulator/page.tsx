@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const dummyEmuls = [
-    { car_number: '12가 3456', emulator_id: 'EMU001', emulator_status: 'on' },
-    { car_number: '34나 5678', emulator_id: 'EMU002', emulator_status: 'on' },
-    { car_number: '56다 7890', emulator_id: 'EMU003', emulator_status: 'off' },
+    { carNumber: '12가 3456', emulatorId: 'EMU001', emulatorStatus: 'on' },
+    { carNumber: '34나 5678', emulatorId: 'EMU002', emulatorStatus: 'on' },
+    { carNumber: '56다 7890', emulatorId: 'EMU003', emulatorStatus: 'off' },
 ];
 
 const CarEmulNumberSearchBox = () => {
@@ -70,7 +70,7 @@ export default function Emulator() {
                 </TableHeader>
                 <TableBody>
                     {dummyEmuls.map((emul) => (
-                        <TableRow key={emul.emulator_id}>
+                        <TableRow key={emul.emulatorId}>
                             <TableCell>
                                 <div
                                     style={{
@@ -89,9 +89,9 @@ export default function Emulator() {
                                     ×
                                 </div>
                             </TableCell>
-                            <TableCell className="font-medium">{emul.car_number}</TableCell>
-                            <TableCell>{emul.emulator_id}</TableCell>
-                            <TableCell>{emul.emulator_status.toUpperCase()}</TableCell>
+                            <TableCell className="font-medium">{emul.carNumber}</TableCell>
+                            <TableCell>{emul.emulatorId}</TableCell>
+                            <TableCell>{emul.emulatorStatus.toUpperCase()}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
