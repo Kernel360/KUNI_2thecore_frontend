@@ -62,6 +62,7 @@ export default function Emulator() {
             }}>
                 <TableHeader>
                     <TableRow>
+                        <TableHead style={{ width: "50px" }}></TableHead>
                         <TableHead>차량번호</TableHead>
                         <TableHead>에뮬레이터 ID</TableHead>
                         <TableHead>ON/OFF</TableHead>
@@ -70,6 +71,24 @@ export default function Emulator() {
                 <TableBody>
                     {dummyEmuls.map((emul) => (
                         <TableRow key={emul.emulator_id}>
+                            <TableCell>
+                                <div
+                                    style={{
+                                        width: "20px",
+                                        height: "20px",
+                                        borderRadius: "50%",
+                                        backgroundColor: "#ff4444",
+                                        color: "white",
+                                        fontSize: "12px",
+                                        fontWeight: "bold",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center"
+                                    }}
+                                >
+                                    ×
+                                </div>
+                            </TableCell>
                             <TableCell className="font-medium">{emul.car_number}</TableCell>
                             <TableCell>{emul.emulator_id}</TableCell>
                             <TableCell>{emul.emulator_status.toUpperCase()}</TableCell>
