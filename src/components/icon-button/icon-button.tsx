@@ -7,15 +7,11 @@ import styles from './icon-button.module.css';
 
 interface IconButtonProps {
   iconType: 'edit' | 'delete';
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   className?: string;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({
-  iconType,
-  onClick,
-  className,
-}) => {
+const IconButton: React.FC<IconButtonProps> = ({ iconType, onClick, className }) => {
   const getIconPath = () => {
     switch (iconType) {
       case 'edit':
@@ -26,7 +22,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   };
 
   return (
-    <Button size="sm" onClick={onClick} className={className}>
+    <Button size="sm" onClick={onClick} className={styles.iconButton}>
       <Image
         src={getIconPath()}
         alt={`${iconType} icon`}

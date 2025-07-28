@@ -1,39 +1,17 @@
 .iconButton {
-  background: none;
-  border: none;
-  /* cursor: pointer; */
-  padding: 4px;
-  /* display: flex; */
-  align-items: center;
-  justify-content: center;
-  /* transition: all 0.2s ease; */
-  border-radius: 4px;
+  background: #8b8b8b;
+  border: 1px solid #8b8b8b;
+  padding: 3px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-right: 12px;
 }
 
 .iconButton:hover {
-  background-color: #f5f5f5;
-  transform: scale(1.1);
+  background-color: #666666;
 }
 
 .icon {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
 }
-
-.icon.edit {
-  color: #666666;
-}
-
-.icon.delete {
-  color: #ff4444;
-}
-
-/* <style>
-        .material-symbols-outlined {
-          font-variation-settings:
-          'FILL' 0,
-          'wght' 400,
-          'GRAD' 0,
-          'opsz' 24
-        }
-      </style> */
