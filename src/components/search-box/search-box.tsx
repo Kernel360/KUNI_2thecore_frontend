@@ -119,7 +119,6 @@ const SearchBox = () => {
               num={car.num}
               brand={car.brand}
               model={car.model}
-              location={car.location}
               status={car.status}
             />
           ))}
