@@ -2,14 +2,11 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import TopBar from '@/components/ui/topBar';
 import { useDetailStore } from '@/store/detail-store';
 import { Input } from '@/components/ui/input';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { Detail } from '@/store/detail-store';
-import Map from '@/components/map/map';
-import KakaoMapScript from '@/components/map/kakaoMapScript';
 
 const mockDetail = {
   speed: 45,
@@ -18,9 +15,10 @@ const mockDetail = {
 };
 
 const DetailPage = () => {
-  const { Number, brand, model, status, location, setDetail } =
+  const { Number, brand, model, status,  setDetail } =
     useDetailStore();
   const detailChange = setDetailChangeStore(state => state.detailChange);
+  const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
   // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리
   const safeStatus = status ?? '대기중';
 
@@ -33,7 +31,6 @@ const DetailPage = () => {
         brand: newBrand,
         model: newModel,
         status,
-        location,
       });
     } else {
       setDetail({
@@ -41,80 +38,84 @@ const DetailPage = () => {
         brand,
         model,
         status,
-        location,
         [field]: value,
       });
     }
   };
 
+  const handleSave = () => {
+    // 여기에 실제 저장 로직을 추가할 수 있습니다
+    // 예: API 호출, 데이터베이스 업데이트 등
+    console.log('저장된 데이터:', { Number, brand, model, status, location });
+    
+    // 편집 모드 종료
+    setDetailChange(false);
+    
+    // 성공 메시지 표시 (선택사항)
+    alert('차량 정보가 성공적으로 저장되었습니다.');
+  };
+
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: '#fafbfc' }}>
       <TopBar title={`차량 상세 정보 - ${Number}`} />
-      <div className="flex gap-8 max-w-6xl w-full">
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}>
-          <Card style={{ width: 480, minWidth: 320 }}>
-            <CardContent>
-              <div style={{ fontWeight: 700, fontSize: 20, marginBottom: 24 }}>
-                차량 정보
-              </div>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 2fr',
-                  rowGap: 18,
-                  columnGap: 12,
-                }}
-              >
-                <label>차량 번호</label>
-                <Input
-                  value={Number}
-                  readOnly={!detailChange}
-                  {...(detailChange && {
-                    onChange: e => handleChange('Number', e.target.value),
-                  })}
-                />
-                <label>차종</label>
-                <Input
-                  value={`${brand} ${model}`}
-                  readOnly={!detailChange}
-                  {...(detailChange && {
-                    onChange: e => handleChange('brand_model', e.target.value),
-                  })}
-                />
-                <label>상태</label>
-                <Input
-                  value={status}
-                  readOnly={!detailChange}
-                  {...(detailChange && {
-                    onChange: e => handleChange('status', e.target.value),
-                  })}
-                />
-                <label>현재 위치</label>
-                <Input
-                  value={location}
-                  readOnly={!detailChange}
-                  {...(detailChange && {
-                    onChange: e => handleChange('location', e.target.value),
-                  })}
-                />
-                <label>속도</label>
-                <Input
-                  value={`${mockDetail.speed} km/h`}
-                  readOnly={!detailChange}
-                />
-                <label>차량 연식</label>
-                <Input value={mockDetail.year} readOnly={!detailChange} />
-                <label>주행거리</label>
-                <Input value={mockDetail.drive_dist} readOnly={!detailChange} />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        
-        <div className="w-full h-80">
-          <kakaoMapScript/>
-          <Map width="100%" height="100%" />
-        </div>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}>
+        <Card style={{ width: 480, minWidth: 320 }}>
+          <CardContent>
+            <div style={{ fontWeight: 700, fontSize: 20, marginBottom: 24 }}>
+              차량 정보
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 2fr',
+                rowGap: 18,
+                columnGap: 12,
+              }}
+            >
+              <label>차량 번호</label>
+              <Input
+                value={Number}
+                readOnly={!detailChange}
+                {...(detailChange && {
+                  onChange: e => handleChange('Number', e.target.value),
+                })}
+              />
+              <label>차종</label>
+              <Input
+                value={`${brand} ${model}`}
+                readOnly={!detailChange}
+                {...(detailChange && {
+                  onChange: e => handleChange('brand_model', e.target.value),
+                })}
+              />
+              <label>상태</label>
+              <Input
+                value={status}
+                readOnly={!detailChange}
+                {...(detailChange && {
+                  onChange: e => handleChange('status', e.target.value),
+                })}
+              />
+              <label>현재 위치</label>
+              <Input
+                value={location}
+                readOnly={!detailChange}
+                {...(detailChange && {
+                  onChange: e => handleChange('location', e.target.value),
+                })}
+              />
+              <label>속도</label>
+              <Input
+                value={`${mockDetail.speed} km/h`}
+                readOnly={!detailChange}
+              />
+              <label>차량 연식</label>
+              <Input value={mockDetail.year} readOnly={!detailChange} />
+              <label>주행거리</label>
+              <Input value={mockDetail.drive_dist} readOnly={!detailChange} />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

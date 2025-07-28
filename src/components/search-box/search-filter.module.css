@@ -4,9 +4,12 @@
   height: 44px;
   margin-left: 14px;
   background-color: #0070f3;
-  color: white;
+  color: rgb(255, 255, 255);
   font-size: 14px;
   font-weight: 500;
+}
+.searchButton:hover {
+  background-color: #0065d8;
 }
 
 /* 공통 입력 필드 스타일 */
@@ -57,4 +60,7 @@
   color: white;
   font-size: 14px;
   font-weight: 500;
+}
+.filterButton:hover {
+  background-color: #0065d8;
 }
