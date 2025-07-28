@@ -16,15 +16,7 @@ const statusToImage: { [key in Car['status']]?: string } = {
   대기중: '/car_yellow.png',
 };
 
-export default function CarClustererMap({
-  width,
-  height,
-  carStatusFilter,
-}: {
-  width: string;
-  height: string;
-  carStatusFilter: 'null' | '운행중' | '수리중' | '대기중';
-}) {
+export default function CarClustererMap({ width, height, carStatusFilter }: { width: string; height: string; carStatusFilter: 'null' | '운행중' | '수리중' | '대기중' }) {
   const [map, setMap] = useState<any>(null);
   const [cars, setCars] = useState<Car[]>([]);
   const clustererRef = useRef<any>(null);
@@ -47,7 +39,7 @@ export default function CarClustererMap({
       { carNumber: '56마5678', status: '대기중', gpsLatitude: '35.1595', gpsLongitude: '126.8526' }, // 광주
       { carNumber: '67바6789', status: '수리중', gpsLatitude: '36.3504', gpsLongitude: '127.3845' }, // 대전
       { carNumber: '78사7890', status: '운행중', gpsLatitude: '35.5384', gpsLongitude: '129.3114' }, // 울산
-      { carNumber: '89아8901', status: '대기중', gpsLatitude: '33.4996', gpsLongitude: '126.5312' }, // 제주    ];
+      { carNumber: '89아8901', status: '대기중', gpsLatitude: '33.4996', gpsLongitude: '126.5312' }, // 제주
     ];
     setCars(dummyCars);
   }, [map]);

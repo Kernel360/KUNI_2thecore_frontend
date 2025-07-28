@@ -8,8 +8,7 @@ import { useDetailStore } from '@/store/detail-store';
 import { Input } from '@/components/ui/input';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { Detail } from '@/store/detail-store';
-import Map from '@/components/map/map';
-import KakaoMapScript from '@/components/map/kakaoMapScript';
+import { Button } from '@/components/ui/button';
 
 const mockDetail = {
   speed: 45,
@@ -50,71 +49,91 @@ const DetailPage = () => {
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: '#fafbfc' }}>
       <TopBar title={`차량 상세 정보 - ${Number}`} />
-      <div className="flex gap-8 max-w-6xl w-full">
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}>
-          <Card style={{ width: 480, minWidth: 320 }}>
-            <CardContent>
-              <div style={{ fontWeight: 700, fontSize: 20, marginBottom: 24 }}>
-                차량 정보
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40, }}>
+        <Card style={{ width: 800, minWidth: 320, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+          <CardContent style={{margin: '35px 0px'}}>
+            <div style={{ fontWeight: 700, fontSize: 20, marginBottom: 24 }}>
+              차량 정보
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 2fr',
+                rowGap: 18,
+                columnGap: 12,
+              }}
+            >
+              <label>차량 번호</label>
+              <Input
+                value={Number}
+                readOnly={!detailChange}
+                onChange={detailChange ? (e => handleChange('Number', e.target.value)) : undefined}
+              />
+              <label>차종</label>
+              <Input
+                value={`${brand} ${model}`}
+                readOnly={!detailChange}
+                onChange={detailChange ? (e => handleChange('brand_model', e.target.value)) : undefined}
+              />
+              <label>상태</label>
+              <Input
+                value={status}
+                readOnly={!detailChange}
+                onChange={detailChange ? (e => handleChange('status', e.target.value)) : undefined}
+              />
+              <label>속도</label>
+              <Input
+                value={`${mockDetail.speed} km/h`}
+                readOnly={true}
+              />
+              <label>차량 연식</label>
+              <Input value={mockDetail.year} readOnly={true} />
+              <label>주행거리</label>
+              <Input value={mockDetail.drive_dist} readOnly={true} />
+            </div>
+            
+            {/* 확인 버튼 - detailChange가 true일 때만 표시 */}
+            {detailChange && (
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                marginTop: 24,
+                gap: 12
+              }}>
+                <Button 
+                  onClick={handleSave}
+                  style={{
+                    backgroundColor: '#007bff',
+                    color: 'white',
+                    border: 'none',
+                    padding: '10px 24px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '500'
+                  }}
+                >
+                  확인
+                </Button>
+                <Button 
+                  onClick={() => setDetailChange(false)}
+                  style={{
+                    backgroundColor: '#6c757d',
+                    color: 'white',
+                    border: 'none',
+                    padding: '10px 24px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '500'
+                  }}
+                >
+                  취소
+                </Button>
               </div>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 2fr',
-                  rowGap: 18,
-                  columnGap: 12,
-                }}
-              >
-                <label>차량 번호</label>
-                <Input
-                  value={Number}
-                  readOnly={!detailChange}
-                  {...(detailChange && {
-                    onChange: e => handleChange('Number', e.target.value),
-                  })}
-                />
-                <label>차종</label>
-                <Input
-                  value={`${brand} ${model}`}
-                  readOnly={!detailChange}
-                  {...(detailChange && {
-                    onChange: e => handleChange('brand_model', e.target.value),
-                  })}
-                />
-                <label>상태</label>
-                <Input
-                  value={status}
-                  readOnly={!detailChange}
-                  {...(detailChange && {
-                    onChange: e => handleChange('status', e.target.value),
-                  })}
-                />
-                <label>현재 위치</label>
-                <Input
-                  value={location}
-                  readOnly={!detailChange}
-                  {...(detailChange && {
-                    onChange: e => handleChange('location', e.target.value),
-                  })}
-                />
-                <label>속도</label>
-                <Input
-                  value={`${mockDetail.speed} km/h`}
-                  readOnly={!detailChange}
-                />
-                <label>차량 연식</label>
-                <Input value={mockDetail.year} readOnly={!detailChange} />
-                <label>주행거리</label>
-                <Input value={mockDetail.drive_dist} readOnly={!detailChange} />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        
-        <div className="w-full h-80">
-          <kakaoMapScript/>
-          <Map width="100%" height="100%" />
-        </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
