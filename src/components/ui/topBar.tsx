@@ -14,7 +14,7 @@ export default function TopBar({ title }: TopBarProps) {
         justifyContent: 'center',
         alignItems: 'center',
       }}
-      >
+    >
       <div
         style={{
           width: '100%',
@@ -24,7 +24,18 @@ export default function TopBar({ title }: TopBarProps) {
           alignItems: 'center',
         }}
       >
-        <h2 style={{ margin: 0, textAlign: 'center', fontWeight: '600', fontSize: '20px', width: '100%', paddingBottom: '8px' }}>{title}</h2>
+        <h2
+          style={{
+            margin: 0,
+            textAlign: 'center',
+            fontWeight: '600',
+            fontSize: '20px',
+            width: '100%',
+            paddingBottom: '8px',
+          }}
+        >
+          {title}
+        </h2>
       </div>
     </header>
   );

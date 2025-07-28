@@ -1,18 +1,19 @@
-"use client";
+'use client';
 
 import Link from 'next/link';
 import TopBar from '@/components/ui/topBar';
-import UserBox from '@/components/userBox/userBox';
-import StatusContainer from '@/components/statusBox/statusContainer';
-import MenuBox from '@/components/menuBox/menuBox';
-import CarClustererMap from '@/components/map/CarClustererMap';
-import KakaoMapScript from '@/components/map/KakaoMapScript';
+import UserBox from '@/components/user-box/user-box';
+import StatusContainer from '@/components/status-box/status-container';
+import MenuBox from '@/components/menu-box/menu-box';
+import CarClustererMap from '@/components/map/car-clusterer-map';
+import KakaoMapScript from '@/components/map/kakao-map-script';
 import { useState } from 'react';
 
 export default function Home() {
-  const [carStatusFilter, setCarStatusFilter] = useState<'null' | '운행중' | '수리중' | '대기중'>('null');
+  const [carStatusFilter, setCarStatusFilter] = useState<
+    'null' | '운행중' | '수리중' | '대기중'
+  >('null');
   return (
-
     <div className="flex flex-col h-screen">
       <TopBar title="차량 관제 시스템"></TopBar>
       <div
@@ -26,14 +27,27 @@ export default function Home() {
         }}
       >
         <div style={{ gridColumn: '1 / span 2' }}>
-          <StatusContainer carStatusFilter={carStatusFilter} setCarStatusFilter={setCarStatusFilter} />
+          <StatusContainer
+            carStatusFilter={carStatusFilter}
+            setCarStatusFilter={setCarStatusFilter}
+          />
         </div>
-        <div style={{ backgroundColor: '#f6f6f6', zIndex: 100, padding: '0px 60px 0px 15px' }}>
+        <div
+          style={{
+            backgroundColor: '#f6f6f6',
+            zIndex: 100,
+            padding: '0px 60px 0px 15px',
+          }}
+        >
           <MenuBox />
         </div>
         <div style={{ position: 'relative', width: '98%', height: '500px' }}>
           <KakaoMapScript />
-          <CarClustererMap width="100%" height="100%" carStatusFilter={carStatusFilter} />
+          <CarClustererMap
+            width="100%"
+            height="100%"
+            carStatusFilter={carStatusFilter}
+          />
         </div>
       </div>
     </div>
