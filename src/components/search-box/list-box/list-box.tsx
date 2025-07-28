@@ -8,7 +8,6 @@ import { useDetailStore } from '@/store/detail-store';
 import { setDetailChangeStore } from '@/store/detail-change';
 import IconButton from '@/components/icon-button/icon-button';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
 
 interface ListBoxProps {
   num: string;
@@ -61,18 +60,22 @@ const ListBox: React.FC<ListBoxProps> = ({
         <AlertDialogTrigger asChild>
           <IconButton iconType="delete" onClick={e => e.stopPropagation()} />
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent className={styles.alertDialog}>
           <AlertDialogHeader>
-            <AlertDialogTitle>정말 삭제하시겠습니까?</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className={styles.alertTitle}>정말 삭제하시겠습니까?</AlertDialogTitle>
+            <AlertDialogDescription className={styles.alertDescription}>
             삭제 후에는 복구할 수 없습니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={e => e.stopPropagation()}>
+          <AlertDialogFooter className={styles.alertFooter}>
+            <AlertDialogCancel
+              className={styles.alertButton}
+              onClick={e => e.stopPropagation()}>
               취소
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
+            <AlertDialogAction
+              className={styles.alertButton}
+              onClick={handleDelete}>
               삭제
             </AlertDialogAction>
           </AlertDialogFooter>
