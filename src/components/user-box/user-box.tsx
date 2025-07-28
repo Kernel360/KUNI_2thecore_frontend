@@ -1,6 +1,6 @@
-import React from 'react'
-import { Button } from "@/components/ui/button"
-import styles from './userBox.module.css'
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import styles from './user-box.module.css';
 
 const UserBox = () => {
   return (
@@ -10,6 +10,6 @@ const UserBox = () => {
         <Button className={styles.Button}>로그아웃</Button>
       </div>
     </div>
-  )
-}
-export default UserBox
+  );
+};
+export default UserBox;
