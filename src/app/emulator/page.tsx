@@ -72,22 +72,7 @@ export default function Emulator() {
                     {dummyEmuls.map((emul) => (
                         <TableRow key={emul.emulatorId}>
                             <TableCell>
-                                <div
-                                    style={{
-                                        width: "20px",
-                                        height: "20px",
-                                        borderRadius: "50%",
-                                        backgroundColor: "#ff4444",
-                                        color: "white",
-                                        fontSize: "12px",
-                                        fontWeight: "bold",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center"
-                                    }}
-                                >
-                                    ×
-                                </div>
+                                {/* iconButton */}
                             </TableCell>
                             <TableCell className="font-medium">{emul.carNumber}</TableCell>
                             <TableCell>{emul.emulatorId}</TableCell>

@@ -1,0 +1,39 @@
+.iconButton {
+  background: none;
+  border: none;
+  /* cursor: pointer; */
+  padding: 4px;
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
+  /* transition: all 0.2s ease; */
+  border-radius: 4px;
+}
+
+.iconButton:hover {
+  background-color: #f5f5f5;
+  transform: scale(1.1);
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.icon.edit {
+  color: #666666;
+}
+
+.icon.delete {
+  color: #ff4444;
+}
+
+/* <style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+      </style> */

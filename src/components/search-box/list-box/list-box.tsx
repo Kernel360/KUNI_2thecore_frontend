@@ -7,22 +7,16 @@ import { useRouter } from 'next/navigation';
 import { useDetailStore } from '@/store/detail-store';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { Button } from '../../ui/button';
+import IconButton from '@/components/icon-button/icon-button';
 
 interface ListBoxProps {
   num: string;
   brand: string;
   model: string;
-  location: string;
   status: string;
 }
 
-const ListBox: React.FC<ListBoxProps> = ({
-  num,
-  model,
-  brand,
-  location,
-  status,
-}) => {
+const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
   const setDetail = useDetailStore(state => state.setDetail);
   const router = useRouter();
 
@@ -32,7 +26,6 @@ const ListBox: React.FC<ListBoxProps> = ({
       brand,
       model,
       status: status as '운행중' | '대기중' | '수리중',
-      location,
     });
     setDetailChange(false);
     router.push('/detail');
@@ -40,17 +33,25 @@ const ListBox: React.FC<ListBoxProps> = ({
 
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
 
-  const handleButtonClick = () => {
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 이벤트 버블링 방지
     setDetail({
       Number: num,
       brand,
       model,
       status: status as '운행중' | '대기중' | '수리중',
-      location,
     });
     setDetailChange(true);
     router.push('/detail');
   };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 이벤트 버블링 방지
+    // if (confirm('정말 삭제하시겠습니까?')) {
+    //   console.log('삭제:', num);
+    // }
+  };
+
   return (
     <div
       className={styles.container}
@@ -60,24 +61,12 @@ const ListBox: React.FC<ListBoxProps> = ({
       <div className={styles.info}>
         <div className={styles.num}>{num}</div>
         <div className={styles.texts}>
-          {brand} {model} {location}
+          {brand} {model}
         </div>
       </div>
       <div>
-        <Button
-          onClick={e => {
-            e.stopPropagation(); // 이벤트 버블링 방지
-            handleButtonClick();
-          }}
-          className={ButtonStyles.searchButton}
-          style={{
-            height: '35px',
-            backgroundColor: '#3981f3',
-            marginRight: '30px',
-          }}
-        >
-          정보 수정
-        </Button>
+        <IconButton iconType="edit" onClick={e => handleEdit(e)} />
+        <IconButton iconType="delete" onClick={e => handleDelete(e)} />
         <Status status={status as '운행중' | '대기중' | '수리중'} />
       </div>
     </div>

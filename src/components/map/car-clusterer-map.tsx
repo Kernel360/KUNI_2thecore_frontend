@@ -40,14 +40,54 @@ export default function CarClustererMap({
     });
 
     const dummyCars: Car[] = [
-      { carNumber: '12가1234', status: '운행중', gpsLatitude: '37.5665', gpsLongitude: '126.9780' }, // 서울
-      { carNumber: '23나2345', status: '대기중', gpsLatitude: '35.1796', gpsLongitude: '129.0756' }, // 부산
-      { carNumber: '34다3456', status: '수리중', gpsLatitude: '35.8714', gpsLongitude: '128.6014' }, // 대구
-      { carNumber: '45라4567', status: '운행중', gpsLatitude: '37.4563', gpsLongitude: '126.7052' }, // 인천
-      { carNumber: '56마5678', status: '대기중', gpsLatitude: '35.1595', gpsLongitude: '126.8526' }, // 광주
-      { carNumber: '67바6789', status: '수리중', gpsLatitude: '36.3504', gpsLongitude: '127.3845' }, // 대전
-      { carNumber: '78사7890', status: '운행중', gpsLatitude: '35.5384', gpsLongitude: '129.3114' }, // 울산
-      { carNumber: '89아8901', status: '대기중', gpsLatitude: '33.4996', gpsLongitude: '126.5312' }, // 제주    ];
+      {
+        carNumber: '12가1234',
+        status: '운행중',
+        gpsLatitude: '37.5665',
+        gpsLongitude: '126.9780',
+      }, // 서울
+      {
+        carNumber: '23나2345',
+        status: '대기중',
+        gpsLatitude: '35.1796',
+        gpsLongitude: '129.0756',
+      }, // 부산
+      {
+        carNumber: '34다3456',
+        status: '수리중',
+        gpsLatitude: '35.8714',
+        gpsLongitude: '128.6014',
+      }, // 대구
+      {
+        carNumber: '45라4567',
+        status: '운행중',
+        gpsLatitude: '37.4563',
+        gpsLongitude: '126.7052',
+      }, // 인천
+      {
+        carNumber: '56마5678',
+        status: '대기중',
+        gpsLatitude: '35.1595',
+        gpsLongitude: '126.8526',
+      }, // 광주
+      {
+        carNumber: '67바6789',
+        status: '수리중',
+        gpsLatitude: '36.3504',
+        gpsLongitude: '127.3845',
+      }, // 대전
+      {
+        carNumber: '78사7890',
+        status: '운행중',
+        gpsLatitude: '35.5384',
+        gpsLongitude: '129.3114',
+      }, // 울산
+      {
+        carNumber: '89아8901',
+        status: '대기중',
+        gpsLatitude: '33.4996',
+        gpsLongitude: '126.5312',
+      }, // 제주    ];
     ];
     setCars(dummyCars);
   }, [map]);
