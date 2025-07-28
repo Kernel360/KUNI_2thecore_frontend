@@ -23,7 +23,6 @@ const ListBox: React.FC<ListBoxProps> = ({
   brand,
   status,
 }) => {
-const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
   const setDetail = useDetailStore(state => state.setDetail);
   const router = useRouter();
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);

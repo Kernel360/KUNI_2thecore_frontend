@@ -16,15 +16,7 @@ const statusToImage: { [key in Car['status']]?: string } = {
   대기중: '/car_yellow.png',
 };
 
-export default function CarClustererMap({
-  width,
-  height,
-  carStatusFilter,
-}: {
-  width: string;
-  height: string;
-  carStatusFilter: 'null' | '운행중' | '수리중' | '대기중';
-}) {
+export default function CarClustererMap({ width, height, carStatusFilter }: { width: string; height: string; carStatusFilter: 'null' | '운행중' | '수리중' | '대기중' }) {
   const [map, setMap] = useState<any>(null);
   const [cars, setCars] = useState<Car[]>([]);
   const clustererRef = useRef<any>(null);
