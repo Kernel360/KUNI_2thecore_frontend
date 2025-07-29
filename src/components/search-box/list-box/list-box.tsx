@@ -20,16 +20,21 @@ import {
 } from '@/components/ui/alert-dialog';
 
 interface ListBoxProps {
-  num: string;
+  carNumber: string;
   brand: string;
   model: string;
   status: string;
 }
 
 const allowedStatus = ['운행중', '대기중', '수리중'] as const;
-type StatusType = typeof allowedStatus[number];
+type StatusType = (typeof allowedStatus)[number];
 
-const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
+const ListBox: React.FC<ListBoxProps> = ({
+  carNumber,
+  model,
+  brand,
+  status,
+}) => {
   const setDetail = useDetailStore(state => state.setDetail);
   const router = useRouter();
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
@@ -40,7 +45,7 @@ const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
 
   const handleClick = () => {
     setDetail({
-      Number: num,
+      carNumber: carNumber,
       brand,
       model,
       status: safeStatus,
@@ -52,7 +57,7 @@ const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
     setDetail({
-      Number: num,
+      carNumber: carNumber,
       brand,
       model,
       status: safeStatus,
@@ -63,7 +68,7 @@ const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    alert(`삭제됨: ${num}`);
+    alert(`삭제됨: ${carNumber}`);
   };
 
   function AlertDialogDemo() {
@@ -107,7 +112,7 @@ const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
       style={{ cursor: 'pointer' }}
     >
       <div className={styles.info}>
-        <div className={styles.num}>{num}</div>
+        <div className={styles.num}>{carNumber}</div>
         <div className={styles.texts}>
           {brand} {model}
         </div>
