@@ -3,7 +3,6 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import TopBar from '@/components/ui/topBar';
 import { useDetailStore } from '@/store/detail-store';
 import { Input } from '@/components/ui/input';
@@ -51,15 +50,9 @@ const DetailPage = () => {
   const handleSave = () => {
     // 여기에 실제 저장 로직을 추가할 수 있습니다
     // 예: API 호출, 데이터베이스 업데이트 등
-    console.log('저장된 데이터:', { Number, brand, model, status });
-    
-    // 편집 모드 종료
+    console.log('저장된 데이터:', { Number, brand, model, status, location });
     setDetailChange(false);
-    
-    // 성공 메시지 표시 (선택사항)
     alert('차량 정보가 성공적으로 저장되었습니다.');
-    
-    // search 페이지로 라우트
     router.push('/search');
   };
 
@@ -96,31 +89,19 @@ const DetailPage = () => {
               <Input
                 value={Number}
                 readOnly={!detailChange}
-                onChange={
-                  detailChange
-                    ? e => handleChange('Number', e.target.value)
-                    : undefined
-                }
+                onChange={detailChange ? (e => handleChange('Number', e.target.value)) : undefined}
               />
               <label>차종</label>
               <Input
                 value={`${brand} ${model}`}
                 readOnly={!detailChange}
-                onChange={
-                  detailChange
-                    ? e => handleChange('brand_model', e.target.value)
-                    : undefined
-                }
+                onChange={detailChange ? (e => handleChange('brand_model', e.target.value)) : undefined}
               />
               <label>상태</label>
               <Input
                 value={status}
                 readOnly={!detailChange}
-                onChange={
-                  detailChange
-                    ? e => handleChange('status', e.target.value)
-                    : undefined
-                }
+                onChange={detailChange ? (e => handleChange('status', e.target.value)) : undefined}
               />
               <label>속도</label>
               <Input value={`${mockDetail.speed} km/h`} readOnly={true} />
@@ -129,7 +110,6 @@ const DetailPage = () => {
               <label>주행거리</label>
               <Input value={mockDetail.drive_dist} readOnly={true} />
             </div>
-
             {/* 확인 버튼 - detailChange가 true일 때만 표시 */}
             {detailChange && (
               <div
@@ -177,7 +157,6 @@ const DetailPage = () => {
             )}
           </CardContent>
         </Card>
-
         {/* 지도 */}
         <Card style={{ width: 500, minWidth: 320, height: 'fit-content' }}>
           <CardContent style={{ margin: '35px 0px' }}>
