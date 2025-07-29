@@ -122,8 +122,6 @@ const DetailPage = () => {
                     : undefined
                 }
               />
-              <label>속도</label>
-              <Input value={`${mockDetail.speed} km/h`} readOnly={true} />
               <label>차량 연식</label>
               <Input value={mockDetail.year} readOnly={true} />
               <label>주행거리</label>

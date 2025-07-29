@@ -26,75 +26,43 @@ interface ListBoxProps {
   status: string;
 }
 
+const allowedStatus = ['운행중', '대기중', '수리중'] as const;
+type StatusType = typeof allowedStatus[number];
+
 const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
   const setDetail = useDetailStore(state => state.setDetail);
   const router = useRouter();
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
-  const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
+
+  const safeStatus: StatusType = allowedStatus.includes(status as StatusType)
+    ? (status as StatusType)
+    : '대기중';
 
   const handleClick = () => {
     setDetail({
       Number: num,
       brand,
       model,
-      status: status as '운행중' | '대기중' | '수리중',
+      status: safeStatus,
     });
     setDetailChange(false);
     router.push('/detail');
   };
 
   const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 이벤트 버블링 방지
-  const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 이벤트 버블링 방지
+    e.stopPropagation();
     setDetail({
       Number: num,
       brand,
       model,
-      status: status as '운행중' | '대기중' | '수리중',
+      status: safeStatus,
     });
     setDetailChange(true);
     router.push('/detail');
   };
 
   const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 이벤트 버블링 방지
-    alert(`삭제됨: ${num}`);
-  };
-
-  function AlertDialogDemo() {
-    return (
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <IconButton iconType="delete" onClick={e => e.stopPropagation()} />
-        </AlertDialogTrigger>
-        <AlertDialogContent className={styles.alertDialog}>
-          <AlertDialogHeader>
-            <AlertDialogTitle className={styles.alertTitle}>정말 삭제하시겠습니까?</AlertDialogTitle>
-            <AlertDialogDescription className={styles.alertDescription}>
-            삭제 후에는 복구할 수 없습니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className={styles.alertFooter}>
-            <AlertDialogCancel
-              className={styles.alertButton}
-              onClick={e => e.stopPropagation()}>
-              취소
-            </AlertDialogCancel>
-            <AlertDialogAction
-              className={styles.alertButton}
-              onClick={handleDelete}>
-              삭제
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    )
-  }
-
-
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 이벤트 버블링 방지
+    e.stopPropagation();
     alert(`삭제됨: ${num}`);
   };
 
@@ -147,7 +115,7 @@ const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
       <div>
         <IconButton iconType="edit" onClick={handleEdit} />
         <AlertDialogDemo />
-        <Status status={status as '운행중' | '대기중' | '수리중'} />
+        <Status status={safeStatus} />
       </div>
     </div>
   );
