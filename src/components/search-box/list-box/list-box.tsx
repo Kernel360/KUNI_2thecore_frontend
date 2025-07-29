@@ -23,10 +23,18 @@ interface ListBoxProps {
   num: string;
   brand: string;
   model: string;
+  location: string;
   status: string;
 }
 
-const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
+
+
+const ListBox: React.FC<ListBoxProps> = ({
+  num,
+  model,
+  brand,
+  status,
+}) => {
   const setDetail = useDetailStore(state => state.setDetail);
   const router = useRouter();
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
@@ -37,6 +45,7 @@ const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
       brand,
       model,
       status: status as '운행중' | '대기중' | '수리중',
+      location,
     });
     setDetailChange(false);
     router.push('/detail');
@@ -49,6 +58,7 @@ const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
       brand,
       model,
       status: status as '운행중' | '대기중' | '수리중',
+      location,
     });
     setDetailChange(true);
     router.push('/detail');
@@ -102,7 +112,7 @@ const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
       <div className={styles.info}>
         <div className={styles.num}>{num}</div>
         <div className={styles.texts}>
-          {brand} {model}
+          {brand} {model} {location}
         </div>
       </div>
       <div>
