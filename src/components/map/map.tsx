@@ -23,9 +23,7 @@ export default function Map({ width, height, onLoad }: MapProps) {
 
         const options = {
           center: new window.kakao.maps.LatLng(36.5, 127.8),
-          level: 13,
-          // center: new window.kakao.maps.LatLng(37.610600, 126.998927),
-          // level: 3,
+          level: 12,
         };
         const mapInstance = new window.kakao.maps.Map(mapContainer, options);
         if (onLoad) {
@@ -38,13 +36,8 @@ export default function Map({ width, height, onLoad }: MapProps) {
   return (
     <div
       ref={mapRef}
-      style={{
-        width,
-        height,
-        border: '1px solid #a7a7a7',
-        borderRadius: '6px',
-        margin: '10px auto',
-      }}
+      className="border border-gray-300 rounded-md mx-auto"
+      style={{ width, height }}
     ></div>
   );
 }
