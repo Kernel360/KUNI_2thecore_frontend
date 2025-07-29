@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { Detail } from '@/store/detail-store';
 import { Button } from '@/components/ui/button';
+import KakaoMapScript from '@/components/map/kakao-map-script';
+import CarLocationMap from '@/components/map/car-location-map';
 
 const mockDetail = {
   speed: 45,
@@ -49,8 +51,10 @@ const DetailPage = () => {
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: '#fafbfc' }}>
       <TopBar title={`차량 상세 정보 - ${Number}`} />
+      <KakaoMapScript />
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40, }}>
-        <Card style={{ width: 800, minWidth: 320, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+        {/* 상세 정보 */}
+        <Card style={{ width: 800, minWidth: 320, height: 'fit-content', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
           <CardContent style={{margin: '35px 0px'}}>
             <div style={{ fontWeight: 700, fontSize: 20, marginBottom: 24 }}>
               차량 정보
@@ -132,6 +136,13 @@ const DetailPage = () => {
                 </Button>
               </div>
             )}
+          </CardContent>
+        </Card>
+
+        {/* 지도 */}
+        <Card style={{ width: 500, minWidth: 320, height: 'fit-content' }}>
+          <CardContent style={{margin: '35px 0px'}}>
+            <CarLocationMap />
           </CardContent>
         </Card>
       </div>
