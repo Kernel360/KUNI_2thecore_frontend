@@ -20,11 +20,10 @@ const mockDetail = {
 };
 
 const DetailPage = () => {
-
   const router = useRouter();
   const { Number, brand, model, status, setDetail } = useDetailStore();
-
   const detailChange = setDetailChangeStore(state => state.detailChange);
+  const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
   // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리
   const safeStatus = status ?? '대기중';
 
@@ -37,7 +36,6 @@ const DetailPage = () => {
         brand: newBrand,
         model: newModel,
         status,
-        location,
       });
     } else {
       setDetail({
@@ -45,12 +43,10 @@ const DetailPage = () => {
         brand,
         model,
         status,
-        location,
         [field]: value,
       });
     }
   };
-
 
   const handleSave = () => {
     // 여기에 실제 저장 로직을 추가할 수 있습니다
@@ -67,15 +63,24 @@ const DetailPage = () => {
     router.push('/search');
   };
 
-
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: '#fafbfc' }}>
       <TopBar title={`차량 상세 정보 - ${Number}`} />
       <KakaoMapScript />
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40, }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}>
         {/* 상세 정보 */}
-        <Card style={{ width: 800, minWidth: 320, height: 'fit-content', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-          <CardContent style={{margin: '35px 0px'}}>
+        <Card
+          style={{
+            width: 800,
+            minWidth: 320,
+            height: 'fit-content',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <CardContent style={{ margin: '35px 0px' }}>
             <div style={{ fontWeight: 700, fontSize: 20, marginBottom: 24 }}>
               차량 정보
             </div>
@@ -176,7 +181,6 @@ const DetailPage = () => {
         {/* 지도 */}
         <Card style={{ width: 500, minWidth: 320, height: 'fit-content' }}>
           <CardContent style={{ margin: '35px 0px' }}>
-
             <CarLocationMap />
           </CardContent>
         </Card>
