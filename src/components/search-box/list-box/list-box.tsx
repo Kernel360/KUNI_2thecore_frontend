@@ -7,7 +7,17 @@ import { useRouter } from 'next/navigation';
 import { useDetailStore } from '@/store/detail-store';
 import { setDetailChangeStore } from '@/store/detail-change';
 import IconButton from '@/components/icon-button/icon-button';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 interface ListBoxProps {
   num: string;
@@ -16,14 +26,10 @@ interface ListBoxProps {
   status: string;
 }
 
-const ListBox: React.FC<ListBoxProps> = ({
-  num,
-  model,
-  brand,
-  status,
-}) => {
+const ListBox: React.FC<ListBoxProps> = ({ num, model, brand, status }) => {
   const setDetail = useDetailStore(state => state.setDetail);
   const router = useRouter();
+  const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
 
   const handleClick = () => {
@@ -37,6 +43,8 @@ const ListBox: React.FC<ListBoxProps> = ({
     router.push('/detail');
   };
 
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 이벤트 버블링 방지
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation(); // 이벤트 버블링 방지
     setDetail({
@@ -82,6 +90,46 @@ const ListBox: React.FC<ListBoxProps> = ({
         </AlertDialogContent>
       </AlertDialog>
     )
+  }
+
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 이벤트 버블링 방지
+    alert(`삭제됨: ${num}`);
+  };
+
+  function AlertDialogDemo() {
+    return (
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <IconButton iconType="delete" onClick={e => e.stopPropagation()} />
+        </AlertDialogTrigger>
+        <AlertDialogContent className={styles.alertDialog}>
+          <AlertDialogHeader>
+            <AlertDialogTitle className={styles.alertTitle}>
+              정말 삭제하시겠습니까?
+            </AlertDialogTitle>
+            <AlertDialogDescription className={styles.alertDescription}>
+              삭제 후에는 복구할 수 없습니다.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className={styles.alertFooter}>
+            <AlertDialogCancel
+              className={styles.alertButton}
+              onClick={e => e.stopPropagation()}
+            >
+              취소
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className={styles.alertButton}
+              onClick={handleDelete}
+            >
+              삭제
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
   }
 
   return (
