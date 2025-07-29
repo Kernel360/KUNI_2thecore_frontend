@@ -1,28 +1,15 @@
 'use client'
 
 import TopBar from '@/components/ui/topBar';
-import React, {useState} from 'react';
+import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import IconButton from '@/components/icon-button/icon-button';
 
-interface Emulator {
-    deviceId: string;
-    carNumber: string;
-    emulatorStatus: string; //'ON' | 'OFF'
-  }
-
-const handleDelete = (e: React.MouseEvent) => {
-    alert("에뮬레이터가 삭제되었습니다.");
-  };
-  
 const dummyEmuls = [
-    { deviceId: "68fd0215-6a96-11f0-aaf3-0a8c035f5c3b", carNumber: "32가1234", emulatorStatus: "OFF" },
-    { deviceId: "68fd01f8-6a96-11f0-aaf3-0a8c035f5c3b", carNumber: "73미1231", emulatorStatus: "ON" },
-    { deviceId: "68fd01d7-6a96-11f0-aaf3-0a8c035f5c3b", carNumber: "12가5129", emulatorStatus: "OFF" },
-    { deviceId: "68fd01b2-6a96-11f0-aaf3-0a8c035f5c3b", carNumber: "12가5126", emulatorStatus: "ON" },
-    { deviceId: "68fd0192-6a96-11f0-aaf3-0a8c035f5c3b", carNumber: "12가5123", emulatorStatus: "OFF" }
+    { carNumber: '12가 3456', emulatorId: 'EMU001', emulatorStatus: 'on' },
+    { carNumber: '34나 5678', emulatorId: 'EMU002', emulatorStatus: 'on' },
+    { carNumber: '56다 7890', emulatorId: 'EMU003', emulatorStatus: 'off' },
 ];
 
 const CarEmulNumberSearchBox = () => {
@@ -35,7 +22,7 @@ const CarEmulNumberSearchBox = () => {
                 display: "flex", flexDirection: "row", alignItems: "center",
                 justifyContent: "center", width: "100%", marginTop: "21px",
             }}>
-                <Input type="text" placeholder="차량 번호 (예: 11가 1111)" style={{
+                <Input type="text" placeholder="차량 번호" style={{
                     width: "80%", height: "38.5px",
                     backgroundColor: "white",
                 }} />
@@ -50,7 +37,7 @@ const CarEmulNumberSearchBox = () => {
                 display: "flex", flexDirection: "row", alignItems: "center",
                 justifyContent: "center", width: "100%", marginTop: "21px",
             }}>
-                <Input type="text" placeholder="새 에뮬레이터를 등록하려면 차량 번호를 이곳에 입력해주세요. (예: 11가 1111)" style={{
+                <Input type="text" placeholder="새 에뮬레이터를 등록하려면 차량 번호를 이곳에 입력해주세요." style={{
                     width: "80%", height: "38.5px",
                     backgroundColor: "white",
                 }} />
@@ -83,12 +70,12 @@ export default function Emulator() {
                 </TableHeader>
                 <TableBody>
                     {dummyEmuls.map((emul) => (
-                        <TableRow key={emul.deviceId}>
+                        <TableRow key={emul.emulatorId}>
                             <TableCell>
-                                <IconButton iconType="delete" onClick={handleDelete} />
+                                {/* iconButton */}
                             </TableCell>
                             <TableCell className="font-medium">{emul.carNumber}</TableCell>
-                            <TableCell>{emul.deviceId}</TableCell>
+                            <TableCell>{emul.emulatorId}</TableCell>
                             <TableCell>{emul.emulatorStatus.toUpperCase()}</TableCell>
                         </TableRow>
                     ))}

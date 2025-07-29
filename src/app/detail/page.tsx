@@ -2,15 +2,12 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import TopBar from '@/components/ui/topBar';
 import { useDetailStore } from '@/store/detail-store';
 import { Input } from '@/components/ui/input';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { Detail } from '@/store/detail-store';
 import { Button } from '@/components/ui/button';
-import KakaoMapScript from '@/components/map/kakao-map-script';
-import CarLocationMap from '@/components/map/car-location-map';
 
 const mockDetail = {
   speed: 45,
@@ -19,9 +16,10 @@ const mockDetail = {
 };
 
 const DetailPage = () => {
-  const { Number, brand, model, status, location, setDetail } =
+  const { Number, brand, model, status,  setDetail } =
     useDetailStore();
   const detailChange = setDetailChangeStore(state => state.detailChange);
+  const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
   // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리
   const safeStatus = status ?? '대기중';
 
@@ -34,7 +32,6 @@ const DetailPage = () => {
         brand: newBrand,
         model: newModel,
         status,
-        location,
       });
     } else {
       setDetail({
@@ -42,19 +39,28 @@ const DetailPage = () => {
         brand,
         model,
         status,
-        location,
         [field]: value,
       });
     }
   };
 
+  const handleSave = () => {
+    // 여기에 실제 저장 로직을 추가할 수 있습니다
+    // 예: API 호출, 데이터베이스 업데이트 등
+    console.log('저장된 데이터:', { Number, brand, model, status, location });
+    
+    // 편집 모드 종료
+    setDetailChange(false);
+    
+    // 성공 메시지 표시 (선택사항)
+    alert('차량 정보가 성공적으로 저장되었습니다.');
+  };
+
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: '#fafbfc' }}>
       <TopBar title={`차량 상세 정보 - ${Number}`} />
-      <KakaoMapScript />
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40, }}>
-        {/* 상세 정보 */}
-        <Card style={{ width: 800, minWidth: 320, height: 'fit-content', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+        <Card style={{ width: 800, minWidth: 320, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
           <CardContent style={{margin: '35px 0px'}}>
             <div style={{ fontWeight: 700, fontSize: 20, marginBottom: 24 }}>
               차량 정보
@@ -136,13 +142,6 @@ const DetailPage = () => {
                 </Button>
               </div>
             )}
-          </CardContent>
-        </Card>
-
-        {/* 지도 */}
-        <Card style={{ width: 500, minWidth: 320, height: 'fit-content' }}>
-          <CardContent style={{margin: '35px 0px'}}>
-            <CarLocationMap />
           </CardContent>
         </Card>
       </div>
