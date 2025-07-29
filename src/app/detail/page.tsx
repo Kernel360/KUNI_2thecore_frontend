@@ -18,6 +18,10 @@ const mockDetail = {
   drive_dist: '45,678 km',
 };
 
+const handleSave = () => {
+  console.log('save');
+};
+
 const DetailPage = () => {
   const { Number, brand, model, status, location, setDetail } =
     useDetailStore();
@@ -120,7 +124,7 @@ const DetailPage = () => {
                   확인
                 </Button>
                 <Button 
-                  onClick={() => setDetailChange(false)}
+                  onClick={() => setDetailChangeStore(false)}
                   style={{
                     backgroundColor: '#6c757d',
                     color: 'white',

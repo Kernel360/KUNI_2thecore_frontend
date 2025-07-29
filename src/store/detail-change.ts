@@ -9,5 +9,5 @@ interface DetailChange {
 
 export const setDetailChangeStore = create<DetailChange>(set => ({
   detailChange: false, // 기본값을 false로 설정
-  setDetailChange: type => set({ detailChange: type }),
+  setDetailChange: (type: DetailChangeType) => set({ detailChange: type }),
 }));
