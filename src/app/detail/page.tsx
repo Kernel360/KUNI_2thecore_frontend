@@ -22,6 +22,7 @@ const mockDetail = {
 const DetailPage = () => {
   const router = useRouter();
   const { carNumber, brand, model, status, setDetail } = useDetailStore();
+
   const detailChange = setDetailChangeStore(state => state.detailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
   // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리
