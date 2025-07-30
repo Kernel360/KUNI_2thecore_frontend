@@ -11,80 +11,69 @@ import { Button } from '../ui/button';
 
 const dummyCars = [
   {
-    num: '12가 1234',
+    carNumber: '12가 1234',
     brand: '현대',
     model: '소나타',
-    location: '서울',
     status: '운행중',
   },
   {
-    num: '23나 2345',
+    carNumber: '23나 2345',
     brand: '기아',
     model: 'K5',
-    location: '동작구',
     status: '대기중',
   },
   {
-    num: '34라 3456',
+    carNumber: '34라 3456',
     brand: '삼성',
     model: 'SM5',
-    location: '국민대',
     status: '수리중',
   },
   {
-    num: '34라 3456',
+    carNumber: '34라 3456',
     brand: '삼성',
     model: 'SM5',
-    location: '국민대',
     status: '수리중',
   },
   {
-    num: '34라 3456',
+    carNumber: '34라 3456',
     brand: '삼성',
     model: 'SM5',
-    location: '국민대',
     status: '수리중',
   },
   {
-    num: '12가 1234',
+    carNumber: '12가 1234',
     brand: '현대',
     model: '소나타',
-    location: '서울',
     status: '운행중',
   },
   {
-    num: '34라 3456',
+    carNumber: '34라 3456',
     brand: '삼성',
     model: 'SM5',
-    location: '국민대',
     status: '수리중',
   },
   {
-    num: '34라 3456',
+    carNumber: '34라 3456',
     brand: '삼성',
     model: 'SM5',
-    location: '국민대',
     status: '수리중',
   },
   {
-    num: '12가 1234',
+    carNumber: '12가 1234',
     brand: '현대',
     model: '소나타',
-    location: '서울',
     status: '운행중',
   },
   {
-    num: '34라 3456',
+    carNumber: '34라 3456',
     brand: '삼성',
     model: 'SM5',
-    location: '국민대',
     status: '수리중',
   },
   {
-    num: '23나 2345',
+    carNumber: '23나 2345',
     brand: '기아',
     model: 'K5',
-    location: '동작구',
     status: '대기중',
   },
 ];
@@ -116,7 +105,7 @@ const SearchBox = () => {
           {dummyCars.map((car, idx) => (
             <ListBox
               key={idx}
-              num={car.num}
+              carNumber={car.carNumber}
               brand={car.brand}
               model={car.model}
               status={car.status}

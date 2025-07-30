@@ -6,47 +6,107 @@ import ButtonStyles from '../search-filter.module.css';
 import { useRouter } from 'next/navigation';
 import { useDetailStore } from '@/store/detail-store';
 import { setDetailChangeStore } from '@/store/detail-change';
-import { Button } from '../../ui/button';
+import IconButton from '@/components/icon-button/icon-button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 interface ListBoxProps {
-  num: string;
+  carNumber: string;
   brand: string;
   model: string;
+  location: string;
   status: string;
 }
 
+const allowedStatus = ['운행중', '대기중', '수리중'] as const;
+type StatusType = (typeof allowedStatus)[number];
+
 const ListBox: React.FC<ListBoxProps> = ({
-  num,
+  carNumber,
   model,
   brand,
+  location,
   status,
 }) => {
   const setDetail = useDetailStore(state => state.setDetail);
   const router = useRouter();
+  const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
+
+  const safeStatus: StatusType = allowedStatus.includes(status as StatusType)
+    ? (status as StatusType)
+    : '대기중';
 
   const handleClick = () => {
     setDetail({
-      Number: num,
+      carNumber: carNumber,
       brand,
       model,
-      status: status as '운행중' | '대기중' | '수리중',
+      status: safeStatus,
     });
     setDetailChange(false);
     router.push('/detail');
   };
 
-  const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
-
-  const handleButtonClick = () => {
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setDetail({
-      Number: num,
+      carNumber: carNumber,
       brand,
       model,
-      status: status as '운행중' | '대기중' | '수리중',
+      status: safeStatus,
     });
     setDetailChange(true);
     router.push('/detail');
   };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    alert(`삭제됨: ${carNumber}`);
+  };
+
+  function AlertDialogDemo() {
+    return (
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <IconButton iconType="delete" onClick={e => e.stopPropagation()} />
+        </AlertDialogTrigger>
+        <AlertDialogContent className={styles.alertDialog}>
+          <AlertDialogHeader>
+            <AlertDialogTitle className={styles.alertTitle}>
+              정말 삭제하시겠습니까?
+            </AlertDialogTitle>
+            <AlertDialogDescription className={styles.alertDescription}>
+              삭제 후에는 복구할 수 없습니다.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className={styles.alertFooter}>
+            <AlertDialogCancel
+              className={styles.alertButton}
+              onClick={e => e.stopPropagation()}
+            >
+              취소
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className={styles.alertButton}
+              onClick={handleDelete}
+            >
+              삭제
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
+  }
+
   return (
     <div
       className={styles.container}
@@ -54,27 +114,15 @@ const ListBox: React.FC<ListBoxProps> = ({
       style={{ cursor: 'pointer' }}
     >
       <div className={styles.info}>
-        <div className={styles.num}>{num}</div>
+        <div className={styles.num}>{carNumber}</div>
         <div className={styles.texts}>
-          {brand} {model}
+          {brand} {model} {location}
         </div>
       </div>
       <div>
-        <Button
-          onClick={e => {
-            e.stopPropagation(); // 이벤트 버블링 방지
-            handleButtonClick();
-          }}
-          className={ButtonStyles.searchButton}
-          style={{
-            height: '35px',
-            backgroundColor: '#3981f3',
-            marginRight: '30px',
-          }}
-        >
-          정보 수정
-        </Button>
-        <Status status={status as '운행중' | '대기중' | '수리중'} />
+        <IconButton iconType="edit" onClick={handleEdit} />
+        <AlertDialogDemo />
+        <Status status={safeStatus} />
       </div>
     </div>
   );

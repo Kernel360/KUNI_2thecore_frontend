@@ -1,10 +1,11 @@
 import { create } from 'zustand';
 
 export type Detail = {
-  Number: string;
+  carNumber: string;
   brand: string;
   model: string;
   status: '운행중' | '대기중' | '수리중';
+  location: string;
 };
 
 type DetailStore = Detail & {
@@ -12,9 +13,10 @@ type DetailStore = Detail & {
 };
 
 export const useDetailStore = create<DetailStore>(set => ({
-  Number: '',
+  carNumber: '',
   brand: '',
   model: '',
   status: '' as '운행중' | '대기중' | '수리중',
+  location: '',
   setDetail: detail => set(detail),
 }));
