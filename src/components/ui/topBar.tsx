@@ -26,7 +26,6 @@ export default function TopBar({ title }: TopBarProps) {
       >
         <h2
           style={{
-            margin: 0,
             textAlign: 'center',
             fontWeight: '600',
             fontSize: '20px',
