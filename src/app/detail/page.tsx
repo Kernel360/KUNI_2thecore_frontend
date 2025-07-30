@@ -14,7 +14,6 @@ import KakaoMapScript from '@/components/map/kakao-map-script';
 import CarLocationMap from '@/components/map/car-location-map';
 
 const mockDetail = {
-  speed: 45,
   year: '2022년',
   drive_dist: '45,678 km',
 };
