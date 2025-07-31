@@ -23,7 +23,6 @@ interface ListBoxProps {
   carNumber: string;
   brand: string;
   model: string;
-  location: string;
   status: string;
 }
 
@@ -34,7 +33,6 @@ const ListBox: React.FC<ListBoxProps> = ({
   carNumber,
   model,
   brand,
-  location,
   status,
 }) => {
   const setDetail = useDetailStore(state => state.setDetail);
@@ -116,7 +114,7 @@ const ListBox: React.FC<ListBoxProps> = ({
       <div className={styles.info}>
         <div className={styles.num}>{carNumber}</div>
         <div className={styles.texts}>
-          {brand} {model} {location}
+          {brand} {model}
         </div>
       </div>
       <div>
