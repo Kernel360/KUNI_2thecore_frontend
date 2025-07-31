@@ -1,20 +1,18 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import TopBar from '@/components/ui/topBar';
-import { useDetailStore } from '@/store/detail-store';
-import { Input } from '@/components/ui/input';
-import { setDetailChangeStore } from '@/store/detail-change';
-import { Detail } from '@/store/detail-store';
-import { Button } from '@/components/ui/button';
-import KakaoMapScript from '@/components/map/kakao-map-script';
+
 import CarLocationMap from '@/components/map/car-location-map';
+import KakaoMapScript from '@/components/map/kakao-map-script';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import TopBar from '@/components/ui/topBar';
+import { setDetailChangeStore } from '@/store/detail-change';
+import { Detail, useDetailStore } from '@/store/detail-store';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const mockDetail = {
-  speed: 45,
   year: '2022년',
   drive_dist: '45,678 km',
 };
@@ -22,7 +20,6 @@ const mockDetail = {
 const DetailPage = () => {
   const router = useRouter();
   const { carNumber, brand, model, status, setDetail } = useDetailStore();
-
   const detailChange = setDetailChangeStore(state => state.detailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
   // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리

@@ -1,11 +1,8 @@
-import * as React from 'react';
-
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -15,11 +12,26 @@ export function Dropdown() {
     <Select>
       <SelectTrigger
         className="w-[15%]"
-        style={{ backgroundColor: 'white', marginRight: '2%', border: '1.5px solid rgb(217, 217, 217)' }}
+        style={{
+          height: '44px',
+          backgroundColor: 'white',
+          marginRight: '2%',
+          borderRadius: '6px',
+          padding: '0 16px',
+          outline: '1.5px solid #bcbcbc',
+        }}
       >
         <SelectValue placeholder="전체 상태" className="bg-white" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent
+        position="popper"
+        className="z-[100] !absolute !top-auto !left-auto !transform-none !mt-1"
+        sideOffset={0}
+        style={{
+          position: 'absolute',
+          zIndex: 9999,
+        }}
+      >
         <SelectGroup>
           <SelectItem value="null">전체 상태</SelectItem>{' '}
           {/*백엔드로 보낼 때 "null"이 아니라 ""으로 보내야함 */}
