@@ -11,7 +11,11 @@ interface IconButtonProps {
   className?: string;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({ iconType, onClick, className }) => {
+const IconButton: React.FC<IconButtonProps> = ({
+  iconType,
+  onClick,
+  className,
+}) => {
   const getIconPath = () => {
     switch (iconType) {
       case 'edit':

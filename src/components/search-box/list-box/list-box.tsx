@@ -2,7 +2,6 @@
 
 import Status from '../status';
 import styles from './list-box.module.css';
-import ButtonStyles from '../search-filter.module.css';
 import { useRouter } from 'next/navigation';
 import { useDetailStore } from '@/store/detail-store';
 import { setDetailChangeStore } from '@/store/detail-change';
