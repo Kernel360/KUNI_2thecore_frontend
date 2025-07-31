@@ -1,5 +1,6 @@
 'use client';
 
+
 import CarLocationMap from '@/components/map/car-location-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import { Button } from '@/components/ui/button';
