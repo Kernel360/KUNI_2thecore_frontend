@@ -1,19 +1,18 @@
-import React from 'react';
-import { Button } from '../ui/button';
 import Link from 'next/link';
+import { Button } from '../ui/button';
 import styles from './menu-box.module.css';
 
-const MenuBox = () => {
+interface MenuBoxProps {
+  onOpenMapModal: () => void;
+}
+
+const MenuBox = ({ onOpenMapModal }: MenuBoxProps) => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'flex-start',
-        flexDirection: 'row',
-      }}
-    >
+    <div className={'flex justify-start flex-row'}>
       <div className={styles.greyBox}>
-        <Button className={styles.Button}>🗺️ 지도</Button>
+        <Button className={styles.Button} onClick={onOpenMapModal}>
+          🗺️ 지도 전체 화면
+        </Button>
         <Link href="/search">
           <Button className={styles.Button}>🚗 차량 검색</Button>
         </Link>
