@@ -204,7 +204,7 @@ const DetailPage = () => {
               flexDirection: 'column',
             }}
           >
-            <CarLocationMap />
+            <CarLocationMap width="100%" height="100%" />
           </CardContent>
         </Card>
       </div>
@@ -213,3 +213,4 @@ const DetailPage = () => {
 };
 
 export default DetailPage;
+//PR 오류 확인
