@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import styles from './map.module.css';
 
 interface MapProps {
   width: string;
@@ -58,11 +59,48 @@ export default function Map({ width, height, onLoad }: MapProps) {
   };
 
   return (
-    <div className="relative" style={{ width, height }}>
+    <div className={styles.map_wrap} style={{ width, height }}>
       <div
         ref={mapRef}
-        className="border border-gray-300 rounded-md mx-auto w-full h-full"
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
       ></div>
+
+      {/* 지도타입 컨트롤 */}
+      <div className={`${styles.custom_typecontrol} ${styles.radius_border}`}>
+        <span
+          className={mapType === 'roadmap' ? styles.selected_btn : styles.btn}
+          onClick={() => setMapTypeHandler('roadmap')}
+        >
+          지도
+        </span>
+        <span
+          className={mapType === 'skyview' ? styles.selected_btn : styles.btn}
+          onClick={() => setMapTypeHandler('skyview')}
+        >
+          스카이뷰
+        </span>
+      </div>
+
+      {/* 지도 확대, 축소 컨트롤 */}
+      <div className={`${styles.custom_zoomcontrol} ${styles.radius_border}`}>
+        <span onClick={zoomIn}>
+          <img
+            src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png"
+            alt="확대"
+          />
+        </span>
+        <span onClick={zoomOut}>
+          <img
+            src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"
+            alt="축소"
+          />
+        </span>
+      </div>
     </div>
   );
 }
