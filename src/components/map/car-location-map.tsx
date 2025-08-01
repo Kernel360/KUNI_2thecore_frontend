@@ -57,8 +57,8 @@ export default function CarLocationMap({
             setAddress(roadAddress);
 
             const content = `
-            <div style="padding: 10px;">
-              <h2 style="margin: 0 0 5px 0;">현재 위치</h2>
+            <div style="padding: 8px;">
+              <h4 style="margin: 0 0 5px 0;">현재 위치</h4>
               <p style="margin: 0; font-size: 12px;">${roadAddress}</p>
             </div>
           `;
