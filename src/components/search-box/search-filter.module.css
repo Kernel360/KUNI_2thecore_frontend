@@ -1,60 +1,53 @@
-/* 공통 버튼 스타일 */
-.searchButton {
+/* 공통 스타일 */
+.searchButton,
+.filterButton {
   width: 80px;
   height: 44px;
-  margin-left: 14px;
   background-color: #0070f3;
   color: white;
   font-size: 14px;
   font-weight: 500;
+
+  border-radius: 6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* 공통 입력 필드 스타일 */
-.searchInput {
-  height: 38.5px;
-  background-color: white;
-}
-
-/* number-search-box 전용 스타일 */
-.numberSearchContainer {
+/* 공통 컨테이너 스타일 */
+.numberSearchContainer,
+.filterContainer {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   width: 97%;
-  height: 80px;
-  margin: 8px 0px;
-  margin-top: 21px;
+  margin: 12px auto;
+  padding: 0 16px;
+  gap: 16px;
+}
+
+/* number-search-box 전용 스타일 */
+.numberSearchContainer {
+  margin-top: 20px;
 }
 
 .numberSearchInput {
-  width: 80%;
-  height: 38.5px;
+  flex: 1;
+  height: 44px;
   background-color: white;
+  border: 1.5px solid #d9d9d9;
+  border-radius: 6px;
+  padding: 0 16px;
 }
 
 /* filter-box 전용 스타일 */
-.filterContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  justify-content: center;
-  width: 97%;
-}
-
 .filterInput {
-  width: 62%;
-  height: 35.5px;
-  background-color: white;
-  padding-left: 22px;
-}
-
-.filterButton {
-  width: 80px;
+  flex: 1;
   height: 44px;
-  margin-left: 9px;
-  background-color: #0070f3;
-  color: white;
-  font-size: 14px;
-  font-weight: 500;
+  background-color: white;
+  border: 1.5px solid #d9d9d9;
+  border-radius: 6px;
+  padding: 0 16px;
 }

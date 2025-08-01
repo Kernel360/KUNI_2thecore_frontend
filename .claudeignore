@@ -95,4 +95,8 @@ yarn.lock
 pnpm-lock.yaml
 
 # TypeScript cache
-*.tsbuildinfo 
+*.tsbuildinfo
+
+# Claude Code specific
+.claude
+.cursorrules 

@@ -1,0 +1,59 @@
+# Claude Code Configuration
+
+# Project Information
+project_name: "KUNI_2thecore_frontend"
+project_type: "Next.js React TypeScript"
+framework: "Next.js 15"
+language: "TypeScript"
+styling: "Tailwind CSS"
+
+# Code Style Preferences
+code_style:
+  - "Use TypeScript for all new files"
+  - "Use functional components with hooks"
+  - "Use Tailwind CSS for styling"
+  - "Follow Next.js 15 conventions"
+  - "Use shadcn/ui components when available"
+  - "Prefer single quotes"
+  - "Use 2 spaces for indentation"
+  - "Use camelCase for variables and functions"
+  - "Use PascalCase for components"
+
+# File Organization
+file_structure:
+  - "Components in src/components/"
+  - "Pages in src/app/"
+  - "Hooks in src/hooks/"
+  - "Store in src/store/"
+  - "Types in src/types/"
+  - "Utils in src/utils.ts"
+
+# Dependencies to use
+preferred_dependencies:
+  - "zustand for state management"
+  - "react-hook-form for forms"
+  - "zod for validation"
+  - "lucide-react for icons"
+  - "radix-ui for UI components"
+
+# Code Generation Rules
+code_generation:
+  - "Always include proper TypeScript types"
+  - "Use proper error handling"
+  - "Include accessibility attributes"
+  - "Follow React best practices"
+  - "Use proper imports and exports"
+  - "Include JSDoc comments for complex functions"
+
+# Testing Preferences
+testing:
+  - "Prefer unit tests for utilities"
+  - "Use React Testing Library for component tests"
+  - "Mock external dependencies"
+
+# Performance Considerations
+performance:
+  - "Use React.memo for expensive components"
+  - "Optimize re-renders with useMemo and useCallback"
+  - "Use proper key props for lists"
+  - "Lazy load components when appropriate" 
