@@ -1,7 +1,15 @@
 import React from 'react';
 
-const page = () => {
-  return <div></div>;
-};
+'use client';
 
-export default page;
+import TopBar from '@/components/ui/topBar';
+import SearchBox from '@/components/search-box/search-box';
+
+export default function History() {
+  return (
+    <div>
+      <TopBar title="주행 기록"></TopBar>
+      <SearchBox />
+    </div>
+  );
+}
