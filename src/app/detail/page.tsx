@@ -213,4 +213,3 @@ const DetailPage = () => {
 };
 
 export default DetailPage;
-//PR 오류 확인
