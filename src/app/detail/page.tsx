@@ -204,7 +204,7 @@ const DetailPage = () => {
               flexDirection: 'column',
             }}
           >
-            <CarLocationMap />
+            <CarLocationMap width="100%" height="100%" />
           </CardContent>
         </Card>
       </div>
