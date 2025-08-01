@@ -2,6 +2,7 @@
 
 import CarClustererMap from '@/components/map/car-clusterer-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
+import MapModal from '@/components/map/map-modal';
 import MenuBox from '@/components/menu-box/menu-box';
 import StatusContainer from '@/components/status-box/status-container';
 import TopBar from '@/components/ui/topBar';
@@ -11,6 +12,8 @@ export default function Home() {
   const [carStatusFilter, setCarStatusFilter] = useState<
     'null' | '운행중' | '수리중' | '대기중'
   >('null');
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+
   return (
     <div className="flex flex-col h-screen">
       <TopBar title="차량 관제 시스템"></TopBar>
@@ -37,7 +40,7 @@ export default function Home() {
             padding: '0px 60px 0px 15px',
           }}
         >
-          <MenuBox />
+          <MenuBox onOpenMapModal={() => setIsMapModalOpen(true)} />
         </div>
         <div style={{ position: 'relative', width: '98%', height: '500px' }}>
           <KakaoMapScript />
@@ -48,6 +51,9 @@ export default function Home() {
           />
         </div>
       </div>
+      <MapModal
+        isOpen={isMapModalOpen}
+        onClose={() => setIsMapModalOpen(false)}
     </div>
   );
 }
