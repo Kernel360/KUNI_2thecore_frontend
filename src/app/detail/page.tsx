@@ -1,6 +1,5 @@
 'use client';
 
-
 import CarLocationMap from '@/components/map/car-location-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import { Button } from '@/components/ui/button';
@@ -70,7 +69,16 @@ const DetailPage = () => {
     <div style={{ width: '100%', minHeight: '100vh', background: '#fafbfc' }}>
       <TopBar title={`차량 상세 정보 - ${carNumber}`} />
       <KakaoMapScript />
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '800px 400px',
+          justifyContent: 'center',
+          marginTop: 40,
+          gap: 20,
+          alignItems: 'stretch',
+        }}
+      >
         {/* 상세 정보 */}
         <Card
           style={{
@@ -184,14 +192,16 @@ const DetailPage = () => {
           style={{
             width: 400,
             minWidth: 320,
-            height: 'fit-content',
-            marginLeft: 20,
+            height: '100%',
           }}
         >
           <CardContent
             style={{
               boxSizing: 'border-box',
               minHeight: '300px',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
             <CarLocationMap />
