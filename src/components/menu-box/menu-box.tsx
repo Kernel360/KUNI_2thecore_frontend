@@ -6,7 +6,7 @@ interface MenuBoxProps {
   onOpenMapModal: () => void;
 }
 
-const MenuBox = ({ onOpenMapModal }): MenuBoxProps => {
+const MenuBox = ({ onOpenMapModal }: MenuBoxProps) => {
   return (
     <div className={'flex justify-start flex-row'}>
       <div className={styles.greyBox}>

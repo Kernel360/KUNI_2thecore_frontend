@@ -15,45 +15,48 @@ export default function Home() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
 
   return (
-    <div className="flex flex-col h-screen">
-      <TopBar title="차량 관제 시스템"></TopBar>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '250px 1fr',
-          gridTemplateRows: 'auto 1fr',
-          gap: '16px',
-          padding: '16px',
-          height: '100%',
-        }}
-      >
-        <div style={{ gridColumn: '1 / span 2' }}>
-          <StatusContainer
-            carStatusFilter={carStatusFilter}
-            setCarStatusFilter={setCarStatusFilter}
-          />
-        </div>
+    <>
+      <div className="flex flex-col h-screen">
+        <TopBar title="차량 관제 시스템"></TopBar>
         <div
           style={{
-            backgroundColor: '#f6f6f6',
-            zIndex: 100,
-            padding: '0px 60px 0px 15px',
+            display: 'grid',
+            gridTemplateColumns: '250px 1fr',
+            gridTemplateRows: 'auto 1fr',
+            gap: '16px',
+            padding: '16px',
+            height: '100%',
           }}
         >
-          <MenuBox onOpenMapModal={() => setIsMapModalOpen(true)} />
-        </div>
-        <div style={{ position: 'relative', width: '98%', height: '500px' }}>
-          <KakaoMapScript />
-          <CarClustererMap
-            width="100%"
-            height="100%"
-            carStatusFilter={carStatusFilter}
-          />
+          <div style={{ gridColumn: '1 / span 2' }}>
+            <StatusContainer
+              carStatusFilter={carStatusFilter}
+              setCarStatusFilter={setCarStatusFilter}
+            />
+          </div>
+          <div
+            style={{
+              backgroundColor: '#f6f6f6',
+              zIndex: 100,
+              padding: '0px 60px 0px 15px',
+            }}
+          >
+            <MenuBox onOpenMapModal={() => setIsMapModalOpen(true)} />
+          </div>
+          <div className="relative w-[98%] h-[500px] rounded-[8px] overflow-hidden">
+            <KakaoMapScript />
+            <CarClustererMap
+              width="100%"
+              height="100%"
+              carStatusFilter={carStatusFilter}
+            />
+          </div>
         </div>
       </div>
       <MapModal
         isOpen={isMapModalOpen}
         onClose={() => setIsMapModalOpen(false)}
-    </div>
+      />
+    </>
   );
 }
