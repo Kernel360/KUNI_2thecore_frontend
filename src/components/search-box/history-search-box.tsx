@@ -1,9 +1,15 @@
 'use client';
 
-import { FromCalendar } from './calendar/from-calendar';
-import { ToCalendar } from './calendar/to-calendar';
+import { Button } from '../ui/button';
 import BrandFilterBox from './filter-box';
 import NumberSearchBox from './number-search-box';
+import { RangeCalendar } from './range-calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import styles from './search-filter.module.css';
 
 const HistorySearchBox = () => {
   return (
@@ -20,9 +26,17 @@ const HistorySearchBox = () => {
         }}
       >
         <NumberSearchBox />
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline">조회 기간</Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80">
+            {' '}
+            <RangeCalendar />
+          </PopoverContent>
+        </Popover>
+        <Button className={styles.searchButton}>검색</Button>
         <BrandFilterBox />
-        <FromCalendar />
-        <ToCalendar />
       </div>
     </>
   );
