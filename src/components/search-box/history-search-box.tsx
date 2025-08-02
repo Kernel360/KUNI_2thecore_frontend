@@ -17,7 +17,7 @@ const HistorySearchBox = () => {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr',
+          gridTemplateColumns: '1fr 1fr 1fr',
           gap: '4px',
           justifyContent: 'center',
           alignItems: 'center',
@@ -37,6 +37,7 @@ const HistorySearchBox = () => {
         </Popover>
         <Button className={styles.searchButton}>검색</Button>
         <BrandFilterBox />
+        <Button className={styles.searchButton}>엑셀 다운</Button>
       </div>
     </>
   );

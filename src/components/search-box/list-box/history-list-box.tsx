@@ -9,6 +9,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import Status from '../status';
+import styles from './list-box.module.css';
 
 // type HistoryList {
 //   carNumber: string;
@@ -59,95 +60,97 @@ const dummyHis = [
 
 const HistoryListBox = () => {
   return (
-    <Table style={{ margin: '0 auto', maxWidth: '1000px' }}>
-      <TableHeader>
-        <TableRow>
-          <TableHead
-            style={{
-              width: '150px',
-              borderBottom: '1px solid #e2e2e2',
-              padding: '10px',
-            }}
-          >
-            차량번호
-          </TableHead>
-          <TableHead
-            style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-          >
-            렌트시작일
-          </TableHead>
-          <TableHead
-            style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-          >
-            렌트종료일
-          </TableHead>
-          <TableHead
-            style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-          >
-            출발지
-          </TableHead>
-          <TableHead
-            style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-          >
-            도착지
-          </TableHead>
-          <TableHead
-            style={{ width: '100px', borderBottom: '1px solid #e2e2e2' }}
-          >
-            주행거리
-          </TableHead>
-          <TableHead
-            style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-          >
-            상태
-          </TableHead>
-          <TableHead
-            style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-          >
-            특이사항
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {dummyHis.map(log => (
-          <TableRow key={log.carNumber}>
-            <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
-              {log.carNumber}
-            </TableCell>
-            <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
-              {log.rentDate}
-            </TableCell>
-            <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
-              {log.returnDate}
-            </TableCell>
-            <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
-              {log.startLocation}
-            </TableCell>
-            <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
-              {log.endLocation}
-            </TableCell>
-            <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
-              {log.totalDist}
-            </TableCell>
-            <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
-              <div
-                style={{
-                  display: 'inline-flex', // inline-flex로 내부 콘텐츠 크기만큼만 차지
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: '5px'
-                }}
-              >
-                <Status status={log.status as StatusType} />
-              </div>
-            </TableCell>
-            <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
-              {log.memo}
-            </TableCell>
+    <div className={styles.container}>
+      <Table style={{ margin: '0 auto', maxWidth: '1000px' }}>
+        <TableHeader>
+          <TableRow>
+            <TableHead
+              style={{
+                width: '150px',
+                borderBottom: '1px solid #e2e2e2',
+                padding: '10px',
+              }}
+            >
+              차량번호
+            </TableHead>
+            <TableHead
+              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
+            >
+              렌트시작일
+            </TableHead>
+            <TableHead
+              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
+            >
+              렌트종료일
+            </TableHead>
+            <TableHead
+              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
+            >
+              출발지
+            </TableHead>
+            <TableHead
+              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
+            >
+              도착지
+            </TableHead>
+            <TableHead
+              style={{ width: '100px', borderBottom: '1px solid #e2e2e2' }}
+            >
+              주행거리
+            </TableHead>
+            <TableHead
+              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
+            >
+              상태
+            </TableHead>
+            <TableHead
+              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
+            >
+              특이사항
+            </TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {dummyHis.map(log => (
+            <TableRow key={log.carNumber}>
+              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+                {log.carNumber}
+              </TableCell>
+              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+                {log.rentDate}
+              </TableCell>
+              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+                {log.returnDate}
+              </TableCell>
+              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+                {log.startLocation}
+              </TableCell>
+              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+                {log.endLocation}
+              </TableCell>
+              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+                {log.totalDist}
+              </TableCell>
+              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+                <div
+                  style={{
+                    display: 'inline-flex', // inline-flex로 내부 콘텐츠 크기만큼만 차지
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: '5px',
+                  }}
+                >
+                  <Status status={log.status as StatusType} />
+                </div>
+              </TableCell>
+              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+                {log.memo}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 
