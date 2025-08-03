@@ -16,9 +16,8 @@ const MenuBox = ({ onOpenMapModal }: MenuBoxProps) => {
         <Link href="/search">
           <Button className={styles.Button}>🚗 차량 검색</Button>
         </Link>
-        <Button className={styles.Button}>📊 주행 기록 및 경로</Button>
         <Link href="/history">
-          <Button className={styles.Button}>⚒️ 차량 관리</Button>
+          <Button className={styles.Button}>📊 주행 기록</Button>
         </Link>
       </div>
     </div>
