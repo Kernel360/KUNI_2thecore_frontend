@@ -6,12 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import TopBar from '@/components/ui/topBar';
+import TopBar from '@/components/ui/topBar';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { Detail, useDetailStore } from '@/store/detail-store';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import styles from './detail.module.css';
-
 const mockDetail = {
   year: '2022년',
   drive_dist: '45,678 km',
@@ -20,10 +20,16 @@ const mockDetail = {
 const DetailPage = () => {
   const router = useRouter();
   const { carNumber, brand, model, status, setDetail } = useDetailStore();
+  const { carNumber, brand, model, status, setDetail } = useDetailStore();
   const detailChange = setDetailChangeStore(state => state.detailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
   // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리
   const safeStatus = status ?? '대기중';
+
+  useEffect(() => {
+    const checkMap = () => {};
+    checkMap();
+  }, [detailChange]);
 
   useEffect(() => {
     const checkMap = () => {};
@@ -36,12 +42,14 @@ const DetailPage = () => {
       const newModel = rest.join(' ');
       setDetail({
         carNumber,
+        carNumber,
         brand: newBrand,
         model: newModel,
         status,
       });
     } else {
       setDetail({
+        carNumber,
         carNumber,
         brand,
         model,
@@ -56,11 +64,15 @@ const DetailPage = () => {
     // 예: API 호출, 데이터베이스 업데이트 등
     console.log('저장된 데이터:', { carNumber, brand, model, status });
 
+    console.log('저장된 데이터:', { carNumber, brand, model, status });
+
     // 편집 모드 종료
     setDetailChange(false);
 
+
     // 성공 메시지 표시 (선택사항)
     alert('차량 정보가 성공적으로 저장되었습니다.');
+
 
     // search 페이지로 라우트
     router.push('/search');
@@ -68,6 +80,7 @@ const DetailPage = () => {
 
   return (
     <div className={styles.pageContainer}>
+      <TopBar title={`차량 상세 정보 - ${carNumber}`} />
       <TopBar title={`차량 상세 정보 - ${carNumber}`} />
       <KakaoMapScript />
       <div className={styles.contentGrid}>
@@ -79,12 +92,15 @@ const DetailPage = () => {
             </div>
             <div className={styles.formGrid}>
               <label className={styles.label}>차량 번호</label>
+
               <Input
                 className={styles.input}
+                value={carNumber}
                 value={carNumber}
                 readOnly={!detailChange}
                 onChange={
                   detailChange
+                    ? e => handleChange('carNumber', e.target.value)
                     ? e => handleChange('carNumber', e.target.value)
                     : undefined
                 }
