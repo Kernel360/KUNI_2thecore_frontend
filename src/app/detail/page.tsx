@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import TopBar from '@/components/ui/topBar';
-import TopBar from '@/components/ui/topBar';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { Detail, useDetailStore } from '@/store/detail-store';
 import { useRouter } from 'next/navigation';
@@ -19,7 +18,6 @@ const mockDetail = {
 
 const DetailPage = () => {
   const router = useRouter();
-  const { carNumber, brand, model, status, setDetail } = useDetailStore();
   const { carNumber, brand, model, status, setDetail } = useDetailStore();
   const detailChange = setDetailChangeStore(state => state.detailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
@@ -42,14 +40,12 @@ const DetailPage = () => {
       const newModel = rest.join(' ');
       setDetail({
         carNumber,
-        carNumber,
         brand: newBrand,
         model: newModel,
         status,
       });
     } else {
       setDetail({
-        carNumber,
         carNumber,
         brand,
         model,
@@ -69,10 +65,8 @@ const DetailPage = () => {
     // 편집 모드 종료
     setDetailChange(false);
 
-
     // 성공 메시지 표시 (선택사항)
     alert('차량 정보가 성공적으로 저장되었습니다.');
-
 
     // search 페이지로 라우트
     router.push('/search');
@@ -81,26 +75,21 @@ const DetailPage = () => {
   return (
     <div className={styles.pageContainer}>
       <TopBar title={`차량 상세 정보 - ${carNumber}`} />
-      <TopBar title={`차량 상세 정보 - ${carNumber}`} />
       <KakaoMapScript />
       <div className={styles.contentGrid}>
         {/* 상세 정보 */}
         <Card className={styles.detailCard}>
           <CardContent className={styles.cardContent}>
-            <div className={styles.title}>
-              차량 정보
-            </div>
+            <div className={styles.title}>차량 정보</div>
             <div className={styles.formGrid}>
               <label className={styles.label}>차량 번호</label>
 
               <Input
                 className={styles.input}
                 value={carNumber}
-                value={carNumber}
                 readOnly={!detailChange}
                 onChange={
                   detailChange
-                    ? e => handleChange('carNumber', e.target.value)
                     ? e => handleChange('carNumber', e.target.value)
                     : undefined
                 }
@@ -128,18 +117,23 @@ const DetailPage = () => {
                 }
               />
               <label className={styles.label}>차량 연식</label>
-              <Input className={styles.input} value={mockDetail.year} readOnly={true} />
+              <Input
+                className={styles.input}
+                value={mockDetail.year}
+                readOnly={true}
+              />
               <label className={styles.label}>주행거리</label>
-              <Input className={styles.input} value={mockDetail.drive_dist} readOnly={true} />
+              <Input
+                className={styles.input}
+                value={mockDetail.drive_dist}
+                readOnly={true}
+              />
             </div>
 
             {/* 확인 버튼 - detailChange가 true일 때만 표시 */}
             {detailChange && (
               <div className={styles.buttonContainer}>
-                <Button
-                  className={styles.confirmButton}
-                  onClick={handleSave}
-                >
+                <Button className={styles.confirmButton} onClick={handleSave}>
                   확인
                 </Button>
                 <Button
