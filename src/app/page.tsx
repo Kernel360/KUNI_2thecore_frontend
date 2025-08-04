@@ -18,29 +18,14 @@ export default function Home() {
     <>
       <div className="flex flex-col h-screen">
         <TopBar title="차량 관제 시스템"></TopBar>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '250px 1fr',
-            gridTemplateRows: 'auto 1fr',
-            gap: '16px',
-            padding: '16px',
-            height: '100%',
-          }}
-        >
-          <div style={{ gridColumn: '1 / span 2' }}>
+        <div className="grid grid-cols-[250px_1fr] grid-rows-[auto_1fr] gap-4 p-4 h-full">
+          <div className="col-span-2">
             <StatusContainer
               carStatusFilter={carStatusFilter}
               setCarStatusFilter={setCarStatusFilter}
             />
           </div>
-          <div
-            style={{
-              backgroundColor: '#f6f6f6',
-              zIndex: 100,
-              padding: '0px 60px 0px 15px',
-            }}
-          >
+          <div className="bg-gray-100 z-[100] py-0 pr-[60px] pl-[15px]">
             <MenuBox onOpenMapModal={() => setIsMapModalOpen(true)} />
           </div>
           <div className="relative w-[98%] h-[500px] rounded-[8px] overflow-hidden">

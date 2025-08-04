@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/table';
 import TopBar from '@/components/ui/topBar';
 import React from 'react';
+import styles from './emulator.module.css';
 
 interface Emulator {
   deviceId: string;
@@ -54,79 +55,24 @@ const dummyEmuls = [
 
 const CarEmulNumberSearchBox = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        marginBottom: '21px',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          marginTop: '21px',
-        }}
-      >
+    <div className={styles.searchContainer}>
+      <div className={styles.searchRow}>
         <Input
           type="text"
           placeholder="차량 번호 (예: 11가 1111)"
-          style={{
-            width: '80%',
-            height: '38.5px',
-            backgroundColor: 'white',
-          }}
+          className={styles.searchInput}
         />
-        <Button
-          style={{
-            width: '7%',
-            height: '44px',
-            marginLeft: '14px',
-            backgroundColor: '#0070f3',
-            color: 'white',
-            fontSize: '14px',
-            fontWeight: 500,
-          }}
-        >
+        <Button className={styles.searchButton}>
           검색
         </Button>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          marginTop: '21px',
-        }}
-      >
+      <div className={styles.searchRow}>
         <Input
           type="text"
           placeholder="새 에뮬레이터를 등록하려면 차량 번호를 이곳에 입력해주세요. (예: 11가 1111)"
-          style={{
-            width: '80%',
-            height: '38.5px',
-            backgroundColor: 'white',
-          }}
+          className={styles.searchInput}
         />
-        <Button
-          style={{
-            width: '7%',
-            height: '44px',
-            marginLeft: '14px',
-            backgroundColor: '#0070f3',
-            color: 'white',
-            fontSize: '14px',
-            fontWeight: 500,
-          }}
-        >
+        <Button className={styles.searchButton}>
           등록
         </Button>
       </div>
@@ -139,24 +85,17 @@ export default function Emulator() {
     <div>
       <TopBar title="에뮬레이터"></TopBar>
       <CarEmulNumberSearchBox />
-      <Table
-        style={{
-          margin: '0 auto',
-          maxWidth: '600px',
-        }}
-      >
-        <TableHeader style={{ padding: '10px' }}>
+      <Table className={styles.emulatorTable}>
+        <TableHeader className={styles.tableHeader}>
           <TableRow>
-            <TableHead
-              style={{ width: '50px', borderBottom: '1px solid #e2e2e2' }}
-            ></TableHead>
-            <TableHead style={{ borderBottom: '1px solid #e2e2e2' }}>
+            <TableHead className={styles.tableCellSmall}></TableHead>
+            <TableHead className={styles.tableCell}>
               차량번호
             </TableHead>
-            <TableHead style={{ borderBottom: '1px solid #e2e2e2' }}>
+            <TableHead className={styles.tableCell}>
               에뮬레이터 ID
             </TableHead>
-            <TableHead style={{ borderBottom: '1px solid #e2e2e2' }}>
+            <TableHead className={styles.tableCell}>
               ON/OFF
             </TableHead>
           </TableRow>
@@ -164,26 +103,18 @@ export default function Emulator() {
         <TableBody>
           {dummyEmuls.map(emul => (
             <TableRow key={emul.deviceId}>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
-                <div
-                  style={{
-                    display: 'inline-flex', // inline-flex로 내부 콘텐츠 크기만큼만 차지
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: '5px',
-                  }}
-                >
-                  {' '}
+              <TableCell className={styles.tableCell}>
+                <div className={styles.deleteContainer}>
                   <IconButton iconType="delete" onClick={handleDelete} />
                 </div>
               </TableCell>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+              <TableCell className={styles.tableCell}>
                 {emul.carNumber}
               </TableCell>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+              <TableCell className={styles.tableCell}>
                 {emul.deviceId}
               </TableCell>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+              <TableCell className={styles.tableCell}>
                 {emul.emulatorStatus.toUpperCase()}
               </TableCell>
             </TableRow>

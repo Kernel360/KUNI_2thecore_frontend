@@ -11,10 +11,7 @@ import { setDetailChangeStore } from '@/store/detail-change';
 import { Detail, useDetailStore } from '@/store/detail-store';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { Detail, useDetailStore } from '@/store/detail-store';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
+import styles from './detail.module.css';
 const mockDetail = {
   year: '2022년',
   drive_dist: '45,678 km',
@@ -82,49 +79,22 @@ const DetailPage = () => {
   };
 
   return (
-    <div style={{ width: '100%', minHeight: '100vh', background: '#fafbfc' }}>
+    <div className={styles.pageContainer}>
       <TopBar title={`차량 상세 정보 - ${carNumber}`} />
       <TopBar title={`차량 상세 정보 - ${carNumber}`} />
       <KakaoMapScript />
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '800px 400px',
-          justifyContent: 'center',
-          marginTop: 40,
-          gap: 20,
-          alignItems: 'stretch',
-        }}
-      >
+      <div className={styles.contentGrid}>
         {/* 상세 정보 */}
-        <Card
-          style={{
-            width: 800,
-            minWidth: 320,
-            height: 'fit-content',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <CardContent style={{ margin: '35px 0px' }}>
-            <div style={{ fontWeight: 700, fontSize: 25, marginBottom: 35 }}>
-            <div style={{ fontWeight: 700, fontSize: 25, marginBottom: 35 }}>
+        <Card className={styles.detailCard}>
+          <CardContent className={styles.cardContent}>
+            <div className={styles.title}>
               차량 정보
             </div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 2fr',
-                rowGap: 25,
-                columnGap: 400,
-                rowGap: 25,
-                columnGap: 400,
-              }}
-            >
-              <label>차량 번호</label>
+            <div className={styles.formGrid}>
+              <label className={styles.label}>차량 번호</label>
+
               <Input
+                className={styles.input}
                 value={carNumber}
                 value={carNumber}
                 readOnly={!detailChange}
@@ -135,8 +105,9 @@ const DetailPage = () => {
                     : undefined
                 }
               />
-              <label>차종</label>
+              <label className={styles.label}>차종</label>
               <Input
+                className={styles.input}
                 value={`${brand} ${model}`}
                 readOnly={!detailChange}
                 onChange={
@@ -145,8 +116,9 @@ const DetailPage = () => {
                     : undefined
                 }
               />
-              <label>상태</label>
+              <label className={styles.label}>상태</label>
               <Input
+                className={styles.input}
                 value={status}
                 readOnly={!detailChange}
                 onChange={
@@ -155,51 +127,26 @@ const DetailPage = () => {
                     : undefined
                 }
               />
-              <label>차량 연식</label>
-              <Input value={mockDetail.year} readOnly={true} />
-              <label>주행거리</label>
-              <Input value={mockDetail.drive_dist} readOnly={true} />
+              <label className={styles.label}>차량 연식</label>
+              <Input className={styles.input} value={mockDetail.year} readOnly={true} />
+              <label className={styles.label}>주행거리</label>
+              <Input className={styles.input} value={mockDetail.drive_dist} readOnly={true} />
             </div>
 
             {/* 확인 버튼 - detailChange가 true일 때만 표시 */}
             {detailChange && (
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  marginTop: 24,
-                  gap: 12,
-                }}
-              >
+              <div className={styles.buttonContainer}>
                 <Button
+                  className={styles.confirmButton}
                   onClick={handleSave}
-                  style={{
-                    backgroundColor: '#007bff',
-                    color: 'white',
-                    border: 'none',
-                    padding: '10px 24px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                  }}
                 >
                   확인
                 </Button>
                 <Button
+                  className={styles.cancelButton}
                   onClick={() => {
                     setDetailChange(false);
                     router.push('/search');
-                  }}
-                  style={{
-                    backgroundColor: '#6c757d',
-                    color: 'white',
-                    border: 'none',
-                    padding: '10px 24px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '500',
                   }}
                 >
                   취소
@@ -210,22 +157,8 @@ const DetailPage = () => {
         </Card>
 
         {/* 지도 */}
-        <Card
-          style={{
-            width: 400,
-            minWidth: 320,
-            height: '100%',
-          }}
-        >
-          <CardContent
-            style={{
-              boxSizing: 'border-box',
-              minHeight: '300px',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
+        <Card className={styles.mapCard}>
+          <CardContent className={styles.mapContent}>
             <CarLocationMap width="100%" height="100%" />
           </CardContent>
         </Card>

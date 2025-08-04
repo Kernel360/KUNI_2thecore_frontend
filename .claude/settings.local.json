@@ -3,7 +3,10 @@
     "allow": [
       "mcp__playwright__playwright_screenshot",
       "mcp__playwright__playwright_click",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "mcp__playwright__playwright_fill",
+      "mcp__playwright__playwright_get_visible_html",
+      "mcp__playwright__playwright_navigate"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -14,37 +14,12 @@ import styles from './search-filter.module.css';
 
 const HistorySearchBox = () => {
   return (
-    <div style={{ padding: '20px' }}>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '16px',
-          width: '100%',
-          maxWidth: '1200px',
-          margin: 'auto',
-        }}
-      >
+    <div className="p-5">
+      <div className="flex flex-row justify-between items-center gap-4 w-full max-w-[1200px] mx-auto">
         <NumberSearchBox />
         <Popover>
           <PopoverTrigger asChild>
-            <Button
-              className="flex"
-              style={{
-                backgroundColor: 'white',
-                width: '200px',
-                height: '44px',
-                border: '2px solid #d3d3d3',
-                borderRadius: '6px',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '0 16px',
-                color: '#666',
-                fontSize: '14px',
-              }}
-            >
+            <Button className="flex bg-white w-[200px] h-11 border-2 border-[#d3d3d3] rounded-md items-center justify-between px-4 text-[#666] text-sm">
               <span>조회 기간</span>
               <Image
                 src="/calendar_month_24dp_434343.svg"
@@ -60,33 +35,9 @@ const HistorySearchBox = () => {
         </Popover>
         <Button className={styles.searchButton}>검색</Button>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '16px',
-          width: '100%',
-          maxWidth: '1200px',
-          margin: '20px auto 0 auto',
-        }}
-      >
+      <div className="flex flex-row justify-between items-center gap-4 w-full max-w-[1200px] mx-auto mt-5">
         <BrandFilterBox />
-        <Button
-          className="flex"
-          style={{
-            width: '200px',
-            height: '44px',
-            backgroundColor: '#099add',
-            color: 'white',
-            fontSize: '14px',
-            fontWeight: '500',
-            borderRadius: '6px',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <Button className="flex w-[200px] h-11 bg-[#099add] text-white text-sm font-medium rounded-md items-center justify-center">
           엑셀 다운로드
         </Button>
       </div>

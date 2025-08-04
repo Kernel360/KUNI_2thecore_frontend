@@ -108,9 +108,8 @@ const ListBox: React.FC<ListBoxProps> = ({
 
   return (
     <div
-      className={styles.container}
+      className={`${styles.container} cursor-pointer`}
       onClick={handleClick}
-      style={{ cursor: 'pointer' }}
     >
       <div className={styles.info}>
         <div className={styles.num}>{carNumber}</div>
