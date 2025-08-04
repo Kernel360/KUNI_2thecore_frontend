@@ -62,12 +62,7 @@ export default function Map({ width, height, onLoad }: MapProps) {
     <div className={styles.map_wrap} style={{ width, height }}>
       <div
         ref={mapRef}
-        style={{
-          width: '100%',
-          height: '100%',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
+        className="w-full h-full relative overflow-hidden"
       ></div>
 
       {/* 지도타입 컨트롤 */}

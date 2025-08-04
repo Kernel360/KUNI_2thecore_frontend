@@ -9,16 +9,8 @@ interface StatusTextProps {
 const StatusText: React.FC<StatusTextProps> = ({ num, text }) => {
   return (
     <div className={styles.div}>
-      <h1 style={{ color: '#0070f3' }}>{num}</h1>
-      <h4
-        style={{
-          fontWeight: '500',
-          fontSize: '14px',
-          paddingBottom: '15px',
-          color: '#000000',
-          margin: 0,
-        }}
-      >
+      <h1 className="text-[#0070f3]">{num}</h1>
+      <h4 className="font-medium text-sm pb-[15px] text-black m-0">
         {text}
       </h4>
     </div>

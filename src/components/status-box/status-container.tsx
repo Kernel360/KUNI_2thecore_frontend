@@ -11,18 +11,10 @@ const StatusContainer = ({
   setCarStatusFilter,
 }: StatusContainerProps) => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        width: '100%',
-        gap: '28px',
-        marginTop: '20px',
-      }}
-    >
+    <div className="flex justify-center w-full gap-7 mt-5">
       <div
         onClick={() => setCarStatusFilter('null')}
-        style={{ cursor: 'pointer' }}
+        className="cursor-pointer"
       >
         <StatusBox
           num={100}
@@ -32,7 +24,7 @@ const StatusContainer = ({
       </div>
       <div
         onClick={() => setCarStatusFilter('운행중')}
-        style={{ cursor: 'pointer' }}
+        className="cursor-pointer"
       >
         <StatusBox
           num={57}
@@ -42,7 +34,7 @@ const StatusContainer = ({
       </div>
       <div
         onClick={() => setCarStatusFilter('대기중')}
-        style={{ cursor: 'pointer' }}
+        className="cursor-pointer"
       >
         <StatusBox
           num={13}
@@ -52,7 +44,7 @@ const StatusContainer = ({
       </div>
       <div
         onClick={() => setCarStatusFilter('수리중')}
-        style={{ cursor: 'pointer' }}
+        className="cursor-pointer"
       >
         <StatusBox
           num={50}
