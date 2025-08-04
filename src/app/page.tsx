@@ -25,10 +25,10 @@ export default function Home() {
               setCarStatusFilter={setCarStatusFilter}
             />
           </div>
-          <div className="bg-gray-100 z-[100] py-0 pr-[60px] pl-[15px]">
+          <div className="bg-gray-50 z-[100] py-0 pr-[60px] pl-[15px] rounded-2xl">
             <MenuBox onOpenMapModal={() => setIsMapModalOpen(true)} />
           </div>
-          <div className="relative w-[98%] h-[500px] rounded-[8px] overflow-hidden">
+          <div className="relative w-[98%] h-[500px] rounded-2xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-xl">
             <KakaoMapScript />
             <CarClustererMap
               width="100%"
