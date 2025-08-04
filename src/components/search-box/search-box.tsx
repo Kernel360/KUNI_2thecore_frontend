@@ -1,77 +1,15 @@
-import React from 'react';
-import NumberSearchBox from './number-search-box';
+import dummyCarsMock from './dummyCarsMock.json';
 import BrandFilterBox from './filter-box';
-import ListBox from './list-box/list-box';
 import floatingStyles from './floating.module.css';
+import ListBox from './list-box/list-box';
+import NumberSearchBox from './number-search-box';
 
-const dummyCars = [
-  {
-    carNumber: '12가 1234',
-    brand: '현대',
-    model: '소나타',
-    status: '운행중',
-  },
-  {
-    carNumber: '23나 2345',
-    brand: '기아',
-    model: 'K5',
-    status: '대기중',
-  },
-  {
-    carNumber: '34라 3456',
-    brand: '삼성',
-    model: 'SM5',
-    status: '수리중',
-  },
-  {
-    carNumber: '34라 3456',
-    brand: '삼성',
-    model: 'SM5',
-    status: '수리중',
-  },
-  {
-    carNumber: '34라 3456',
-    brand: '삼성',
-    model: 'SM5',
-    status: '수리중',
-  },
-  {
-    carNumber: '12가 1234',
-    brand: '현대',
-    model: '소나타',
-    status: '운행중',
-  },
-  {
-    carNumber: '34라 3456',
-    brand: '삼성',
-    model: 'SM5',
-    status: '수리중',
-  },
-  {
-    carNumber: '34라 3456',
-    brand: '삼성',
-    model: 'SM5',
-    status: '수리중',
-  },
-  {
-    carNumber: '12가 1234',
-    brand: '현대',
-    model: '소나타',
-    status: '운행중',
-  },
-  {
-    carNumber: '34라 3456',
-    brand: '삼성',
-    model: 'SM5',
-    status: '수리중',
-  },
-  {
-    carNumber: '23나 2345',
-    brand: '기아',
-    model: 'K5',
-    status: '대기중',
-  },
-];
+const dummyCars = dummyCarsMock as Array<{
+  carNumber: string;
+  brand: string;
+  model: string;
+  status: string;
+}>;
 
 const SearchBox = () => {
   return (
