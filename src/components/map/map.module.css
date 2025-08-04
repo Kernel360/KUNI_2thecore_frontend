@@ -78,13 +78,10 @@
   cursor: pointer;
 }
 
-.custom_zoomcontrol span img {
-  width: 15px;
-  height: 15px;
-  padding: 12px 0;
-  border: none;
+.custom_zoomcontrol span:first-child {
+  border-bottom: 1px solid #bfbfbf !important;
 }
 
-.custom_zoomcontrol span:first-child {
-  border-bottom: 1px solid #bfbfbf;
+.custom_zoomcontrol span:hover {
+  background-color: #e0e0e0 !important;
 }

@@ -66,7 +66,14 @@ export default function Map({ width, height, onLoad }: MapProps) {
       ></div>
 
       {/* 지도타입 컨트롤 */}
-      <div className={`${styles.custom_typecontrol} ${styles.radius_border}`}>
+      <div
+        className={`${styles.custom_typecontrol} ${styles.radius_border}`}
+        style={{
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'row',
+        }}
+      >
         <span
           className={mapType === 'roadmap' ? styles.selected_btn : styles.btn}
           onClick={() => setMapTypeHandler('roadmap')}
@@ -82,18 +89,53 @@ export default function Map({ width, height, onLoad }: MapProps) {
       </div>
 
       {/* 지도 확대, 축소 컨트롤 */}
-      <div className={`${styles.custom_zoomcontrol} ${styles.radius_border}`}>
-        <span onClick={zoomIn}>
-          <img
-            src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png"
-            alt="확대"
-          />
+      <div
+        className={`${styles.custom_zoomcontrol} ${styles.radius_border}`}
+        style={{
+          position: 'absolute',
+          top: '50px',
+          right: '10px',
+          zIndex: 9999,
+          backgroundColor: '#f5f5f5',
+          border: '1px solid #919191',
+          borderRadius: '5px',
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <span
+          onClick={zoomIn}
+          style={{
+            display: 'block',
+            width: '36px',
+            height: '40px',
+            textAlign: 'center',
+            cursor: 'pointer',
+            userSelect: 'none',
+            fontSize: '18px',
+            fontWeight: 'bold',
+            lineHeight: '40px',
+            color: '#333',
+          }}
+        >
+          +
         </span>
-        <span onClick={zoomOut}>
-          <img
-            src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"
-            alt="축소"
-          />
+        <span
+          onClick={zoomOut}
+          style={{
+            display: 'block',
+            width: '36px',
+            height: '40px',
+            textAlign: 'center',
+            cursor: 'pointer',
+            userSelect: 'none',
+            borderTop: '1px solid #bfbfbf',
+            fontSize: '18px',
+            fontWeight: 'bold',
+            lineHeight: '40px',
+            color: '#333',
+          }}
+        >
+          −
         </span>
       </div>
     </div>
