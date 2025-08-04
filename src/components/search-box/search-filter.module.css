@@ -3,16 +3,26 @@
 .filterButton {
   width: 80px;
   height: 44px;
-  background-color: #0070f3;
+  background: linear-gradient(135deg, #0070f3 0%, #0058cc 100%);
   color: white;
   font-size: 14px;
-  font-weight: 500;
-
-  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 112, 243, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
 
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.searchButton:hover,
+.filterButton:hover {
+  background: linear-gradient(135deg, #0058cc 0%, #0550b8 100%);
+  box-shadow: 0 4px 8px rgba(0, 112, 243, 0.4);
+  transform: translateY(-2px);
 }
 
 /* 공통 컨테이너 스타일 */
@@ -37,9 +47,18 @@
   flex: 1;
   height: 44px;
   background-color: white;
-  border: 1.5px solid #d9d9d9;
-  border-radius: 6px;
+  border: 1px solid #e5e7eb !important;
+  outline: 1.5px solid #d1d5db !important;
+  border-radius: 12px;
   padding: 0 16px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.numberSearchInput:focus {
+  border-color: #0070f3;
+  box-shadow: 0 4px 12px rgba(0, 112, 243, 0.15);
 }
 
 /* filter-box 전용 스타일 */
@@ -47,7 +66,17 @@
   flex: 1;
   height: 44px;
   background-color: white;
-  border: 1.5px solid #d9d9d9;
-  border-radius: 6px;
+  border: 1px solid #e5e7eb !important;
+  outline: 1.5px solid #d1d5db !important;
+  border-radius: 12px;
   padding: 0 16px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.filterInput:focus {
+  border-color: #0070f3;
+  box-shadow: 0 4px 12px rgba(0, 112, 243, 0.15);
+  outline: none;
 }

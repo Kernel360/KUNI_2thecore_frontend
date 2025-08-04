@@ -1,0 +1,50 @@
+button.dropdownTrigger,
+button.dropdownTrigger[role='combobox'] {
+  height: 44px !important;
+  background-color: white !important;
+  margin-right: 2%;
+  border-radius: 12px !important;
+  padding: 0 16px !important;
+  border: 1px solid #e5e7eb !important;
+  outline: 1.5px solid #d1d5db !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.3s ease !important;
+  font-size: 15px !important;
+}
+
+.dropdownTrigger:focus,
+.dropdownTrigger:focus-within,
+.dropdownTrigger[data-state='open'] {
+  border-color: #0070f3 !important;
+  box-shadow: 0 4px 12px rgba(0, 112, 243, 0.15) !important;
+  outline: none !important;
+}
+
+.dropdownTrigger:hover {
+  border-color: #d1d5db;
+}
+
+.dropdownContent {
+  z-index: 9999;
+  background: white;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+}
+
+.dropdownItem {
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dropdownItem:hover {
+  background-color: #f3f4f6;
+}
+
+.dropdownItem[data-highlighted] {
+  background-color: #0070f3;
+  color: white;
+}

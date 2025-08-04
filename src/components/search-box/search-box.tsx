@@ -1,13 +1,8 @@
 import React from 'react';
 import NumberSearchBox from './number-search-box';
 import BrandFilterBox from './filter-box';
-import { Dropdown } from './dropdown';
 import ListBox from './list-box/list-box';
-import styles from './list-box/list-box.module.css';
-import searchFilterStyles from './search-filter.module.css';
 import floatingStyles from './floating.module.css';
-import Status from './status';
-import { Button } from '../ui/button';
 
 const dummyCars = [
   {
