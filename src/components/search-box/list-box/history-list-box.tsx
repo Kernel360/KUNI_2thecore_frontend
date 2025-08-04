@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/table';
 import Status from '../status';
 import styles from './list-box.module.css';
+import historyStyles from './history-list-box.module.css';
 
 // type HistoryList {
 //   carNumber: string;
@@ -61,51 +62,31 @@ const dummyHis = [
 const HistoryListBox = () => {
   return (
     <div className={styles.container}>
-      <Table style={{ margin: '0 auto', maxWidth: '1000px' }}>
+      <Table className={historyStyles.historyTable}>
         <TableHeader>
           <TableRow>
-            <TableHead
-              style={{
-                width: '150px',
-                borderBottom: '1px solid #e2e2e2',
-                padding: '10px',
-              }}
-            >
+            <TableHead className={historyStyles.tableHeadWithPadding}>
               차량번호
             </TableHead>
-            <TableHead
-              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-            >
+            <TableHead className={historyStyles.tableHeadDefault}>
               렌트시작일
             </TableHead>
-            <TableHead
-              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-            >
+            <TableHead className={historyStyles.tableHeadDefault}>
               렌트종료일
             </TableHead>
-            <TableHead
-              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-            >
+            <TableHead className={historyStyles.tableHeadDefault}>
               출발지
             </TableHead>
-            <TableHead
-              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-            >
+            <TableHead className={historyStyles.tableHeadDefault}>
               도착지
             </TableHead>
-            <TableHead
-              style={{ width: '100px', borderBottom: '1px solid #e2e2e2' }}
-            >
+            <TableHead className={historyStyles.tableHeadSmall}>
               주행거리
             </TableHead>
-            <TableHead
-              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-            >
+            <TableHead className={historyStyles.tableHeadDefault}>
               상태
             </TableHead>
-            <TableHead
-              style={{ width: '150px', borderBottom: '1px solid #e2e2e2' }}
-            >
+            <TableHead className={historyStyles.tableHeadDefault}>
               특이사항
             </TableHead>
           </TableRow>
@@ -113,37 +94,30 @@ const HistoryListBox = () => {
         <TableBody>
           {dummyHis.map(log => (
             <TableRow key={log.carNumber}>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+              <TableCell className={historyStyles.tableCell}>
                 {log.carNumber}
               </TableCell>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+              <TableCell className={historyStyles.tableCell}>
                 {log.rentDate}
               </TableCell>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+              <TableCell className={historyStyles.tableCell}>
                 {log.returnDate}
               </TableCell>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+              <TableCell className={historyStyles.tableCell}>
                 {log.startLocation}
               </TableCell>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+              <TableCell className={historyStyles.tableCell}>
                 {log.endLocation}
               </TableCell>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+              <TableCell className={historyStyles.tableCell}>
                 {log.totalDist}
               </TableCell>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
-                <div
-                  style={{
-                    display: 'inline-flex', // inline-flex로 내부 콘텐츠 크기만큼만 차지
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: '5px',
-                  }}
-                >
+              <TableCell className={historyStyles.tableCell}>
+                <div className={historyStyles.statusContainer}>
                   <Status status={log.status as StatusType} />
                 </div>
               </TableCell>
-              <TableCell style={{ borderBottom: '1px solid #e2e2e2' }}>
+              <TableCell className={historyStyles.tableCell}>
                 {log.memo}
               </TableCell>
             </TableRow>
