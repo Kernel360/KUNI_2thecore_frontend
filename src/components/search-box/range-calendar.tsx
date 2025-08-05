@@ -1,7 +1,5 @@
 'use client';
 
-import * as React from 'react';
-
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -10,48 +8,26 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import Image from 'next/image';
+import * as React from 'react';
+import { DateRange } from 'react-day-picker';
 
-export function RangeCalendarFrom() {
+export function RangeCalendar() {
   const [open, setOpen] = React.useState(false);
-  const [date1, setDate1] = React.useState<Date | undefined>(undefined);
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" id="date1" className="w-48 justify-between">
-          {date1 ? date1.toLocaleDateString() : '시작일'}
-          <Image
-            src="/calendar_month_24dp_434343.svg"
-            alt="calendar"
-            width={20}
-            height={20}
-          />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto overflow-hidden p-0 bg-white" align="start">
-        <Calendar
-          mode="single"
-          selected={date1}
-          captionLayout="dropdown"
-          onSelect={date1 => {
-            setDate1(date1);
-            setOpen(false);
-          }}
-        />
-      </PopoverContent>
-    </Popover>
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>(
+    undefined
   );
-}
 
-export function RangeCalendarTo() {
-  const [open, setOpen] = React.useState(false);
-  const [date2, setDate2] = React.useState<Date | undefined>(undefined);
+  const formatDateRange = (range: DateRange | undefined) => {
+    if (!range?.from) return '시작일 - 종료일';
+    if (!range?.to) return range.from.toLocaleDateString();
+    return `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`;
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" id="date2" className="w-48 justify-between">
-          {date2 ? date2.toLocaleDateString() : '종료일'}
+        <Button variant="outline" className="w-96 justify-between">
+          {formatDateRange(dateRange)}
           <Image
             src="/calendar_month_24dp_434343.svg"
             alt="calendar"
@@ -60,15 +36,16 @@ export function RangeCalendarTo() {
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto overflow-hidden p-0 bg-white" align="start">
+      <PopoverContent
+        className="w-auto overflow-hidden p-0 bg-white"
+        align="center"
+      >
         <Calendar
-          mode="single"
-          selected={date2}
+          mode="range"
+          selected={dateRange}
           captionLayout="dropdown"
-          onSelect={date2 => {
-            setDate2(date2);
-            setOpen(false);
-          }}
+          onSelect={setDateRange}
+          numberOfMonths={2}
         />
       </PopoverContent>
     </Popover>
