@@ -16,10 +16,10 @@
 }
 
 .active {
-  border-color: #0070f3;
-  box-shadow: 0 4px 12px rgba(0, 112, 243, 0.15);
+  border-color: #3a70ff;
+  box-shadow: 0 4px 12px rgba(58, 112, 255, 0.15);
 }
 
 .active:hover {
-  box-shadow: 0 8px 20px rgba(0, 112, 243, 0.2);
+  box-shadow: 0 8px 20px rgba(58, 112, 255, 0.2);
 }

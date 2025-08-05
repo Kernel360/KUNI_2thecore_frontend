@@ -18,7 +18,7 @@ export function RangeCalendar() {
   );
 
   const formatDateRange = (range: DateRange | undefined) => {
-    if (!range?.from) return '시작일 - 종료일';
+    if (!range?.from) return '렌트시작일 - 렌트종료일';
     if (!range?.to) return range.from.toLocaleDateString();
     return `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`;
   };

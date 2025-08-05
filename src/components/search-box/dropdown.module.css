@@ -14,8 +14,8 @@ button.dropdownTrigger[role='combobox'] {
 .dropdownTrigger:focus,
 .dropdownTrigger:focus-within,
 .dropdownTrigger[data-state='open'] {
-  border-color: #0070f3 !important;
-  box-shadow: 0 4px 12px rgba(0, 112, 243, 0.15) !important;
+  border-color: #3a70ff !important;
+  box-shadow: 0 4px 12px rgba(58, 112, 255, 0.15) !important;
   outline: none !important;
 }
 
@@ -44,6 +44,6 @@ button.dropdownTrigger[role='combobox'] {
 }
 
 .dropdownItem[data-highlighted] {
-  background-color: #0070f3;
+  background-color: #3a70ff;
   color: white;
 }
