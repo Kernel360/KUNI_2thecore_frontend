@@ -10,9 +10,6 @@
 .tableHeadWithPadding {
   width: 150px;
   padding: 10px;
-  /* display: flex;
-  flex-direction: row;
-  align-items: center; */
 }
 
 .tableHeadSmall {

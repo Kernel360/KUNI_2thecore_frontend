@@ -11,12 +11,12 @@
   font-size: 14px;
   font-weight: 500;
   color: #fff;
-  background-color: #0070f3;
+  background-color: #3a70ff;
   border-radius: 10px;
   border: none;
   cursor: pointer;
 }
 
 .Button:hover {
-  background-color: #3d9efa;
+  background-color: #5788ff;
 }

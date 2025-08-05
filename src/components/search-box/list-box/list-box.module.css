@@ -43,7 +43,7 @@
 }
 
 /* Status 뱃지 크기 줄이기 */
-:global(.status-badge) {
+.statusBadge :global(.status-badge) {
   font-size: 0.98rem !important;
   padding: 6px 16px !important;
   min-width: 48px !important;

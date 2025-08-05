@@ -85,25 +85,31 @@ const HistoryListBox = () => {
         <TableHeader>
           <TableRow>
             <TableHead className={historyStyles.tableHeadWithPadding}>
-              차량번호
-              <div
-                className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
-                onClick={handleSort}
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                차량번호
+                <div
+                  className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
+                  onClick={handleSort}
+                />
+              </div>
             </TableHead>
             <TableHead className={historyStyles.tableHeadWithPadding}>
-              렌트시작일
-              <div
-                className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
-                onClick={handleSort}
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                렌트시작일
+                <div
+                  className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
+                  onClick={handleSort}
+                />
+              </div>
             </TableHead>
             <TableHead className={historyStyles.tableHeadWithPadding}>
-              렌트종료일
-              <div
-                className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
-                onClick={handleSort}
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                렌트종료일
+                <div
+                  className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
+                  onClick={handleSort}
+                />
+              </div>
             </TableHead>
             <TableHead className={historyStyles.tableHeadDefault}>
               출발지

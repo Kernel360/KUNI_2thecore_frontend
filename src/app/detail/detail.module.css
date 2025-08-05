@@ -39,7 +39,7 @@
   font-size: 28px;
   margin-bottom: 40px;
   color: #1f2937;
-  border-bottom: 3px solid #0070f3;
+  border-bottom: 3px solid #3a70ff;
   padding-bottom: 16px;
   display: inline-block;
 }
@@ -71,8 +71,8 @@
 }
 
 .input:focus {
-  border-color: #0070f3;
-  box-shadow: 0 4px 12px rgba(0, 112, 243, 0.15);
+  border-color: #3a70ff;
+  box-shadow: 0 4px 12px rgba(58, 112, 255, 0.15);
   outline: none;
   background: #fff;
 }
@@ -91,7 +91,7 @@
 }
 
 .confirmButton {
-  background: linear-gradient(135deg, #0070f3 0%, #0058cc 100%);
+  background: linear-gradient(135deg, #3a70ff 0%, #2860ff 100%);
   color: white;
   border: none;
   padding: 12px 32px;
@@ -100,13 +100,13 @@
   font-size: 15px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 112, 243, 0.3);
+  box-shadow: 0 4px 12px rgba(58, 112, 255, 0.3);
 }
 
 .confirmButton:hover {
-  background: linear-gradient(135deg, #0058cc 0%, #0043a3 100%);
+  background: linear-gradient(135deg, #2860ff 0%, #1e56ff 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 112, 243, 0.4);
+  box-shadow: 0 6px 16px rgba(58, 112, 255, 0.4);
 }
 
 .cancelButton {

@@ -3,10 +3,9 @@ import '../styles/globals.css';
 
 interface RootLayoutProps {
   children: ReactNode;
-  title: string;
 }
 
-export default function RootLayout({ children, title }: RootLayoutProps) {
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ko">
       <body>
