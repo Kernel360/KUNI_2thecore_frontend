@@ -1,8 +1,5 @@
-import '../styles/globals.css';
 import type { ReactNode } from 'react';
-import TopBar from '@/components/ui/topBar';
-import StatusContainer from '@/components/status-box/status-container';
-import MenuBox from '@/components/menu-box/menu-box';
+import '../styles/globals.css';
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -22,6 +19,7 @@ export default function RootLayout({ children, title }: RootLayoutProps) {
               width: '100%', // 추가
               height: '100%',
               maxWidth: '1290px', // 필요시 최대폭 제한
+              maxHeight: '2000px',
               borderRadius: '10px',
             }}
           >

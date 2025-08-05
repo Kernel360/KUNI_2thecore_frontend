@@ -6,7 +6,9 @@
       "Bash(npm run dev:*)",
       "mcp__playwright__playwright_fill",
       "mcp__playwright__playwright_get_visible_html",
-      "mcp__playwright__playwright_navigate"
+      "mcp__playwright__playwright_navigate",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot"
     ]
   },
   "enableAllProjectMcpServers": true,

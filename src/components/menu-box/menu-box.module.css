@@ -1,7 +1,7 @@
 .Button {
-  width: 200px;
-  height: 40px;
-  font-size: 14px;
+  width: 220px;
+  height: 60px;
+  font-size: 16px;
   font-weight: 500;
   color: #1a1a1a;
   background-color: #ffffff;
@@ -10,7 +10,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   cursor: pointer;
   text-align: left !important;
-  padding-left: 9px !important;
+  padding-left: 16px !important;
   justify-content: flex-start !important;
   transition: all 0.3s ease;
 }
@@ -20,23 +20,4 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
   border-color: #e3e8ef;
-}
-
-.greyBox {
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  gap: 8px;
-  background-color: #ffffff;
-  padding: 20px 16px 320px 16px;
-  margin-top: 10px;
-  border-radius: 16px;
-  text-align: left;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f1f3f4;
-  transition: all 0.3s ease;
-}
-
-.greyBox:hover {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }

@@ -1,4 +1,3 @@
-import React from 'react';
 import StatusBox from './status-box';
 
 interface StatusContainerProps {
@@ -11,7 +10,7 @@ const StatusContainer = ({
   setCarStatusFilter,
 }: StatusContainerProps) => {
   return (
-    <div className="flex justify-center w-full gap-6 mt-6 px-4">
+    <div className="flex justify-between w-full gap-6 mt-6 px-4 flex-wrap">
       <div
         onClick={() => setCarStatusFilter('null')}
         className="cursor-pointer transition-transform duration-200 hover:scale-105"
