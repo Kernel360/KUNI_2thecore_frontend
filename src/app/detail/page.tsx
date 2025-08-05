@@ -73,7 +73,7 @@ const DetailPage = () => {
   };
 
   return (
-    <div className={styles.pageContainer}>
+    <>
       <TopBar title={`차량 상세 정보 - ${carNumber}`} />
       <KakaoMapScript />
       <div className={styles.contentGrid}>
@@ -156,8 +156,7 @@ const DetailPage = () => {
             <CarLocationMap width="100%" height="100%" />
           </CardContent>
         </Card>
-      </div>
-    </div>
+    </>
   );
 };
 
