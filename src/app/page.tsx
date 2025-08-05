@@ -18,7 +18,7 @@ export default function Home() {
     <>
       <div className="flex flex-col h-screen">
         <TopBar title="차량 관제 시스템"></TopBar>
-        <div className="flex flex-col gap-4 p-4 h-full">
+        <div className="flex flex-col gap-6 p-4 h-full w-[98%] mx-auto">
           <div>
             <StatusContainer
               carStatusFilter={carStatusFilter}
