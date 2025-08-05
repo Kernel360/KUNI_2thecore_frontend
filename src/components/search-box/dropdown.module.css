@@ -2,7 +2,6 @@ button.dropdownTrigger,
 button.dropdownTrigger[role='combobox'] {
   height: 44px !important;
   background-color: white !important;
-  margin-right: 2%;
   border-radius: 12px !important;
   padding: 0 16px !important;
   border: 1px solid #e5e7eb !important;

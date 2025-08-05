@@ -26,7 +26,7 @@ export function RangeCalendar() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="w-96 justify-between">
+        <Button variant="outline" className="w-96 h-11 justify-between">
           {formatDateRange(dateRange)}
           <Image
             src="/calendar_month_24dp_434343.svg"

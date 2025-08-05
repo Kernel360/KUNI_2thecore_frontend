@@ -61,7 +61,9 @@ const dummyHis = [
 
 const HistoryListBox = () => {
   return (
-    <div className={styles.container}>
+    <div
+      className="flex align-center justify-between p-4 bg-white rounded-xl shadow-md w-[98%] m-3"
+    >
       <Table className={historyStyles.historyTable}>
         <TableHeader>
           <TableRow>

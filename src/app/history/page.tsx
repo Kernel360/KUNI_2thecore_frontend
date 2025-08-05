@@ -6,19 +6,10 @@ import TopBar from '@/components/ui/topBar';
 
 export default function History() {
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <TopBar title="주행 기록"></TopBar>
-      <HistorySearchBox />
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-          position: 'relative',
-        }}
-      >
+      <div className="gap-6 p-4 h-full w-[98%] mx-auto">
+        <HistorySearchBox />
         <HistoryListBox />
       </div>
     </div>
