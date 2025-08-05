@@ -18,30 +18,32 @@ export default function Home() {
     <>
       <div className="flex flex-col h-screen">
         <TopBar title="차량 관제 시스템"></TopBar>
-        <div className="grid grid-cols-[250px_1fr] grid-rows-[auto_1fr] gap-4 p-4 h-full">
-          <div className="col-span-2">
+        <div className="flex flex-col gap-6 p-4 h-full w-[98%] mx-auto">
+          <div>
             <StatusContainer
               carStatusFilter={carStatusFilter}
               setCarStatusFilter={setCarStatusFilter}
             />
           </div>
-          <div className="bg-gray-100 z-[100] py-0 pr-[60px] pl-[15px]">
-            <MenuBox onOpenMapModal={() => setIsMapModalOpen(true)} />
-          </div>
-          <div className="relative w-[98%] h-[500px] rounded-[8px] overflow-hidden">
-            <KakaoMapScript />
-            <CarClustererMap
-              width="100%"
-              height="100%"
-              carStatusFilter={carStatusFilter}
-            />
+          <div className="flex flex-row gap-4 flex-1 px-4">
+            <div className="flex-shrink-0">
+              <MenuBox onOpenMapModal={() => setIsMapModalOpen(true)} />
+            </div>
+            <div className="relative flex-1 rounded-2xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-xl">
+              <KakaoMapScript />
+              <CarClustererMap
+                width="100%"
+                height="100%"
+                carStatusFilter={carStatusFilter}
+              />
+            </div>
           </div>
         </div>
+        <MapModal
+          isOpen={isMapModalOpen}
+          onClose={() => setIsMapModalOpen(false)}
+        />
       </div>
-      <MapModal
-        isOpen={isMapModalOpen}
-        onClose={() => setIsMapModalOpen(false)}
-      />
     </>
   );
 }

@@ -21,30 +21,21 @@ const SearchBox = () => {
           gap: '4px',
           justifyContent: 'center',
           alignItems: 'center',
-          width: '100%',
+          width: '95%',
           position: 'relative',
         }}
       >
         <NumberSearchBox />
         <BrandFilterBox />
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            marginTop: '20px',
-          }}
-        >
-          {dummyCars.map((car, idx) => (
-            <ListBox
-              key={idx}
-              carNumber={car.carNumber}
-              brand={car.brand}
-              model={car.model}
-              status={car.status}
-            />
-          ))}
-        </div>
+        {dummyCars.map((car, idx) => (
+          <ListBox
+            key={idx}
+            carNumber={car.carNumber}
+            brand={car.brand}
+            model={car.model}
+            status={car.status}
+          />
+        ))}
       </div>
       <div className={floatingStyles.floatingContainer}>
         <button className={floatingStyles.floatingButton}>+</button>

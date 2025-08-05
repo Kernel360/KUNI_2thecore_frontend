@@ -3,14 +3,15 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 24px;
-  margin: 8px 0;
   background: #fff;
-  width: 90%;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   border: 1px solid #f1f3f4;
   transition: all 0.3s ease;
   cursor: pointer;
+  width: 98%;
+  margin: 12px auto;
+
 }
 
 .container:hover {
