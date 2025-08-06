@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+import { DateRange } from 'react-day-picker';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import BrandFilterBox from './filter-box';
@@ -7,6 +9,24 @@ import { RangeCalendar } from './range-calendar';
 import styles from './search-filter.module.css';
 
 const HistorySearchBox = () => {
+  const [carNumber, setCarNumber] = useState('');
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+
+  const handleSearch = () => {
+    if (!carNumber.trim()) {
+      alert('차량 번호를 입력해주세요.');
+      return;
+    }
+
+    if (!dateRange?.from || !dateRange?.to) {
+      alert('날짜 범위를 선택해주세요.');
+      return;
+    }
+
+    // 검색 로직 실행
+    console.log('검색 실행:', { carNumber, dateRange });
+  };
+
   return (
     <div className="flex flex-col">
       <div className={styles.numberSearchContainer}>
@@ -14,9 +34,17 @@ const HistorySearchBox = () => {
           type="text"
           placeholder="차량 번호"
           className={styles.numberSearchInput}
+          value={carNumber}
+          onChange={e => setCarNumber(e.target.value)}
+          required
         />
-        <RangeCalendar />
-        <Button className={styles.searchButton}>검색</Button>
+        <RangeCalendar
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
+        />
+        <Button className={styles.searchButton} onClick={handleSearch}>
+          검색
+        </Button>
       </div>
       <div className="flex flex-row p-3">
         <BrandFilterBox />
