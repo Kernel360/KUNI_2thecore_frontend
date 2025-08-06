@@ -23,3 +23,13 @@
 .active:hover {
   box-shadow: 0 8px 20px rgba(58, 112, 255, 0.2);
 }
+
+.totalCar {
+  background-color: #ebebeb;
+  width: 270px;
+  height: 100px;
+  display: flex;
+  border-radius: 16px;
+  justify-content: center;
+  align-items: center;
+}
