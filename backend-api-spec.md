@@ -164,6 +164,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Method**: GET
 - **Path**: `/api/cars/statistics`
 - **상태**: 완료
+- **request**:"" // null
+- **response**:`
+{
+  "result": true,
+  "message": null,
+  "data": {
+    "total": 10, // 전체 차량수
+    "operating": 1, // 운행 차량 수
+    "waiting": 9, // 대기 차량 수
+    "inspecting": 0 // 점검 차량 수
+  }
+`
 
 ### 3. 로그 관련 API
 
