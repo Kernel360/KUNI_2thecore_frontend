@@ -19,8 +19,6 @@ import TopBar from '@/components/ui/topBar';
 import React from 'react';
 import styles from './emulator.module.css';
 
-// Emulator 인터페이스는 @/lib/api에서 import
-
 const handleDelete = async (deviceId: string) => {
   if (!confirm('정말로 이 에뮬레이터를 삭제하시겠습니까?')) {
     return;
@@ -53,7 +51,7 @@ const EmulSearchBox = () => {
   );
 };
 
-export default function Emulator() {
+export default function LocalEmulator() {
   const [emulators, setEmulators] = useState<Emulator[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -101,9 +99,7 @@ const CarEmulNumberSearchBox = () => {
           placeholder="새 에뮬레이터를 등록하려면 차량 번호를 이곳에 입력해주세요. (예: 11가 1111)"
           className={styles.searchContainer}
         />
-        <Button className={styles.searchButton}>
-          등록
-        </Button>
+        <Button className={styles.searchButton}>등록</Button>
       </div>
     </div>
   );
