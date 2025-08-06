@@ -11,11 +11,19 @@ import Image from 'next/image';
 import * as React from 'react';
 import { DateRange } from 'react-day-picker';
 
-export function RangeCalendar() {
+interface RangeCalendarProps {
+  dateRange?: DateRange | undefined;
+  onDateRangeChange?: (range: DateRange | undefined) => void;
+}
+
+export function RangeCalendar({ dateRange: externalDateRange, onDateRangeChange }: RangeCalendarProps) {
   const [open, setOpen] = React.useState(false);
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>(
+  const [internalDateRange, setInternalDateRange] = React.useState<DateRange | undefined>(
     undefined
   );
+
+  const dateRange = externalDateRange ?? internalDateRange;
+  const setDateRange = onDateRangeChange ?? setInternalDateRange;
 
   const formatDateRange = (range: DateRange | undefined) => {
     if (!range?.from) return '렌트시작일 - 렌트종료일';
@@ -46,6 +54,7 @@ export function RangeCalendar() {
           captionLayout="dropdown"
           onSelect={setDateRange}
           numberOfMonths={2}
+          required
         />
       </PopoverContent>
     </Popover>
