@@ -1,5 +1,3 @@
-/* History List Box specific styles */
-
 .historyTable {
   margin: 0 auto;
   max-width: 1000px;
@@ -7,18 +5,15 @@
 
 .tableHeadDefault {
   width: 150px;
-  border-bottom: 1px solid #e2e2e2;
 }
 
 .tableHeadWithPadding {
   width: 150px;
-  border-bottom: 1px solid #e2e2e2;
   padding: 10px;
 }
 
 .tableHeadSmall {
   width: 100px;
-  border-bottom: 1px solid #e2e2e2;
 }
 
 .tableCell {

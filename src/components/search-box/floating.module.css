@@ -6,7 +6,7 @@
 }
 
 .floatingButton {
-  background: linear-gradient(135deg, #0070f3 0%, #0560d7 100%);
+  background: linear-gradient(135deg, #3a70ff 0%, #2660ff 100%);
   color: white;
   border-radius: 50%;
   width: 64px;
@@ -18,12 +18,12 @@
   font-size: 28px;
   font-weight: 300;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0, 112, 243, 0.3);
+  box-shadow: 0 8px 20px rgba(58, 112, 255, 0.3);
   transition: all 0.3s ease;
 }
 
 .floatingButton:hover {
-  background: linear-gradient(135deg, #0058cc 0%, #0358ce 100%);
+  background: linear-gradient(135deg, #2860ff 0%, #1e56ff 100%);
   transform: scale(1.1) translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 112, 243, 0.4);
+  box-shadow: 0 8px 20px rgba(58, 112, 255, 0.4);
 }

@@ -15,3 +15,21 @@
   width: 20px;
   height: 20px;
 }
+
+.sortOrder {
+  cursor: pointer;
+  margin-left: 4px;
+  width: 16px;
+  height: 16px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.sortOrder.ascend {
+  background-image: url('/arrow_drop_down_24dp_000000.svg');
+}
+
+.sortOrder.descend {
+  background-image: url('/arrow_drop_up_24dp_000000.svg');
+}

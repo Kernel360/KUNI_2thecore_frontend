@@ -1,43 +1,29 @@
 'use client';
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import Image from 'next/image';
 import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import BrandFilterBox from './filter-box';
-import NumberSearchBox from './number-search-box';
 import { RangeCalendar } from './range-calendar';
 import styles from './search-filter.module.css';
 
 const HistorySearchBox = () => {
   return (
-    <div className="p-5">
-      <div className="flex flex-row justify-between items-center gap-4 w-full max-w-[1200px] mx-auto">
-        <NumberSearchBox />
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button className="flex bg-white w-[200px] h-11 border-2 border-[#d3d3d3] rounded-md items-center justify-between px-4 text-[#666] text-sm">
-              <span>조회 기간</span>
-              <Image
-                src="/calendar_month_24dp_434343.svg"
-                alt="calendar"
-                width={20}
-                height={20}
-              />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80">
-            <RangeCalendar />
-          </PopoverContent>
-        </Popover>
+    <div className="flex flex-col">
+      <div className={styles.numberSearchContainer}>
+        <Input
+          type="text"
+          placeholder="차량 번호"
+          className={styles.numberSearchInput}
+        />
+        <RangeCalendar />
         <Button className={styles.searchButton}>검색</Button>
       </div>
-      <div className="flex flex-row justify-between items-center gap-4 w-full max-w-[1200px] mx-auto mt-5">
+      <div className="flex flex-row p-3">
         <BrandFilterBox />
-        <Button className="flex w-[200px] h-11 bg-[#099add] text-white text-sm font-medium rounded-md items-center justify-center">
+        <Button
+          className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
+          rounded-xl shadow-lg shadow-sky-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
+        >
           엑셀 다운로드
         </Button>
       </div>

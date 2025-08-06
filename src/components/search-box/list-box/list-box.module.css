@@ -42,7 +42,7 @@
 }
 
 /* Status 뱃지 크기 줄이기 */
-:global(.status-badge) {
+.statusBadge :global(.status-badge) {
   font-size: 0.98rem !important;
   padding: 6px 16px !important;
   min-width: 48px !important;
@@ -73,12 +73,12 @@
 }
 
 .alertButton {
-  background-color: #0070f3;
+  background-color: #3a70ff;
   color: #fff;
   padding: 4px 16px;
 }
 
 .alertButton:hover {
-  background-color: #0065d8;
+  background-color: #2860ff;
   color: #fff;
 }

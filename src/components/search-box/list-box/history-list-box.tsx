@@ -1,5 +1,6 @@
 'use client';
 
+import styles from '@/components/icon-button/icon-button.module.css';
 import {
   Table,
   TableBody,
@@ -8,8 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useState } from 'react';
 import Status from '../status';
-import styles from './list-box.module.css';
 import historyStyles from './history-list-box.module.css';
 
 // type HistoryList {
@@ -60,19 +61,55 @@ const dummyHis = [
 ];
 
 const HistoryListBox = () => {
+  const [sortOrder, setSortOrder] = useState<'ascend' | 'descend'>('ascend');
+  const [sortedData, setSortedData] = useState(dummyHis);
+
+  const handleSort = () => {
+    const newSortOrder = sortOrder === 'ascend' ? 'descend' : 'ascend';
+    setSortOrder(newSortOrder);
+
+    const sorted = [...sortedData].sort((a, b) => {
+      if (newSortOrder === 'ascend') {
+        return a.carNumber.localeCompare(b.carNumber);
+      } else {
+        return b.carNumber.localeCompare(a.carNumber);
+      }
+    });
+
+    setSortedData(sorted);
+  };
+
   return (
-    <div className={styles.container}>
+    <div className="flex align-center justify-between p-4 bg-white rounded-xl shadow-md w-[98%] m-3">
       <Table className={historyStyles.historyTable}>
         <TableHeader>
           <TableRow>
             <TableHead className={historyStyles.tableHeadWithPadding}>
-              차량번호
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                차량번호
+                <div
+                  className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
+                  onClick={handleSort}
+                />
+              </div>
             </TableHead>
-            <TableHead className={historyStyles.tableHeadDefault}>
-              렌트시작일
+            <TableHead className={historyStyles.tableHeadWithPadding}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                렌트시작일
+                <div
+                  className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
+                  onClick={handleSort}
+                />
+              </div>
             </TableHead>
-            <TableHead className={historyStyles.tableHeadDefault}>
-              렌트종료일
+            <TableHead className={historyStyles.tableHeadWithPadding}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                렌트종료일
+                <div
+                  className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
+                  onClick={handleSort}
+                />
+              </div>
             </TableHead>
             <TableHead className={historyStyles.tableHeadDefault}>
               출발지
@@ -92,7 +129,7 @@ const HistoryListBox = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {dummyHis.map(log => (
+          {sortedData.map(log => (
             <TableRow key={log.carNumber}>
               <TableCell className={historyStyles.tableCell}>
                 {log.carNumber}
