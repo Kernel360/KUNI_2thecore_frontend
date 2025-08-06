@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import { CarService } from '@/services/car-service';
 import Map from './map';
 
 export interface Car {
@@ -31,17 +32,36 @@ export default function CarClustererMap({ width, height, carStatusFilter }: { wi
       disableClickZoom: true,
     });
 
-    const dummyCars: Car[] = [
-      { carNumber: '12가1234', status: '운행중', gpsLatitude: '37.5665', gpsLongitude: '126.9780' }, // 서울
-      { carNumber: '23나2345', status: '대기중', gpsLatitude: '35.1796', gpsLongitude: '129.0756' }, // 부산
-      { carNumber: '34다3456', status: '수리중', gpsLatitude: '35.8714', gpsLongitude: '128.6014' }, // 대구
-      { carNumber: '45라4567', status: '운행중', gpsLatitude: '37.4563', gpsLongitude: '126.7052' }, // 인천
-      { carNumber: '56마5678', status: '대기중', gpsLatitude: '35.1595', gpsLongitude: '126.8526' }, // 광주
-      { carNumber: '67바6789', status: '수리중', gpsLatitude: '36.3504', gpsLongitude: '127.3845' }, // 대전
-      { carNumber: '78사7890', status: '운행중', gpsLatitude: '35.5384', gpsLongitude: '129.3114' }, // 울산
-      { carNumber: '89아8901', status: '대기중', gpsLatitude: '33.4996', gpsLongitude: '126.5312' }, // 제주
-    ];
-    setCars(dummyCars);
+    const fetchCars = async () => {
+      try {
+        const carData = await CarService.getAllCars(1, 100); // 첫 번째 페이지, 100개
+        const carsWithGPS = carData.content
+          .filter(car => car.gpsLatitude && car.gpsLongitude)
+          .map(car => ({
+            carNumber: car.carNumber,
+            status: car.status,
+            gpsLatitude: car.gpsLatitude?.toString() || '0',
+            gpsLongitude: car.gpsLongitude?.toString() || '0',
+          }));
+        setCars(carsWithGPS);
+      } catch (error) {
+        console.error('차량 데이터 조회 실패:', error);
+        // 에러 발생 시 더미 데이터 사용
+        const fallbackCars: Car[] = [
+          { carNumber: '12가1234', status: '운행중', gpsLatitude: '37.5665', gpsLongitude: '126.9780' },
+          { carNumber: '23나2345', status: '대기중', gpsLatitude: '35.1796', gpsLongitude: '129.0756' },
+          { carNumber: '34다3456', status: '수리중', gpsLatitude: '35.8714', gpsLongitude: '128.6014' },
+          { carNumber: '45라4567', status: '운행중', gpsLatitude: '37.4563', gpsLongitude: '126.7052' },
+          { carNumber: '56마5678', status: '대기중', gpsLatitude: '35.1595', gpsLongitude: '126.8526' },
+          { carNumber: '67바6789', status: '수리중', gpsLatitude: '36.3504', gpsLongitude: '127.3845' },
+          { carNumber: '78사7890', status: '운행중', gpsLatitude: '35.5384', gpsLongitude: '129.3114' },
+          { carNumber: '89아8901', status: '대기중', gpsLatitude: '33.4996', gpsLongitude: '126.5312' },
+        ];
+        setCars(fallbackCars);
+      }
+    };
+
+    fetchCars();
   }, [map]);
 
   useEffect(() => {
