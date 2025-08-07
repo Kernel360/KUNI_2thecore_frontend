@@ -15,7 +15,6 @@ const StatusContainer = ({
   carStatusFilter,
   setCarStatusFilter,
 }: StatusContainerProps) => {
-
   const [carSummary, setCarSummary] = useState<CarStatistics>({
     total: 0,
     operating: 0,
