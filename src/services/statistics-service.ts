@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = ''; // 프록시 사용으로 빈 문자열
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_CAR_BASE_URL || 'http://localhost:8080/api';
 
 export interface CarStatistics {
   total: number;
@@ -18,14 +19,14 @@ export interface ApiResponse<T> {
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0IiwiaWF0IjoxNzU0NTI5OTc5LCJleHAiOjE3NTUxMjk5Nzl9.LXgndqqwz1XEAgG45rmgGJN-r2mUHgnRAtaIZ3FscrM`,
   },
 });
 
 export class StatisticsService {
   static async getCarStatistics(): Promise<CarStatistics> {
     try {
-      const response = await axios.get('/api/cars/statistics');
+      const response = await axiosInstance.get('/cars/statistics');
 
       if (response.data.result) {
         return response.data.data;
