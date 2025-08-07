@@ -15,13 +15,15 @@ import historyStyles from './history-list-box.module.css';
 
 // type HistoryList {
 //   carNumber: string;
-// 	rentDate: number; //timestamp
-// 	returnDate: number; //timestamp
-// 	startLocation : string;
-// 	endLocation : string;
-// 	totalDist : number;
-// 	status: string;
-// 	memo : string;
+//   brand: string;
+// 	model: string;
+//  	rentDate: number; //timestamp
+//  	returnDate: number; //timestamp
+//  	startLocation : string;
+//  	endLocation : string;
+//  	totalDist : number;
+//  	status: string;
+//  	memo : string;
 // }
 
 const allowedStatus = ['운행중', '대기중', '수리중'] as const;
@@ -30,6 +32,8 @@ type StatusType = (typeof allowedStatus)[number];
 const dummyHis = [
   {
     carNumber: '12가 3456',
+    brand: '현대',
+    model: '소나타',
     rentDate: '2025-01-15',
     returnDate: '2024-01-17',
     startLocation: '서울시 중구',
@@ -40,6 +44,8 @@ const dummyHis = [
   },
   {
     carNumber: '34나 5678',
+    brand: '기아',
+    model: 'K5',
     rentDate: '2025-01-15',
     returnDate: '-',
     startLocation: '서울시 서초구',
@@ -50,6 +56,8 @@ const dummyHis = [
   },
   {
     carNumber: '56다 7890',
+    brand: '삼성',
+    model: 'SM5',
     rentDate: '2025-01-10',
     returnDate: '2025-01-15',
     startLocation: '대전광역시',
@@ -85,7 +93,9 @@ const HistoryListBox = () => {
         <TableHeader>
           <TableRow>
             <TableHead className={historyStyles.tableHeadWithPadding}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
                 차량번호
                 <div
                   className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
@@ -93,8 +103,14 @@ const HistoryListBox = () => {
                 />
               </div>
             </TableHead>
+            <TableHead className={historyStyles.tableHeadSmall}>
+              브랜드
+            </TableHead>
+            <TableHead className={historyStyles.tableHeadSmall}>모델</TableHead>
             <TableHead className={historyStyles.tableHeadWithPadding}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
                 렌트시작일
                 <div
                   className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
@@ -103,7 +119,9 @@ const HistoryListBox = () => {
               </div>
             </TableHead>
             <TableHead className={historyStyles.tableHeadWithPadding}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
                 렌트종료일
                 <div
                   className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
@@ -133,6 +151,12 @@ const HistoryListBox = () => {
             <TableRow key={log.carNumber}>
               <TableCell className={historyStyles.tableCell}>
                 {log.carNumber}
+              </TableCell>
+              <TableCell className={historyStyles.tableCell}>
+                {log.brand}
+              </TableCell>
+              <TableCell className={historyStyles.tableCell}>
+                {log.model}
               </TableCell>
               <TableCell className={historyStyles.tableCell}>
                 {log.rentDate}

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // API 기본 설정
-const API_BASE_URL = 'http://localhost:8080'; // main-server 포트
-const EMULATOR_API_BASE_URL = 'http://localhost:8081'; // emulator-server 포트
+const API_BASE_URL = 'http://localhost:8080/'; // main-server 포트
+const EMULATOR_API_BASE_URL = 'http://localhost:8081/'; // emulator-server 포트
 
 // Main API 인스턴스
 export const mainApi = axios.create({
