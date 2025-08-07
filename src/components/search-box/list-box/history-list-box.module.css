@@ -1,6 +1,6 @@
 .historyTable {
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: 1150px;
 }
 
 .tableHeadDefault {
@@ -13,7 +13,7 @@
 }
 
 .tableHeadSmall {
-  width: 100px;
+  width: 90px;
 }
 
 .tableCell {

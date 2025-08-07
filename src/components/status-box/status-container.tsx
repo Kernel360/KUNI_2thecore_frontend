@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { CarService } from '@/services/car-service';
+import { CarSummary } from '@/lib/api';
 import { StatisticsService, CarStatistics } from '@/services/statistics-service';
 import StatusBox from './status-box';
 import styles from './status-box.module.css';
@@ -13,6 +15,7 @@ const StatusContainer = ({
   carStatusFilter,
   setCarStatusFilter,
 }: StatusContainerProps) => {
+
   const [carSummary, setCarSummary] = useState<CarStatistics>({
     total: 0,
     operating: 0,
@@ -92,7 +95,7 @@ const StatusContainer = ({
       >
         <StatusBox
           num={carSummary.inspecting}
-          text="점검 중"
+          text="수리 중"
           active={carStatusFilter === '수리중'}
         />
       </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { EmulatorService } from '@/services/emulator-service';
 import { Emulator } from '@/lib/api';
 import IconButton from '@/components/icon-button/icon-button';
+import NumberSearchBox from '@/components/search-box/number-search-box';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -17,8 +18,6 @@ import {
 import TopBar from '@/components/ui/topBar';
 import React from 'react';
 import styles from './emulator.module.css';
-
-// Emulator 인터페이스는 @/lib/api에서 import
 
 const handleDelete = async (deviceId: string) => {
   if (!confirm('정말로 이 에뮬레이터를 삭제하시겠습니까?')) {
@@ -36,34 +35,23 @@ const handleDelete = async (deviceId: string) => {
   }
 };
 
-const CarEmulNumberSearchBox = () => {
+const EmulSearchBox = () => {
   return (
-    <div className={styles.searchContainer}>
-      <div className={styles.searchRow}>
-        <Input
-          type="text"
-          placeholder="차량 번호 (예: 11가 1111)"
-          className={styles.searchInput}
-        />
-        <Button className={styles.searchButton}>
-          검색
-        </Button>
-      </div>
-      <div className={styles.searchRow}>
+    <div className={styles.emulSearch}>
+      <NumberSearchBox />
+      <div className={styles.filterContainer}>
         <Input
           type="text"
           placeholder="새 에뮬레이터를 등록하려면 차량 번호를 이곳에 입력해주세요. (예: 11가 1111)"
-          className={styles.searchInput}
+          className={styles.searchContainer}
         />
-        <Button className={styles.searchButton}>
-          등록
-        </Button>
+        <Button className={styles.searchButton}>등록</Button>
       </div>
     </div>
   );
 };
 
-export default function Emulator() {
+export default function LocalEmulator() {
   const [emulators, setEmulators] = useState<Emulator[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -101,34 +89,33 @@ export default function Emulator() {
     fetchEmulators();
   }, []);
 
-  if (loading) {
-    return (
-      <div>
-        <TopBar title="에뮬레이터"></TopBar>
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
-          <div>로딩 중...</div>
-        </div>
+const CarEmulNumberSearchBox = () => {
+  return (
+    <div className={styles.emulSearch}>
+      <NumberSearchBox />
+      <div className={styles.filterContainer}>
+        <Input
+          type="text"
+          placeholder="새 에뮬레이터를 등록하려면 차량 번호를 이곳에 입력해주세요. (예: 11가 1111)"
+          className={styles.searchContainer}
+        />
+        <Button className={styles.searchButton}>등록</Button>
       </div>
-    );
-  }
+    </div>
+  );
+};
 
   return (
     <div>
       <TopBar title="에뮬레이터"></TopBar>
-      <CarEmulNumberSearchBox />
+      <EmulSearchBox />
       <Table className={styles.emulatorTable}>
         <TableHeader className={styles.tableHeader}>
           <TableRow>
             <TableHead className={styles.tableCellSmall}></TableHead>
-            <TableHead className={styles.tableCell}>
-              차량번호
-            </TableHead>
-            <TableHead className={styles.tableCell}>
-              에뮬레이터 ID
-            </TableHead>
-            <TableHead className={styles.tableCell}>
-              ON/OFF
-            </TableHead>
+            <TableHead className={styles.tableCell}>차량번호</TableHead>
+            <TableHead className={styles.tableCell}>에뮬레이터 ID</TableHead>
+            <TableHead className={styles.tableCell}>ON/OFF</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -158,4 +145,3 @@ export default function Emulator() {
     </div>
   );
 }
-

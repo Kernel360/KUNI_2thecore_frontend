@@ -164,6 +164,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Method**: GET
 - **Path**: `/api/cars/statistics`
 - **상태**: 완료
+
 - **request**:"" // null
 - **response**:`
 {
@@ -176,6 +177,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
     "inspecting": 0 // 점검 차량 수
   }
 `
+
 
 ### 3. 로그 관련 API
 
