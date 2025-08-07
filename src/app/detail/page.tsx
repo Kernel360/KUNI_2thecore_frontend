@@ -1,5 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { CarService } from '@/services/car-service';
+import { CarDetail } from '@/lib/api';
 import CarLocationMap from '@/components/map/car-location-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import { Button } from '@/components/ui/button';
@@ -9,7 +12,6 @@ import TopBar from '@/components/ui/topBar';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { Detail, useDetailStore } from '@/store/detail-store';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import styles from './detail.module.css';
 const mockDetail = {
   year: '2022년',
@@ -55,21 +57,34 @@ const DetailPage = () => {
     }
   };
 
-  const handleSave = () => {
-    // 여기에 실제 저장 로직을 추가할 수 있습니다
-    // 예: API 호출, 데이터베이스 업데이트 등
-    console.log('저장된 데이터:', { carNumber, brand, model, status });
+  const handleSave = async () => {
+    if (!carNumber) {
+      alert('차량 번호가 필요합니다.');
+      return;
+    }
 
-    console.log('저장된 데이터:', { carNumber, brand, model, status });
+    try {
+      const updateData: Partial<CarDetail> = {
+        carNumber,
+        brand,
+        model,
+        status,
+      };
 
-    // 편집 모드 종료
-    setDetailChange(false);
+      await CarService.updateCar(carNumber, updateData);
+      
+      // 편집 모드 종료
+      setDetailChange(false);
 
-    // 성공 메시지 표시 (선택사항)
-    alert('차량 정보가 성공적으로 저장되었습니다.');
+      // 성공 메시지 표시
+      alert('차량 정보가 성공적으로 저장되었습니다.');
 
-    // search 페이지로 라우트
-    router.push('/search');
+      // search 페이지로 라우트
+      router.push('/search');
+    } catch (error) {
+      console.error('차량 정보 저장 실패:', error);
+      alert('차량 정보 저장 중 오류가 발생했습니다.');
+    }
   };
 
   return (

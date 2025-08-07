@@ -1,5 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { EmulatorService } from '@/services/emulator-service';
+import { Emulator } from '@/lib/api';
 import IconButton from '@/components/icon-button/icon-button';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,43 +18,23 @@ import TopBar from '@/components/ui/topBar';
 import React from 'react';
 import styles from './emulator.module.css';
 
-interface Emulator {
-  deviceId: string;
-  carNumber: string;
-  emulatorStatus: string; //'ON' | 'OFF'
-}
+// Emulator 인터페이스는 @/lib/api에서 import
 
-const handleDelete = (e: React.MouseEvent) => {
-  alert('에뮬레이터가 삭제되었습니다.');
+const handleDelete = async (deviceId: string) => {
+  if (!confirm('정말로 이 에뮬레이터를 삭제하시겠습니까?')) {
+    return;
+  }
+
+  try {
+    await EmulatorService.deleteEmulator(deviceId);
+    alert('에뮬레이터가 삭제되었습니다.');
+    // 페이지 리로드 또는 상태 업데이트
+    window.location.reload();
+  } catch (error) {
+    console.error('에뮬레이터 삭제 실패:', error);
+    alert('에뮬레이터 삭제 중 오류가 발생했습니다.');
+  }
 };
-
-const dummyEmuls = [
-  {
-    deviceId: '68fd0215-6a96-11f0-aaf3-0a8c035f5c3b',
-    carNumber: '32가1234',
-    emulatorStatus: 'OFF',
-  },
-  {
-    deviceId: '68fd01f8-6a96-11f0-aaf3-0a8c035f5c3b',
-    carNumber: '73미1231',
-    emulatorStatus: 'ON',
-  },
-  {
-    deviceId: '68fd01d7-6a96-11f0-aaf3-0a8c035f5c3b',
-    carNumber: '12가5129',
-    emulatorStatus: 'OFF',
-  },
-  {
-    deviceId: '68fd01b2-6a96-11f0-aaf3-0a8c035f5c3b',
-    carNumber: '12가5126',
-    emulatorStatus: 'ON',
-  },
-  {
-    deviceId: '68fd0192-6a96-11f0-aaf3-0a8c035f5c3b',
-    carNumber: '12가5123',
-    emulatorStatus: 'OFF',
-  },
-];
 
 const CarEmulNumberSearchBox = () => {
   return (
@@ -81,6 +64,54 @@ const CarEmulNumberSearchBox = () => {
 };
 
 export default function Emulator() {
+  const [emulators, setEmulators] = useState<Emulator[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEmulators = async () => {
+      try {
+        const emulatorData = await EmulatorService.getAllEmulators(0, 100);
+        setEmulators(emulatorData.content);
+      } catch (error) {
+        console.error('에뮬레이터 목록 조회 실패:', error);
+        // 에러 발생 시 더미 데이터 사용
+        const fallbackEmulators: Emulator[] = [
+          {
+            deviceId: '68fd0215-6a96-11f0-aaf3-0a8c035f5c3b',
+            carNumber: '32가1234',
+            emulatorStatus: 'OFF',
+          },
+          {
+            deviceId: '68fd01f8-6a96-11f0-aaf3-0a8c035f5c3b',
+            carNumber: '73미1231',
+            emulatorStatus: 'ON',
+          },
+          {
+            deviceId: '68fd01d7-6a96-11f0-aaf3-0a8c035f5c3b',
+            carNumber: '12가5129',
+            emulatorStatus: 'OFF',
+          },
+        ];
+        setEmulators(fallbackEmulators);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEmulators();
+  }, []);
+
+  if (loading) {
+    return (
+      <div>
+        <TopBar title="에뮬레이터"></TopBar>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+          <div>로딩 중...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <TopBar title="에뮬레이터"></TopBar>
@@ -101,11 +132,14 @@ export default function Emulator() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {dummyEmuls.map(emul => (
+          {emulators.map(emul => (
             <TableRow key={emul.deviceId}>
               <TableCell className={styles.tableCell}>
                 <div className={styles.deleteContainer}>
-                  <IconButton iconType="delete" onClick={handleDelete} />
+                  <IconButton 
+                    iconType="delete" 
+                    onClick={() => handleDelete(emul.deviceId)} 
+                  />
                 </div>
               </TableCell>
               <TableCell className={styles.tableCell}>

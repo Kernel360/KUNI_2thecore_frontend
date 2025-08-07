@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import { useWebSocket } from '@/hooks/use-websocket';
 import Map from './map';
 
 export interface Car {
@@ -8,6 +9,16 @@ export interface Car {
   status: '운행중' | '대기중' | '수리중';
   gpsLatitude: string;
   gpsLongitude: string;
+}
+
+export interface WebSocketCarData {
+  loginId: string;
+  carNumber: string;
+  logList: {
+    latitude: string;
+    longitude: string;
+    timestamp: string;
+  }[];
 }
 
 const statusToImage: { [key in Car['status']]?: string } = {
@@ -21,6 +32,50 @@ export default function CarClustererMap({ width, height, carStatusFilter }: { wi
   const [cars, setCars] = useState<Car[]>([]);
   const clustererRef = useRef<any>(null);
 
+  const { connectionStatus, lastMessage, sendMessage } = useWebSocket({
+    url: 'ws://localhost:8082/map/running',
+    onOpen: () => {
+      console.log('지도 WebSocket 연결됨');
+    },
+    onMessage: (message) => {
+      if (message.type === 'message' && message.data) {
+        try {
+          const carData = message.data as WebSocketCarData;
+          if (carData.logList && carData.logList.length > 0) {
+            const latestLog = carData.logList[carData.logList.length - 1];
+            const newCar: Car = {
+              carNumber: carData.carNumber,
+              status: '운행중', // WebSocket으로 받은 차량은 운행중 상태로 가정
+              gpsLatitude: latestLog.latitude,
+              gpsLongitude: latestLog.longitude
+            };
+            
+            setCars(prevCars => {
+              const existingIndex = prevCars.findIndex(car => car.carNumber === newCar.carNumber);
+              if (existingIndex >= 0) {
+                const updated = [...prevCars];
+                updated[existingIndex] = newCar;
+                return updated;
+              } else {
+                return [...prevCars, newCar];
+              }
+            });
+          }
+        } catch (error) {
+          console.error('WebSocket 데이터 파싱 오류:', error);
+        }
+      }
+    },
+    onError: (error) => {
+      console.error('지도 WebSocket 오류:', error);
+    },
+    onClose: () => {
+      console.log('지도 WebSocket 연결 종료');
+    },
+    reconnectAttempts: 5,
+    reconnectInterval: 3000
+  });
+
   useEffect(() => {
     if (!map) return;
 
@@ -31,18 +86,14 @@ export default function CarClustererMap({ width, height, carStatusFilter }: { wi
       disableClickZoom: true,
     });
 
-    const dummyCars: Car[] = [
-      { carNumber: '12가1234', status: '운행중', gpsLatitude: '37.5665', gpsLongitude: '126.9780' }, // 서울
-      { carNumber: '23나2345', status: '대기중', gpsLatitude: '35.1796', gpsLongitude: '129.0756' }, // 부산
-      { carNumber: '34다3456', status: '수리중', gpsLatitude: '35.8714', gpsLongitude: '128.6014' }, // 대구
-      { carNumber: '45라4567', status: '운행중', gpsLatitude: '37.4563', gpsLongitude: '126.7052' }, // 인천
-      { carNumber: '56마5678', status: '대기중', gpsLatitude: '35.1595', gpsLongitude: '126.8526' }, // 광주
-      { carNumber: '67바6789', status: '수리중', gpsLatitude: '36.3504', gpsLongitude: '127.3845' }, // 대전
-      { carNumber: '78사7890', status: '운행중', gpsLatitude: '35.5384', gpsLongitude: '129.3114' }, // 울산
-      { carNumber: '89아8901', status: '대기중', gpsLatitude: '33.4996', gpsLongitude: '126.5312' }, // 제주
-    ];
-    setCars(dummyCars);
-  }, [map]);
+    // WebSocket 연결 상태 확인 후 초기 요청
+    if (connectionStatus === 'Open') {
+      sendMessage({
+        type: 'request_running_cars',
+        timestamp: new Date().toISOString()
+      });
+    }
+  }, [map, connectionStatus, sendMessage]);
 
   useEffect(() => {
     if (!clustererRef.current) return;
@@ -79,5 +130,14 @@ export default function CarClustererMap({ width, height, carStatusFilter }: { wi
     clustererRef.current.addMarkers(markers);
   }, [cars, carStatusFilter]);
 
-  return <Map width={width} height={height} onLoad={setMap} />;
+  return (
+    <div className="relative">
+      {connectionStatus !== 'Open' && (
+        <div className="absolute top-2 right-2 z-10 px-3 py-1 rounded-full text-sm bg-yellow-100 text-yellow-800">
+          WebSocket {connectionStatus === 'Connecting' ? '연결 중...' : '연결 끊김'}
+        </div>
+      )}
+      <Map width={width} height={height} onLoad={setMap} />
+    </div>
+  );
 }
