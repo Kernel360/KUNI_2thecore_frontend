@@ -15,6 +15,7 @@ import {
 import { setDetailChangeStore } from '@/store/detail-change';
 import { useDetailStore } from '@/store/detail-store';
 import { useRouter } from 'next/navigation';
+import { CarService } from '@/services/car-service';
 import Status from '../status';
 import styles from './list-box.module.css';
 
@@ -23,9 +24,10 @@ interface ListBoxProps {
   brand: string;
   model: string;
   status: string;
+  onDelete?: () => void;
 }
 
-const allowedStatus = ['운행중', '대기중', '수리중'] as const;
+const allowedStatus = ['운행', '대기', '점검'] as const;
 type StatusType = (typeof allowedStatus)[number];
 
 const ListBox: React.FC<ListBoxProps> = ({
@@ -33,6 +35,7 @@ const ListBox: React.FC<ListBoxProps> = ({
   model,
   brand,
   status,
+  onDelete,
 }) => {
   const setDetail = useDetailStore(state => state.setDetail);
   const router = useRouter();
@@ -40,7 +43,7 @@ const ListBox: React.FC<ListBoxProps> = ({
 
   const safeStatus: StatusType = allowedStatus.includes(status as StatusType)
     ? (status as StatusType)
-    : '대기중';
+    : '대기';
 
   const handleClick = () => {
     setDetail({
@@ -65,9 +68,18 @@ const ListBox: React.FC<ListBoxProps> = ({
     router.push('/detail');
   };
 
-  const handleDelete = (e: React.MouseEvent) => {
+  const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    alert(`삭제됨: ${carNumber}`);
+    try {
+      await CarService.deleteCar(carNumber);
+      alert(`차량이 삭제되었습니다: ${carNumber}`);
+      if (onDelete) {
+        onDelete(); // 상위 컴포넌트에서 목록 새로고침
+      }
+    } catch (error) {
+      console.error('차량 삭제 실패:', error);
+      alert('차량 삭제에 실패했습니다.');
+    }
   };
 
   function AlertDialogDemo() {

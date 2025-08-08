@@ -8,18 +8,22 @@ import {
 } from '@/components/ui/select';
 import styles from './dropdown.module.css';
 
-export function Dropdown() {
+interface DropdownProps {
+  onValueChange?: (value: string) => void;
+}
+
+export function Dropdown({ onValueChange }: DropdownProps) {
   return (
-    <Select>
+    <Select onValueChange={onValueChange}>
       <SelectTrigger className={`w-[15%] ${styles.dropdownTrigger}`}>
         <SelectValue placeholder="전체 상태" />
       </SelectTrigger>
       <SelectContent className={styles.dropdownContent} position="popper" sideOffset={4}>
         <SelectGroup>
           <SelectItem className={styles.dropdownItem} value="null">전체 상태</SelectItem>
-          <SelectItem className={styles.dropdownItem} value="IN_USE">운행중</SelectItem>
-          <SelectItem className={styles.dropdownItem} value="IDLE">대기중</SelectItem>
-          <SelectItem className={styles.dropdownItem} value="MAINTENANCE">점검중</SelectItem>
+          <SelectItem className={styles.dropdownItem} value="운행">운행</SelectItem>
+          <SelectItem className={styles.dropdownItem} value="대기">대기</SelectItem>
+          <SelectItem className={styles.dropdownItem} value="점검">점검</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>

@@ -41,7 +41,7 @@ export interface Car {
   carNumber: string;
   brand: string;
   model: string;
-  status: '운행중' | '대기중' | '수리중';
+  status: '운행' | '대기' | '점검';
   gpsLatitude?: number;
   gpsLongitude?: number;
   year?: string;
@@ -49,15 +49,51 @@ export interface Car {
 }
 
 export interface CarDetail extends Car {
-  year?: string;
-  mileage?: string;
+  carYear?: number;
+  carType?: string;
+  sumDist?: number;
+  lastLatitude?: number;
+  lastLongitude?: number;
+}
+
+// 백엔드 API 응답 형식 (snake_case)
+export interface CarApiResponse {
+  brand: string;
+  model: string;
+  car_year: number;
+  status: string;
+  car_type: string;
+  car_number: string;
+  sum_dist: number;
+  last_latitude?: number;
+  last_longitude?: number;
+}
+
+// 백엔드 API 요청 형식
+export interface CarCreateRequest {
+  brand: string;
+  model: string;
+  carYear: number;
+  carType: string;
+  carNumber: string;
+  sumDist: number;
+}
+
+export interface CarUpdateRequest {
+  brand: string;
+  model: string;
+  carYear: number;
+  carType: string;
+  status: string;
+  carNumber: string;
+  sumDist: number;
 }
 
 export interface CarSummary {
-  totalCount: number;
-  operatingCount: number;
-  waitingCount: number;
-  repairCount: number;
+  total: number;
+  operating: number;
+  waiting: number;
+  inspecting: number;
 }
 
 // Emulator 타입들
