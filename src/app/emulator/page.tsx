@@ -144,5 +144,4 @@ const CarEmulNumberSearchBox = () => {
       </Table>
     </div>
   );
-
 }
