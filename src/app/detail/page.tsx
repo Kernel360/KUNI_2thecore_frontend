@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { CarService } from '@/services/car-service';
-import { CarDetail } from '@/lib/api';
+import { CarDetail } from '@/types';
 import CarLocationMap from '@/components/map/car-location-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import { Button } from '@/components/ui/button';
