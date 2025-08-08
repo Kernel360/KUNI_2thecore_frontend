@@ -1,42 +1,387 @@
-# CLAUDE.md
+# CLAUDE.md - Technical Specifications
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Korean vehicle fleet management system "2 the Core" - Next.js 15 with Korean-first UI.
 
 ## Development Commands
+- `npm run dev` | `npm run build` | `npm start` | `npm run lint` | `npm run format`
 
-- **Development server**: `npm run dev` (uses Next.js with Turbopack)
-- **Build**: `npm run build`
-- **Production start**: `npm start`
-- **Linting**: `npm run lint`
-- **Code formatting**: `npm run format` (write) or `npm run format:check` (check only)
+## Tech Stack
+Next.js 15 + React 19 | Tailwind CSS + CSS modules | Zustand | shadcn/ui | Kakao Maps | React Hook Form + Zod | pnpm
 
-## Project Summary
+### Project Structure & Page-Component Architecture
 
-KUNI 2thecore Frontend is a Korean vehicle fleet management system called "2 the Core" built with Next.js 15. The application provides comprehensive vehicle monitoring, tracking, and management capabilities with a Korean-first UI. It features a dashboard-centric interface for fleet operators to monitor real-time vehicle status, manage vehicle information, and control GPS tracking emulators.
+#### Page-Component Mapping & Data Flow
 
-## Architecture Overview
+```typescript
+// Complete page-component hierarchy with data flow documentation
+interface PageComponentArchitecture {
+  // 메인 대시보드 (/) - 차량 관제 시스템 중앙 허브
+  mainDashboard: {
+    pageFile: "src/app/page.tsx";
+    mainComponents: [
+      "TopBar", 
+      "StatusContainer", 
+      "MenuBox", 
+      "CarClustererMap", 
+      "MapModal"
+    ];
+    
+    stateManagement: {
+      localState: {
+        carStatusFilter: "'운행중' | '수리중' | '대기중' - 차량 상태 필터";
+        isMapModalOpen: "boolean - 지도 모달 표시 상태";
+      };
+      props: "carStatusFilter를 StatusContainer와 CarClustererMap에 전달";
+    };
+    
+    dataFlow: {
+      "TopBar": "title prop으로 '차량 관제 시스템' 표시";
+      "StatusContainer": {
+        receives: "carStatusFilter, setCarStatusFilter";
+        provides: "StatisticsService를 통한 차량 통계 데이터";
+        children: ["StatusBox", "StatusText"];
+      };
+      "MenuBox": {
+        receives: "onOpenMapModal 콜백";
+        provides: "페이지 네비게이션 기능";
+      };
+      "CarClustererMap": {
+        receives: "carStatusFilter, width, height";
+        provides: "카카오맵 기반 차량 위치 클러스터링";
+        dependencies: ["KakaoMapScript"];
+      };
+      "MapModal": {
+        receives: "isOpen, onClose";
+        provides: "확대된 지도 뷰";
+      };
+    };
+  };
+  
+  // 차량 검색 페이지 (/search) - 차량 목록 및 필터링
+  searchPage: {
+    pageFile: "src/app/search/page.tsx";
+    mainComponents: ["TopBar", "SearchBox"];
+    
+    stateManagement: {
+      noLocalState: "모든 상태를 SearchBox에서 관리";
+    };
+    
+    dataFlow: {
+      "TopBar": "title prop으로 '차량 검색' 표시";
+      "SearchBox": {
+        receives: "없음 - 최상위 검색 컴포넌트";
+        provides: "CarService를 통한 차량 목록 데이터";
+        children: [
+          "NumberSearchBox",
+          "BrandFilterBox", 
+          "ListBox (다중)",
+          "FloatingButton"
+        ];
+        localState: {
+          cars: "Car[] - 차량 목록 데이터";
+          loading: "boolean - 로딩 상태";
+        };
+      };
+    };
+  };
+  
+  // 차량 상세 페이지 (/detail) - 개별 차량 정보 관리
+  detailPage: {
+    pageFile: "src/app/detail/page.tsx";
+    mainComponents: [
+      "TopBar",
+      "Card (차량정보)",
+      "CarLocationMap",
+      "Form Controls"
+    ];
+    
+    stateManagement: {
+      zustandStores: {
+        "useDetailStore": "차량 상세 정보 (carNumber, brand, model, status)";
+        "setDetailChangeStore": "편집 모드 상태 (detailChange boolean)";
+      };
+      localState: {
+        mockDetail: "하드코딩된 연식, 주행거리 데이터";
+      };
+    };
+    
+    dataFlow: {
+      "TopBar": "동적 title: '차량 상세 정보 - {carNumber}'";
+      "Form Fields": {
+        receives: "useDetailStore의 차량 데이터";
+        provides: "handleChange를 통한 실시간 편집";
+        editing: "detailChange 상태에 따른 readOnly 제어";
+      };
+      "CarLocationMap": {
+        receives: "width, height props";
+        provides: "개별 차량 위치 표시";
+        dependencies: ["KakaoMapScript"];
+      };
+      "Save/Cancel Buttons": {
+        receives: "detailChange 상태";
+        provides: "CarService.updateCar API 호출 및 페이지 라우팅";
+      };
+    };
+  };
+  
+  // 에뮬레이터 관리 페이지 (/emulator) - GPS 에뮬레이터 제어
+  emulatorPage: {
+    pageFile: "src/app/emulator/page.tsx";
+    mainComponents: [
+      "TopBar",
+      "EmulSearchBox",
+      "Table (에뮬레이터 목록)"
+    ];
+    
+    stateManagement: {
+      localState: {
+        emulators: "Emulator[] - 에뮬레이터 목록";
+        loading: "boolean - 로딩 상태";
+      };
+    };
+    
+    dataFlow: {
+      "TopBar": "title prop으로 '에뮬레이터' 표시";
+      "EmulSearchBox": {
+        components: ["NumberSearchBox", "Input (등록)", "Button"];
+        provides: "새 에뮬레이터 등록 기능";
+      };
+      "Table": {
+        receives: "emulators 배열";
+        provides: "에뮬레이터 목록 표시 및 삭제 기능";
+        children: ["IconButton (delete)", "TableRow (다중)"];
+        apis: "EmulatorService.getAllEmulators, deleteEmulator";
+      };
+    };
+  };
+  
+  // 주행 기록 페이지 (/history) - 차량 이력 관리
+  historyPage: {
+    pageFile: "src/app/history/page.tsx";
+    mainComponents: [
+      "TopBar",
+      "HistorySearchBox", 
+      "HistoryListBox"
+    ];
+    
+    stateManagement: {
+      noLocalState: "자식 컴포넌트에서 상태 관리";
+    };
+    
+    dataFlow: {
+      "TopBar": "title prop으로 '주행 기록' 표시";
+      "HistorySearchBox": {
+        provides: "날짜 범위 검색 기능 (구현 필요)";
+      };
+      "HistoryListBox": {
+        provides: "주행 기록 목록 표시 (구현 필요)";
+      };
+      status: "PLACEHOLDER - 백엔드 연결 필요";
+    };
+  };
+  
+  // 로그인 페이지 (/login) - 사용자 인증
+  loginPage: {
+    pageFile: "src/app/login/page.tsx";
+    mainComponents: [
+      "TopBar",
+      "Card (로그인 폼)"
+    ];
+    
+    stateManagement: {
+      noState: "정적 폼 - 인증 로직 구현 필요";
+    };
+    
+    dataFlow: {
+      "TopBar": "title prop으로 '로그인' 표시";
+      "Form": {
+        provides: "아이디/비밀번호 입력 필드";
+        status: "PLACEHOLDER - JWT 인증 구현 필요";
+      };
+    };
+  };
+}
+```
 
-This is a Next.js 15 car fleet management system with the following key characteristics:
+#### Component Hierarchy & Reusability Matrix
 
-### Tech Stack
+```typescript
+// 재사용 가능한 컴포넌트와 페이지별 사용 현황
+interface ComponentReusabilityMatrix {
+  // 공통 UI 컴포넌트 (모든 페이지에서 사용)
+  universal: {
+    "TopBar": {
+      usedIn: ["main", "search", "detail", "emulator", "history", "login"];
+      props: "title: string";
+      responsibility: "페이지 제목 및 헤더 표시";
+    };
+    "KakaoMapScript": {
+      usedIn: ["main", "detail"];
+      props: "없음";
+      responsibility: "카카오맵 SDK 동적 로딩";
+    };
+  };
+  
+  // 검색 관련 컴포넌트
+  searchComponents: {
+    "NumberSearchBox": {
+      usedIn: ["search", "emulator"];
+      props: "없음 - 자체 상태 관리";
+      responsibility: "차량번호 검색 입력 필드";
+    };
+    "SearchBox": {
+      usedIn: ["search"];
+      children: ["NumberSearchBox", "BrandFilterBox", "ListBox"];
+      apis: "CarService.getAllCars";
+    };
+    "ListBox": {
+      usedIn: ["search"];
+      props: "carNumber, brand, model, status";
+      responsibility: "개별 차량 정보 카드 표시";
+    };
+  };
+  
+  // 지도 관련 컴포넌트
+  mapComponents: {
+    "CarClustererMap": {
+      usedIn: ["main"];
+      props: "width, height, carStatusFilter";
+      responsibility: "메인 대시보드 차량 위치 클러스터링";
+    };
+    "CarLocationMap": {
+      usedIn: ["detail"];
+      props: "width, height";
+      responsibility: "개별 차량 위치 표시";
+    };
+    "MapModal": {
+      usedIn: ["main"];
+      props: "isOpen, onClose";
+      responsibility: "확대된 지도 모달 뷰";
+    };
+  };
+  
+  // 상태 관련 컴포넌트
+  statusComponents: {
+    "StatusContainer": {
+      usedIn: ["main"];
+      props: "carStatusFilter, setCarStatusFilter";
+      children: ["StatusBox", "StatusText"];
+      apis: "StatisticsService.getCarStatistics";
+    };
+    "StatusBox": {
+      usedIn: ["StatusContainer"];
+      props: "num, text, active";
+      responsibility: "클릭 가능한 상태 박스 (운행중/대기중/수리중)";
+    };
+    "StatusText": {
+      usedIn: ["StatusContainer"];
+      props: "num, text";
+      responsibility: "전체 차량 수 표시";
+    };
+  };
+}
+```
 
-- **Framework**: Next.js 15 with App Router and React 19
-- **Styling**: Tailwind CSS with custom CSS modules
-- **State Management**: Zustand for global state and props
-- **UI Components**: Combination of shadcn/ui components and custom components
-- **Maps**: Kakao Maps integration for vehicle tracking
-- **Forms**: React Hook Form with Zod validation
-- **Package Manager**: pnpm
+#### State Management & Data Flow Patterns
 
-### Project Structure
+```typescript
+// 상태 관리 및 데이터 흐름 패턴
+interface StateManagementPatterns {
+  // Zustand 글로벌 상태
+  zustandStores: {
+    "useDetailStore": {
+      location: "src/store/detail-store.ts";
+      state: "carNumber, brand, model, status";
+      usedBy: ["detail 페이지"];
+      dataFlow: "SearchBox ListBox → DetailStore → Detail 페이지";
+    };
+    "setDetailChangeStore": {
+      location: "src/store/detail-change.ts";
+      state: "detailChange: boolean";
+      usedBy: ["detail 페이지"];
+      purpose: "편집 모드 토글 상태 관리";
+    };
+  };
+  
+  // Props 기반 상태 전달
+  propsDrilling: {
+    "carStatusFilter": {
+      origin: "main 페이지 useState";
+      flow: "main → StatusContainer → StatusBox";
+      flow2: "main → CarClustererMap";
+      purpose: "차량 상태 필터링 (운행중/대기중/수리중)";
+    };
+    "차량 데이터": {
+      origin: "API 서비스 (CarService, EmulatorService)";
+      flow: "API → useState → 자식 컴포넌트";
+      pattern: "각 페이지에서 독립적으로 API 호출";
+    };
+  };
+  
+  // 컴포넌트별 로컬 상태
+  localState: {
+    "SearchBox": "cars[], loading - CarService API 결과";
+    "StatusContainer": "carSummary, loading, error - StatisticsService API 결과";
+    "EmulatorPage": "emulators[], loading - EmulatorService API 결과";
+    "DetailPage": "mockDetail - 하드코딩된 연식/주행거리";
+  };
+}
+```
+
+#### API Integration Points & Service Layer
+
+```typescript
+// 서비스 레이어와 컴포넌트 연결점
+interface APIIntegrationPoints {
+  // 차량 관리 API
+  carService: {
+    location: "src/services/car-service.ts";
+    endpoints: {
+      "getAllCars": {
+        usedBy: ["SearchBox"];
+        params: "page, limit";
+        returns: "{ content: Car[], total: number }";
+      };
+      "updateCar": {
+        usedBy: ["DetailPage"];
+        params: "carNumber, updateData";
+        returns: "Car";
+      };
+    };
+  };
+  
+  // 에뮬레이터 관리 API
+  emulatorService: {
+    location: "src/services/emulator-service.ts";
+    endpoints: {
+      "getAllEmulators": {
+        usedBy: ["EmulatorPage"];
+        params: "page, limit";
+        returns: "{ content: Emulator[], total: number }";
+      };
+      "deleteEmulator": {
+        usedBy: ["EmulatorPage"];
+        params: "deviceId";
+        returns: "void";
+      };
+    };
+  };
+  
+  // 통계 API
+  statisticsService: {
+    location: "src/services/statistics-service.ts";
+    endpoints: {
+      "getCarStatistics": {
+        usedBy: ["StatusContainer"];
+        params: "없음";
+        returns: "{ total, operating, waiting, inspecting }";
+      };
+    };
+  };
+}
+```
 
 - **`src/app/`**: Next.js App Router pages with Korean layout (lang="ko")
-  - `/` (main): Central dashboard with vehicle status overview, interactive map with clustering, and navigation menu
-  - `/detail`: Comprehensive vehicle detail view with editable information forms and individual location mapping
-  - `/emulator`: GPS tracking emulator management with device registration, search, and ON/OFF control
-  - `/history`: Vehicle management and maintenance history (placeholder)
-  - `/login`: User authentication system with Korean language interface
-  - `/search`: Advanced vehicle search with filtering by car number, brand, and status
 - **`src/components/`**: Feature-organized reusable components
   - `map/`: Kakao Maps integration with clustering (`car-clusterer-map`), individual location tracking (`car-location-map`), and script loading
   - `search-box/`: Complete vehicle search system with number search, brand filtering, dropdown selection, and paginated list display
@@ -49,74 +394,20 @@ This is a Next.js 15 car fleet management system with the following key characte
 - **`src/hooks/`**: Custom React hooks (mobile detection)
 - **`src/types/`**: TypeScript type definitions (Kakao Maps API)
 
-### Key Features
+## Code Conventions
+- Files: `kebab-case` | Components: `PascalCase` | Variables: `camelCase` | Hooks: `useCamelCase` | Constants: `UPPER_SNAKE_CASE`
 
-- **Central Dashboard**: Grid-based layout (250px sidebar + flexible content) with TopBar title "차량 관제 시스템"
-- **Real-time Status Overview**: Interactive status boxes showing 전체 차량(100), 운행 중(57), 대기 중(13), 수리 중(50) with click-to-filter functionality
-- **Kakao Maps Integration**: 
-  - Main dashboard: Clustered vehicle locations with status-based markers (Green=운행중, Red=수리중, Yellow=대기중)
-  - Detail page: Individual vehicle location mapping
-  - Center point covers South Korea (36.5, 127.8) with clustering at minimum level 10
-- **Advanced Vehicle Search**: 
-  - Car number search with Korean license plate format (12가 1234)
-  - Brand filtering (현대, 기아, 삼성, etc.)
-  - Status-based filtering with visual status indicators
-  - Floating + button for adding new vehicles
-- **Vehicle Detail Management**: 
-  - Editable forms for car number, brand/model, status, year, and mileage
-  - Toggle between view and edit modes with confirmation/cancel buttons
-  - Side-by-side layout with vehicle info (800px) and location map (400px)
-- **GPS Emulator Control**: 
-  - Device ID management with UUID format (68fd0215-6a96-11f0-aaf3-0a8c035f5c3b)
-  - Search and register new emulators by car number
-  - ON/OFF status control with table-based interface
-  - Delete functionality with confirmation alerts
-- **Korean-First UI**: All interface text, status labels, and user interactions in Korean
+## Core Data Types
+```typescript
+// Vehicle: { carNumber: string, brand: string, model: string, status: '운행중'|'대기중'|'수리중' }
+// Emulator: { deviceId: string, carNumber: string, emulatorStatus: 'ON'|'OFF' }
+// Korean License Plates: "12가 1234", "23나 2345" format
+```
 
-### Code Conventions
-
-- **Files/Folders**: kebab-case (e.g., `user-profile.tsx`)
-- **Components/Classes/Types**: PascalCase (e.g., `UserProfile`, `IUserData`)
-- **Props/Variables/Functions**: camelCase (e.g., `userSettings`, `fetchData`)
-- **Custom Hooks**: use + camelCase (e.g., `useAuthState`)
-- **Constants**: UPPER_SNAKE_CASE (e.g., `API_BASE_URL`)
-
-### State Management
-
-The app uses Zustand for state management with stores in `src/store/`:
-
-- `detail-store.ts`: Vehicle detail information with interface `Detail` containing carNumber, brand, model, status
-- `detail-change.ts`: Boolean edit mode state (`detailChange`) for vehicle detail page toggle functionality
-- Vehicle status types: '운행중' | '대기중' | '수리중' (Korean status labels) with 'null' for all vehicles filter
-- Status filter state managed in main dashboard component with type `'null' | '운행중' | '수리중' | '대기중'`
-- Dummy data arrays used throughout for development (`dummyCars`, `dummyEmuls`)
-
-### Map Integration
-
-Kakao Maps is used for vehicle location tracking:
-
-- `KakaoMapScript`: Loads Kakao Maps SDK dynamically
-- `CarClustererMap`: Main dashboard map with vehicle clustering, status-based filtering
-- `CarLocationMap`: Individual vehicle location display for detail page
-- `Map`: Base map component with center point (36.5, 127.8) covering South Korea
-- Custom markers: Green (운행중), Red (수리중), Yellow (대기중)
-- Marker clustering with minimum level 10 for performance
-
-### Styling
-
-- Tailwind CSS with custom CSS variables for theming
-- CSS modules for component-specific styles
-- shadcn/ui design system integration
-- Responsive design with mobile considerations (`use-mobile.ts` hook)
-
-### Data Patterns
-
-- **Dummy Data Usage**: All components use hardcoded arrays (`dummyCars`, `dummyEmuls`) for development
-- **Vehicle Object**: `{ carNumber: string, brand: string, model: string, status: '운행중'|'대기중'|'수리중', gpsLatitude?: number, gpsLongitude?: number }`
-- **Emulator Object**: `{ deviceId: string (UUID), carNumber: string, emulatorStatus: 'ON'|'OFF' }`
-- **Status Filtering**: Components support 'null' (전체 차량) or specific Korean status filtering
-- **Korean License Plates**: Format follows Korean standards (12가 1234, 23나 2345, 34라 3456)
-- **Mock Static Data**: Additional fields like year ('2022년') and mileage ('45,678 km') are hardcoded
+## State Management (Zustand)
+- `detail-store.ts`: Vehicle detail info (carNumber, brand, model, status)
+- `detail-change.ts`: Edit mode toggle (detailChange: boolean)
+- Status types: `'운행중' | '대기중' | '수리중'` + `'null'` for all vehicles
 
 ### Backend Integration Priority
 
@@ -137,240 +428,20 @@ Kakao Maps is used for vehicle location tracking:
 
 ## Backend Integration Strategy
 
-### API Architecture Requirements
-
-The system requires comprehensive backend integration following these specifications:
-
-#### API Service Layer (`src/lib/api.ts`)
+### API Requirements (`src/lib/api.ts`)
 ```typescript
-// Core API configuration with request/response typing
-interface APIConfig {
-  baseURL: string;           // Environment-based API endpoint
-  timeout: number;           // Request timeout handling
-  retryAttempts: number;     // Failed request retry logic
-  headers: {
-    'Content-Type': 'application/json';
-    'Accept': 'application/json';
-    'Accept-Language': 'ko-KR,ko;q=0.9';  // Korean language preference
-  };
-}
-
-// Request/Response type definitions for all API endpoints
-interface APIRequestTypes {
-  // Vehicle Management
-  getVehicles: { page?: number; limit?: number; status?: VehicleStatus };
-  updateVehicle: { carNumber: string; data: Partial<VehicleUpdateData> };
-  createVehicle: VehicleCreateData;
-  deleteVehicle: { carNumber: string };
-  
-  // Authentication
-  login: { username: string; password: string };
-  refreshToken: { token: string };
-  
-  // GPS/Emulator
-  getEmulators: { page?: number; limit?: number };
-  toggleEmulator: { deviceId: string; status: 'ON' | 'OFF' };
-  registerEmulator: { carNumber: string; deviceId?: string };
-}
-
-interface APIResponseTypes {
-  // Standard response wrapper
-  success: { success: boolean; data: any; message?: string };
-  error: { success: boolean; error: string; code?: number; details?: any };
-  
-  // Paginated responses
-  paginated: { 
-    data: any[]; 
-    total: number; 
-    page: number; 
-    limit: number; 
-    hasNext: boolean 
-  };
-}
+// Core: axios + TypeScript + Korean error handling
+// Auth: JWT (localStorage) + refresh interceptor
+// Real-time: WebSocket preferred, polling fallback
+// Status codes: 200/201 success, 400/401/403/404/500 Korean messages
 ```
 
-#### HTTP Status Code Handling
+### Data Transformation
 ```typescript
-interface HTTPStatusHandling {
-  200: "요청 성공 - 데이터 정상 반환";
-  201: "생성 성공 - 새 차량/에뮬레이터 등록 완료";
-  400: "잘못된 요청 - 입력 데이터 검증 실패";
-  401: "인증 실패 - 로그인 필요";
-  403: "권한 없음 - 해당 작업 권한 부족";
-  404: "데이터 없음 - 요청한 차량/에뮬레이터를 찾을 수 없음";
-  409: "중복 데이터 - 이미 존재하는 차량번호/디바이스ID";
-  429: "요청 제한 - API 호출 한도 초과";
-  500: "서버 오류 - 관리자에게 문의하세요";
-  502: "게이트웨이 오류 - 잠시 후 다시 시도해주세요";
-  503: "서비스 unavailable - 점검 중입니다";
-}
-```
-
-#### Error Handling Strategy
-```typescript
-interface ErrorHandlingStrategy {
-  // Request interceptor - 요청 전 검증
-  requestValidation: {
-    authToken: "JWT 토큰 유효성 검사";
-    dataFormat: "요청 데이터 구조 검증";
-    requiredFields: "필수 필드 존재 확인";
-  };
-  
-  // Response interceptor - 응답 후 처리
-  responseHandling: {
-    successParsing: "성공 응답 데이터 파싱 및 타입 검증";
-    errorMapping: "HTTP 상태 코드별 한국어 메시지 매핑";
-    retryLogic: "네트워크 오류 시 재시도 로직";
-    fallbackData: "오류 시 기본 데이터 제공";
-  };
-  
-  // UI Error Display
-  userFeedback: {
-    toastMessages: "상단 토스트로 성공/실패 메시지";
-    formValidation: "폼 필드별 에러 메시지 표시";
-    loadingStates: "API 호출 중 로딩 상태 관리";
-    retryButtons: "실패 시 재시도 버튼 제공";
-  };
-}
-```
-
-#### Authentication Integration
-```typescript
-interface AuthenticationFlow {
-  // JWT Token Management
-  tokenStorage: {
-    accessToken: "localStorage에 액세스 토큰 저장";
-    refreshToken: "httpOnly 쿠키에 리프레시 토큰 저장 (보안)";
-    tokenExpiry: "토큰 만료 시간 추적";
-  };
-  
-  // Auto-refresh logic
-  tokenRefresh: {
-    interceptor: "axios 인터셉터로 만료 토큰 자동 갱신";
-    backgroundRefresh: "사용자 활동 감지 시 백그라운드 갱신";
-    logoutOnFailure: "토큰 갱신 실패 시 자동 로그아웃";
-  };
-  
-  // Route Protection
-  routeGuards: {
-    privateRoutes: "인증 필요 페이지 접근 제어";
-    redirectLogic: "미인증 시 로그인 페이지로 리디렉션";
-    roleBasedAccess: "관리자/일반 사용자 권한 분리";
-  };
-}
-```
-
-#### Real-time Data Integration
-```typescript
-interface RealTimeDataStrategy {
-  // WebSocket Connection (Preferred)
-  webSocket: {
-    connection: "ws://api-server/fleet-updates";
-    channels: ["vehicle-status", "gps-location", "emulator-status"];
-    reconnection: "연결 끊김 시 자동 재연결 로직";
-    heartbeat: "30초마다 연결 상태 확인";
-  };
-  
-  // Polling Fallback
-  polling: {
-    intervals: {
-      vehicleStatus: "30초마다 차량 상태 업데이트";
-      gpsLocation: "10초마다 위치 정보 갱신";
-      dashboardCounts: "60초마다 전체 통계 업데이트";
-    };
-    optimization: "페이지 비활성화 시 폴링 중단";
-  };
-  
-  // Data Synchronization
-  sync: {
-    conflictResolution: "서버 데이터 우선 정책";
-    localCache: "오프라인 시 로컬 데이터 사용";
-    backgroundUpdate: "백그라운드에서 데이터 동기화";
-  };
-}
-```
-
-### Data Transformation Patterns
-
-#### API Response to Frontend Model Mapping
-```typescript
-// Backend API Response → Frontend Component Props
-interface DataTransformation {
-  // 차량 목록 API → 검색 컴포넌트
-  vehicleList: {
-    apiResponse: "{ vehicles: VehicleAPIModel[], total: number }";
-    componentProps: "{ cars: Car[], totalCount: number }";
-    transformation: "API 모델을 컴포넌트 인터페이스로 변환";
-  };
-  
-  // GPS 좌표 API → 카카오맵 마커
-  gpsData: {
-    apiResponse: "{ latitude: number, longitude: number, timestamp: string }";
-    kakaoMap: "{ lat: number, lng: number, title: string }";
-    transformation: "GPS 데이터를 카카오맵 형식으로 변환";
-  };
-  
-  // 에뮬레이터 상태 API → 관리 테이블
-  emulatorStatus: {
-    apiResponse: "{ device_id: string, car_number: string, is_active: boolean }";
-    tableRows: "{ deviceId: string, carNumber: string, status: 'ON'|'OFF' }";
-    transformation: "snake_case API를 camelCase UI 모델로 변환";
-  };
-}
-```
-
-### Performance Optimization Requirements
-
-#### Caching Strategy
-```typescript
-interface CachingStrategy {
-  // Memory Cache (React Query / SWR)
-  queryCache: {
-    staleTime: "차량 목록: 30초, GPS 위치: 10초, 상태: 5초";
-    refetchOnWindowFocus: "윈도우 포커스 시 자동 갱신";
-    backgroundRefetch: "백그라운드에서 주기적 갱신";
-  };
-  
-  // Local Storage Cache
-  persistentCache: {
-    vehicleDetails: "차량 상세 정보 로컬 저장";
-    userPreferences: "사용자 설정 및 필터 상태";
-    recentSearches: "최근 검색 기록";
-  };
-  
-  // CDN/API Cache Headers
-  httpCache: {
-    vehicleImages: "차량 이미지 장기 캐싱";
-    staticData: "브랜드, 모델 등 정적 데이터 캐싱";
-    apiResponses: "ETag 헤더를 통한 조건부 요청";
-  };
-}
-```
-
-#### Pagination & Large Dataset Handling
-```typescript
-interface LargeDatasetStrategy {
-  // Server-side Pagination
-  pagination: {
-    pageSize: "기본 20개, 사용자 설정 가능 (10/20/50/100)";
-    serverPaging: "서버에서 OFFSET/LIMIT으로 처리";
-    totalCount: "전체 레코드 수 별도 제공";
-  };
-  
-  // Virtual Scrolling (if needed)
-  virtualization: {
-    trigger: "200개 이상 항목 시 가상 스크롤 활성화";
-    itemHeight: "고정 높이 기반 렌더링 최적화";
-    bufferSize: "화면 밖 10개 아이템 버퍼";
-  };
-  
-  // Search & Filter Optimization
-  searchOptimization: {
-    debouncing: "검색어 입력 500ms 후 API 호출";
-    serverFilter: "필터링은 서버에서 처리";
-    filterPersistence: "필터 상태 URL 쿼리 파라미터로 저장";
-  };
-}
+// API snake_case → Frontend camelCase
+// GPS coordinates → Kakao Map format  
+// Pagination: server-side (page/limit/total)
+// Cache: React Query (30s vehicles, 10s GPS, 5s status)
 ```
 
 ### TypeScript Configuration
