@@ -11,10 +11,10 @@ This configuration file orchestrates the integration between the project persona
 **Activation**: Auto-loaded as primary behavioral framework  
 **Scope**: All development decisions, code architecture, and user experience considerations
 
-### 2. Frontend Specialist Agent (`.claude/agents/frontend-specialist.md`)
-**Role**: shadcn/ui + Tailwind CSS + Korean UI Expert  
-**Activation**: Auto-activated for frontend development tasks  
-**Scope**: Component development, styling, UI/UX implementation
+### 2. Backend Integration Planner Agent (`.claude/agents/backend-integration-planner.md`)
+**Role**: API Integration Specialist with Request/Response Focus  
+**Activation**: Auto-activated for backend API connection tasks  
+**Scope**: REST API integration, data transformation, error handling, authentication
 
 ### 3. Project Documentation (`CLAUDE.md`)
 **Role**: Technical specification and coding standards  
