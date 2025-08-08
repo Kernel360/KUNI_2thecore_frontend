@@ -87,28 +87,88 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Method**: POST
 - **Path**: `/api/cars`
 - **상태**: 완료
+- **request**:{// header에는
+  brand,
+  model,
+  carYear,
+  carType,
+  carNumber,
+  sumDist
+  }
+- **response**:{
+  "result": boolean,
+  "message": String,
+  "data": {
+  "brand": String,
+  "model": String,
+  "car_year": Integer,
+  "status": String,
+  "car_type": String,
+  "car_number": String,
+  "sum_dist": double
+  }
+  }
+- **response example**:{
+  "result": true,
+  "message": "차량 등록이 성공적으로 완료되었습니다.",
+  "data": {
+  "brand": "현대",
+  "model": "아반떼",
+  "car_year": 2025,
+  "status": "대기", // 초기 값은 "대기" - "운행", "대기", "수리"
+  "car_type": "중형",
+  "car_number": "12가1598",
+  "sum_dist": 12345.67
+  }
+  }
 
 #### 2.2 차량 정보 수정
 
 - **Method**: PATCH
 - **Path**: `/api/cars/{car_number}`
 - **상태**: 완료
+- **request**:{
+  brand,
+  model,
+  carYear,
+  carType,
+  status, // 상태: "운행", "대기", "수리" 중 1
+  carNumber,
+  sumDist
+  }
+- **response**:
+  {
+  "result": boolean,
+  "message": String,
+  "data": {
+  "brand": String,
+  "model": String,
+  "car_year": Integer,
+  "status": String,
+  "car_type": String,
+  "car_number": String,
+  "sum_dist": double
+  }
+  }
+- **response example**:{
+  "result": true,
+  "message": "차량 등록이 성공적으로 완료되었습니다.",
+  "data": {
+  "brand": "현대",
+  "model": "아반떼",
+  "car_year": 2025,
+  "status": "대기", // 초기 값은 "대기" - "운행", "대기", "수리"
+  "car_type": "중형",
+  "car_number": "12가1598",
+  "sum_dist": 12345.67
+  }
+  }
 
 #### 2.3 차량 삭제
 
 - **Method**: DELETE
 - **Path**: `/api/cars/{car_number}`
-- **Request**:
-
-```json
-{
-  // CarDeleteDto - 모두 필수!!
-  "brand": "string",
-  "model": "string",
-  "carNumber": "string"
-}
-```
-
+- **Request**: // 필요없음
 - **Response (성공)**:
 
 ```json
@@ -140,33 +200,119 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Method**: GET
 - **Path**: `/api/cars`
 - **상태**: 완료
+- **request**:
+- **Response**:
+- **Response example**:
 
 #### 2.5 차량 상세 조회
 
 - **Method**: GET
 - **Path**: `/api/cars/{car_number}`
 - **상태**: 완료
+- **request**://필요없음
+- **Response example**:{
+	"message": "차량 조회가 성공적으로 완료되었습니다.",
+	"data": {
+		"brand": "차량 브랜드명",
+		"model" : "차량 모델명",
+		"car_year" : "연식",
+		"status" : "차량 상태" // "운행", "대기", "점검"
+		"carType" : "차종",
+		"carNumber" : "차량 번호",
+		"sumDist" : "계기판 km"
+		"last_latitude" : "마지막 위치의 위도",
+		"last_longitude" : "마지막 위치의 경도"
+	}
+}
 
 #### 2.6 차량 검색
+// - 미입력 시 차량 전체 조회
+// - 검색 필터용 (nullable)
 
 - **Method**: GET
 - **Path**: `/api/cars/search`
 - **상태**: 완료
+- **request**:{
+  "brand" : "소나타", // 브랜드명에 모델명을 넣었을때 테스트
+  "twoParam": false,
+  "page" : 1, // 프론트에서 현재 1페이지를 요청
+  "offset" : 2 // 그 페이지의 데이터는 2개가 최대
+}
+- **Response example**:{
+  "result": true, // 결과가 잘 도착하였는지 여부
+  "message": null, // api 메세지 (data만 보내기에 null로)
+  "data": // 해당 조건을 통해 필터링 된 데이터들 {
+    "content": [
+      {
+        "car_number": "12가1233",
+        "brand": "현대",
+        "model": "소나타",
+        "status": "IDLE"
+      },
+      {
+        "car_number": "12가5422",
+        "brand": "기아",
+        "model": "소나타",
+        "status": "IDLE"
+      }
+    ],
+    "pageable": {
+      "pageNumber": 0, // 서버 상의 현재 페이지 넘버
+      "pageSize": 2, // 해당 페이지 내의 데이터 수
+      "sort": { // 정렬 조건
+        "empty": true, // 정렬 조건이 비어있는지의 여부
+        "sorted": false, // 정렬 여부
+        "unsorted": true // 비정렬 여부
+      },
+      "offset": 0, // 전체 페이지 내에서 현제 페이지 시작 인덱스
+      "paged": true, // 페이지 적용 여부
+      "unpaged": false // 페이지 비적용 여부
+    },
+    "last": false, // 마지막 페이지 여부
+    "totalElements": 6, // 전체 데이터 수
+    "totalPages": 3, // 전체 페이지 수
+    "size": 2, // 한 페이지 내에 요청받은 데이터수
+    "number": 0, // 서버 상의 현재 페이지 넘버
+    "sort": // 위와 동일{
+      "empty": true,
+      "sorted": false,
+      "unsorted": true
+    },
+    "first": true,
+    "numberOfElements": 2,
+    "empty": false
+  }
+}
 
 #### 2.7 차량 상태 조회
 
 - **Method**: GET
 - **Path**: `/api/cars/status`
 - **상태**: 완료
+- **request**:{
+  "status": "운행" | "점검" | "대기"
+}
+- **Response**:{
+  "result": true,
+  "message": "운행중인 차량 조회가 완료되었습니다.",
+  "data": [
+    {
+      "carNumber": "123나4567",
+      "brand": "TESLA",
+      "model": "Model S",
+      "status": "DRIVING"
+    }
+  ]
+}
+- **Response example**:
 
 #### 2.8 대시보드 차량 통계 조회
 
 - **Method**: GET
 - **Path**: `/api/cars/statistics`
 - **상태**: 완료
-- **request**:"" // null
-- **response**:`
-{
+- **request**:"" // 헤더에 jwt토큰만 있으면 됨
+- **response**:`{
   "result": true,
   "message": null,
   "data": {
@@ -174,8 +320,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
     "operating": 1, // 운행 차량 수
     "waiting": 9, // 대기 차량 수
     "inspecting": 0 // 점검 차량 수
-  }
-`
+  }`
 
 ### 3. 로그 관련 API
 
@@ -212,6 +357,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Method**: POST
 - **Path**: `/api/emulators`
 - **상태**: 완료
+- **request**:{
+  carNumber: string;
+  }
+- **request example**
+  {
+  "carNumber" : "11가 1111"
+  }
+- **response**:`
 
 #### 4.2 애뮬레이터 상세 조회
 
