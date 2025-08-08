@@ -1,4 +1,6 @@
-import { mainApi, ApiResponse, PageResponse, Car, CarDetail, CarSummary, CarFilterRequest } from '@/lib/api';
+import { mainApi } from '@/lib/api';
+import { ApiResponse, PageResponse } from '@/types/api';
+import { Car, CarDetail, CarSummary, CarFilterRequest } from '@/types';
 
 export class CarService {
   // 모든 차량 조회 (페이징)
