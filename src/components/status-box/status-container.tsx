@@ -94,11 +94,7 @@ const StatusContainer = ({
       >
         <StatusBox
           num={carSummary.inspecting}
-<<<<<<< HEAD
           text="수리 중"
-=======
-          text="점검 중"
->>>>>>> nextToReact
           active={carStatusFilter === '수리중'}
         />
       </div>
