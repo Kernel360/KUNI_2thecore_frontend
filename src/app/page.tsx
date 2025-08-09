@@ -1,4 +1,4 @@
-'use client';
+
 
 import CarClustererMap from '@/components/map/car-clusterer-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';

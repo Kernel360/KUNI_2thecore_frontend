@@ -1,4 +1,4 @@
-'use client';
+
 
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';

@@ -1,4 +1,4 @@
-'use client';
+
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -7,7 +7,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import Image from 'next/image';
 import * as React from 'react';
 import { DateRange } from 'react-day-picker';
 
@@ -36,7 +35,7 @@ export function RangeCalendar({ dateRange: externalDateRange, onDateRangeChange 
       <PopoverTrigger asChild>
         <Button variant="outline" className="w-96 h-11 justify-between">
           {formatDateRange(dateRange)}
-          <Image
+          <img
             src="/calendar_month_24dp_434343.svg"
             alt="calendar"
             width={20}

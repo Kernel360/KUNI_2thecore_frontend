@@ -1,8 +1,7 @@
-'use client';
 
 import { useEffect, useState } from 'react';
 import { EmulatorService } from '@/services/emulator-service';
-import { Emulator } from '@/lib/api';
+import { Emulator } from '@/types';
 import IconButton from '@/components/icon-button/icon-button';
 import NumberSearchBox from '@/components/search-box/number-search-box';
 import { Button } from '@/components/ui/button';

@@ -1,4 +1,4 @@
-'use client';
+
 
 import SearchBox from '@/components/search-box/search-box';
 import TopBar from '@/components/ui/topBar';

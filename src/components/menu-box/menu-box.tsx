@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { Button } from '../ui/button';
 import styles from './menu-box.module.css';
 
@@ -12,10 +12,10 @@ const MenuBox = ({ onOpenMapModal }: MenuBoxProps) => {
       <Button className={styles.Button} onClick={onOpenMapModal}>
         🗺️ 지도 전체 화면
       </Button>
-      <Link href="/search">
+      <Link to="/search">
         <Button className={styles.Button}>🚗 차량 검색</Button>
       </Link>
-      <Link href="/history">
+      <Link to="/history">
         <Button className={styles.Button}>📊 주행 기록</Button>
       </Link>
     </div>
