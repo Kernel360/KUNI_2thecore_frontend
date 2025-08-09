@@ -19,7 +19,7 @@ export function WebSocketExample() {
       console.log('메시지 수신:', message)
       // 특정 메시지 타입에 따른 처리
       switch (message.type) {
-        case 'vehicle_update':
+        case 'car_update':
           // 차량 정보 업데이트 처리
           break
         case 'gps_location':
@@ -127,7 +127,7 @@ export function useVehicleTracking() {
         // 지도에 차량 위치 업데이트
         console.log('차량 위치 업데이트:', message.data)
       } else if (message.type === 'vehicle_status') {
-        // 차량 상태 업데이트 (운행중/대기중/수리중)
+        // 차량 상태 업데이트 (운행/대기/수리)
         console.log('차량 상태 변경:', message.data)
       }
     },

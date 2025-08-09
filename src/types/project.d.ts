@@ -1,7 +1,7 @@
 // 프로젝트 전역 타입 정의
 
 // 차량 상태 타입
-export type CarStatus = '운행중' | '수리중' | '대기중';
+export type CarStatus = '운행' | '수리' | '대기';
 
 // 차량 정보 인터페이스
 export interface CarInfo {

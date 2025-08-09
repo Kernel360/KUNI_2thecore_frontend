@@ -1,6 +1,6 @@
 # CLAUDE.md - Technical Specifications
 
-Korean vehicle fleet management system "2 the Core" - Next.js 15 with Korean-first UI.
+Korean car fleet management system "2 the Core" - react with Korean-first UI.
 
 ## Development Commands
 - `npm run dev` | `npm run build` | `npm start` | `npm run lint` | `npm run format`

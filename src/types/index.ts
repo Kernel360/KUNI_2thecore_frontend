@@ -3,4 +3,4 @@
 export * from './api';
 export * from './auth';
 export * from './emulator';
-export * from './vehicle';
+export * from './car';
