@@ -1,9 +1,11 @@
 # Cursor Rules for KUNI_2thecore_frontend
 
 ## Project Overview
-This is a Next.js 15 React TypeScript project for a vehicle management system (차량 관제 시스템).
+
+This is a Next.js 15 React TypeScript project for a car management system (차량 관제 시스템).
 
 ## Code Style Guidelines
+
 - Use TypeScript for all new files
 - Use functional components with React hooks
 - Use Tailwind CSS for styling
@@ -15,6 +17,7 @@ This is a Next.js 15 React TypeScript project for a vehicle management system (�
 - Use PascalCase for components
 
 ## File Structure
+
 - Components: `src/components/`
 - Pages: `src/app/`
 - Hooks: `src/hooks/`
@@ -23,6 +26,7 @@ This is a Next.js 15 React TypeScript project for a vehicle management system (�
 - Utils: `src/utils.ts`
 
 ## Dependencies
+
 - zustand for state management
 - react-hook-form for forms
 - zod for validation
@@ -30,6 +34,7 @@ This is a Next.js 15 React TypeScript project for a vehicle management system (�
 - radix-ui for UI components
 
 ## Code Generation Rules
+
 - Always include proper TypeScript types
 - Use proper error handling
 - Include accessibility attributes
@@ -38,18 +43,21 @@ This is a Next.js 15 React TypeScript project for a vehicle management system (�
 - Include JSDoc comments for complex functions
 
 ## Performance Considerations
+
 - Use React.memo for expensive components
 - Optimize re-renders with useMemo and useCallback
 - Use proper key props for lists
 - Lazy load components when appropriate
 
 ## Testing
+
 - Prefer unit tests for utilities
 - Use React Testing Library for component tests
 - Mock external dependencies
 
 ## Project-Specific Conventions
+
 - Use Korean comments for business logic
 - Follow the existing component naming patterns
 - Maintain the current file organization structure
-- Use the existing state management patterns with zustand 
+- Use the existing state management patterns with zustand
