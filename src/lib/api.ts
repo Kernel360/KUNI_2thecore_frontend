@@ -5,7 +5,7 @@ import { ApiResponse, ApiError } from '@/types/api';
 const API_BASE_URL = process.env.NEXT_PUBLIC_MAIN_API_URL || 'http://localhost:8080';
 const EMULATOR_API_BASE_URL = process.env.NEXT_PUBLIC_EMULATOR_API_URL || 'http://localhost:8081';
 
-// 토큰 관리 유틸리티
+// 토큰 관리 유틸리티, 이게 맞는지는 모름
 class TokenManager {
   private static readonly ACCESS_TOKEN_KEY = 'accessToken';
   private static readonly REFRESH_TOKEN_KEY = 'refreshToken';
@@ -141,9 +141,6 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
 // API 인스턴스들
 export const mainApi = createApiInstance(API_BASE_URL);
 export const emulatorApi = createApiInstance(EMULATOR_API_BASE_URL);
-
-// WebSocket URL export
-export const websocketUrl = WEBSOCKET_URL;
 
 // 토큰 관리 유틸리티 export
 export { TokenManager };
