@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { ApiResponse, ApiError } from '@/types/api';
+import { TokenManager } from './token-manager';
 
 // 환경변수 기반 API 설정
 const API_BASE_URL = process.env.CAR_BASE_URL || 'http://localhost:8080/api';

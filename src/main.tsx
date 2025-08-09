@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.tsx'
+import ProtectedRoute from './components/ProtectedRoute.tsx'
 import './styles/globals.css'
 
 // Pages
@@ -16,12 +17,15 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />}>
+        {/* 로그인 페이지 - 보호되지 않음 */}
+        <Route path="/login" element={<LoginPage />} />
+        
+        {/* 보호된 라우트들 */}
+        <Route path="/" element={<ProtectedRoute><App /></ProtectedRoute>}>
           <Route index element={<MainPage />} />
           <Route path="detail" element={<DetailPage />} />
           <Route path="emulator" element={<EmulatorPage />} />
           <Route path="history" element={<HistoryPage />} />
-          <Route path="login" element={<LoginPage />} />
           <Route path="search" element={<SearchPage />} />
         </Route>
       </Routes>
