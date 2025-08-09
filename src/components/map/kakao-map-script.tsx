@@ -1,13 +1,27 @@
-'use client';
-
-import Script from 'next/script';
+import { useEffect } from 'react';
 
 export default function KakaoMapScript() {
-  return (
-    <Script
-      type="text/javascript"
-      src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&libraries=services,clusterer&autoload=false`}
-      strategy="beforeInteractive"
-    />
-  );
+  useEffect(() => {
+    // 이미 스크립트가 로드되었는지 확인
+    if (document.querySelector('script[src*="dapi.kakao.com"]')) {
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_API_KEY}&libraries=services,clusterer&autoload=false`;
+    script.async = true;
+    
+    document.head.appendChild(script);
+
+    return () => {
+      // cleanup: 컴포넌트가 언마운트될 때 스크립트 제거
+      const existingScript = document.querySelector('script[src*="dapi.kakao.com"]');
+      if (existingScript) {
+        document.head.removeChild(existingScript);
+      }
+    };
+  }, []);
+
+  return null;
 }

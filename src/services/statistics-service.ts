@@ -1,14 +1,8 @@
 import axios from 'axios';
+import { CarStatistics } from '@/types';
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_CAR_BASE_URL || 'http://localhost:8080/api';
-
-export interface CarStatistics {
-  total: number;
-  operating: number;
-  waiting: number;
-  inspecting: number;
-}
 
 export interface ApiResponse<T> {
   result: boolean;

@@ -1,4 +1,6 @@
-import { emulatorApi, ApiResponse, PageResponse, Emulator } from '@/lib/api';
+import { emulatorApi } from '@/lib/api';
+import { ApiResponse, PageResponse } from '@/types/api';
+import { Emulator } from '@/types';
 
 // 에뮬레이터 요청 타입
 export interface EmulatorRequest {

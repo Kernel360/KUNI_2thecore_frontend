@@ -1,4 +1,4 @@
-'use client';
+
 
 import IconButton from '@/components/icon-button/icon-button';
 import {
@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { useDetailStore } from '@/store/detail-store';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import Status from '../status';
 import styles from './list-box.module.css';
 
@@ -35,7 +35,7 @@ const ListBox: React.FC<ListBoxProps> = ({
   status,
 }) => {
   const setDetail = useDetailStore(state => state.setDetail);
-  const router = useRouter();
+  const navigate = useNavigate();
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
 
   const safeStatus: StatusType = allowedStatus.includes(status as StatusType)
@@ -50,7 +50,7 @@ const ListBox: React.FC<ListBoxProps> = ({
       status: safeStatus,
     });
     setDetailChange(false);
-    router.push('/detail');
+    navigate('/detail');
   };
 
   const handleEdit = (e: React.MouseEvent) => {
@@ -62,7 +62,7 @@ const ListBox: React.FC<ListBoxProps> = ({
       status: safeStatus,
     });
     setDetailChange(true);
-    router.push('/detail');
+    navigate('/detail');
   };
 
   const handleDelete = (e: React.MouseEvent) => {
