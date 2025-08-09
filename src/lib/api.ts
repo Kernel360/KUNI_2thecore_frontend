@@ -2,45 +2,9 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosR
 import { ApiResponse, ApiError } from '@/types/api';
 
 // 환경변수 기반 API 설정
-const API_BASE_URL = import.meta.env.VITE_MAIN_API_URL || 'http://localhost:8080';
-const EMULATOR_API_BASE_URL = import.meta.env.VITE_EMULATOR_API_URL || 'http://localhost:8081';
+const API_BASE_URL = process.env.CAR_BASE_URL || 'http://localhost:8080/api';
+const EMULATOR_API_BASE_URL = process.env.EMULATOR_BASE_URL || 'http://localhost:8081/api';
 
-// 토큰 관리 유틸리티, 이게 맞는지는 모름
-class TokenManager {
-  private static readonly ACCESS_TOKEN_KEY = 'accessToken';
-  private static readonly REFRESH_TOKEN_KEY = 'refreshToken';
-
-  static getAccessToken(): string | null {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem(this.ACCESS_TOKEN_KEY);
-  }
-
-  static setAccessToken(token: string): void {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem(this.ACCESS_TOKEN_KEY, token);
-  }
-
-  static getRefreshToken(): string | null {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem(this.REFRESH_TOKEN_KEY);
-  }
-
-  static setRefreshToken(token: string): void {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem(this.REFRESH_TOKEN_KEY, token);
-  }
-
-  static clearTokens(): void {
-    if (typeof window === 'undefined') return;
-    localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
-  }
-
-  static setTokens(accessToken: string, refreshToken: string): void {
-    this.setAccessToken(accessToken);
-    this.setRefreshToken(refreshToken);
-  }
-}
 
 // 한국어 에러 메시지 매핑
 const getKoreanErrorMessage = (status: number, message?: string): string => {
@@ -61,9 +25,9 @@ const getKoreanErrorMessage = (status: number, message?: string): string => {
 const createApiInstance = (baseURL: string): AxiosInstance => {
   const instance = axios.create({
     baseURL,
-    timeout: 10000,
+    timeout: 3000,
     headers: {
-      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + (TokenManager.getAccessToken() || ''),
     },
   });
 
@@ -100,7 +64,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
           }
 
           // 토큰 갱신 요청 (메인 API 서버 사용)
-          const refreshResponse = await axios.post(`${API_BASE_URL}/api/auth/refresh`, {
+          const refreshResponse = await axios.post(`${API_BASE_URL}/auth/refresh`, {
             refreshToken,
           });
 
