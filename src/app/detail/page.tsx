@@ -1,8 +1,7 @@
-'use client';
 
 import { useEffect, useState } from 'react';
 import { CarService } from '@/services/car-service';
-import { CarDetail } from '@/lib/api';
+import { CarDetail } from '@/types';
 import CarLocationMap from '@/components/map/car-location-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import { Button } from '@/components/ui/button';
@@ -11,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import TopBar from '@/components/ui/topBar';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { Detail, useDetailStore } from '@/store/detail-store';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import styles from './detail.module.css';
 const mockDetail = {
   year: '2022년',
@@ -19,7 +18,7 @@ const mockDetail = {
 };
 
 const DetailPage = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { carNumber, brand, model, status, setDetail } = useDetailStore();
   const detailChange = setDetailChangeStore(state => state.detailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
@@ -80,7 +79,7 @@ const DetailPage = () => {
       alert('차량 정보가 성공적으로 저장되었습니다.');
 
       // search 페이지로 라우트
-      router.push('/search');
+      navigate('/search');
     } catch (error) {
       console.error('차량 정보 저장 실패:', error);
       alert('차량 정보 저장 중 오류가 발생했습니다.');
@@ -155,7 +154,7 @@ const DetailPage = () => {
                   className={styles.cancelButton}
                   onClick={() => {
                     setDetailChange(false);
-                    router.push('/search');
+                    navigate('/search');
                   }}
                 >
                   취소

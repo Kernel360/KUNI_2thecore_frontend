@@ -169,7 +169,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Method**: DELETE
 - **Path**: `/api/cars/{car_number}`
 - **Request**: // 필요없음
-
 - **Response (성공)**:
 
 ```json

@@ -1,4 +1,4 @@
-'use client';
+
 
 import styles from '@/components/icon-button/icon-button.module.css';
 import {
