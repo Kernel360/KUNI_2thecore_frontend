@@ -1,63 +1,43 @@
 # Cursor Rules for KUNI_2thecore_frontend
 
 ## Project Overview
-
-This is a Next.js 15 React TypeScript project for a car management system (차량 관제 시스템).
+This is a React 19 + Vite TypeScript project for a car management system (차량 관제 시스템).
 
 ## Code Style Guidelines
-
 - Use TypeScript for all new files
 - Use functional components with React hooks
 - Use Tailwind CSS for styling
-- Follow Next.js 15 App Router conventions
-- Use shadcn/ui components when available
+- Follow React Router DOM conventions
+- Use shadcn/ui + Radix UI components when available
 - Prefer single quotes
 - Use 2 spaces for indentation
 - Use camelCase for variables and functions
 - Use PascalCase for components
 
 ## File Structure
-
 - Components: `src/components/`
-- Pages: `src/app/`
+- Pages: `src/app/` (React Router pages)
 - Hooks: `src/hooks/`
-- Store: `src/store/`
+- Store: `src/store/` (Zustand)
+- Services: `src/services/` (API layer)
 - Types: `src/types/`
 - Utils: `src/utils.ts`
 
 ## Dependencies
-
+- axios for API calls
 - zustand for state management
-- react-hook-form for forms
-- zod for validation
-- lucide-react for icons
-- radix-ui for UI components
+- react-hook-form + zod for forms
+- shadcn/ui + radix-ui for UI components
+- react-router-dom for routing
+
+## Development Focus
+- **Backend Integration**: Primary focus on axios-based API connections
+- **Real Implementation**: Replace mock data with real backend calls
+- **Terminology**: Always use "car" (차량) - never use "vehicle"
+- **Error Handling**: Implement proper loading states and Korean error messages
 
 ## Code Generation Rules
-
 - Always include proper TypeScript types
-- Use proper error handling
-- Include accessibility attributes
-- Follow React best practices
-- Use proper imports and exports
-- Include JSDoc comments for complex functions
-
-## Performance Considerations
-
-- Use React.memo for expensive components
-- Optimize re-renders with useMemo and useCallback
-- Use proper key props for lists
-- Lazy load components when appropriate
-
-## Testing
-
-- Prefer unit tests for utilities
-- Use React Testing Library for component tests
-- Mock external dependencies
-
-## Project-Specific Conventions
-
-- Use Korean comments for business logic
-- Follow the existing component naming patterns
-- Maintain the current file organization structure
-- Use the existing state management patterns with zustand
+- Use proper error handling with Korean messages
+- Follow existing component patterns and API service layer
+- Use Korean UI text throughout the application 
