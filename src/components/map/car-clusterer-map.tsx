@@ -5,7 +5,7 @@ import Map from './map';
 
 export interface Car {
   carNumber: string;
-  status: 'null' | '운행' | '대기' | '수리';
+  status: '운행' | '대기' | '수리';
   latitude: string;
   longtitude: string;
 }

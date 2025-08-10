@@ -69,7 +69,7 @@ const StatusContainer = ({
         className="cursor-pointer transition-transform duration-200 hover:scale-105"
       >
         <StatusBox
-          num={100}
+          num={carSummary.total}
           text="전체 차량"
           active={carStatusFilter === 'null'}
         />
