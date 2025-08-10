@@ -1,8 +1,3 @@
-import axios, {
-  AxiosInstance,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from 'axios';
 import { TokenManager } from './token-manager';
 
 // 환경변수 기반 API 설정
@@ -48,6 +43,17 @@ export interface PageResponse<T> {
   empty: boolean;
 }
 
+// HTTP 메서드 타입
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
+// API 요청 옵션 타입
+interface ApiRequestOptions {
+  method?: HttpMethod;
+  body?: any;
+  params?: Record<string, any>;
+  headers?: Record<string, string>;
+}
+
 // 한국어 에러 메시지 매핑
 const getKoreanErrorMessage = (status: number, message?: string): string => {
   const defaultMessages: Record<number, string> = {
@@ -65,96 +71,179 @@ const getKoreanErrorMessage = (status: number, message?: string): string => {
   );
 };
 
-// Axios 인스턴스 생성 함수
-const createApiInstance = (baseURL: string): AxiosInstance => {
-  const instance = axios.create({
-    baseURL,
-    timeout: 3000,
-    headers: {
-      'Content-Type': 'application/json',
-    },
+// URL에 쿼리 파라미터 추가 헬퍼 함수
+const buildUrl = (baseUrl: string, endpoint: string, params?: Record<string, any>): string => {
+  const url = `${baseUrl}${endpoint}`;
+  if (!params) return url;
+
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      if (Array.isArray(value)) {
+        value.forEach(v => searchParams.append(key, v.toString()));
+      } else {
+        searchParams.append(key, value.toString());
+      }
+    }
   });
 
-  // 요청 인터셉터: 인증 토큰 추가
-  instance.interceptors.request.use(
-    (config: InternalAxiosRequestConfig) => {
-      const token = TokenManager.getAccessToken();
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      } else {
-        // 토큰이 없으면 Authorization 헤더 제거
-        delete config.headers.Authorization;
-      }
-      return config;
-    },
-    error => {
-      return Promise.reject(error);
+  const queryString = searchParams.toString();
+  return queryString ? `${url}?${queryString}` : url;
+};
+
+// Fetch 기반 API 클라이언트 클래스
+class FetchApiClient {
+  private baseURL: string;
+
+  constructor(baseURL: string) {
+    this.baseURL = baseURL;
+  }
+
+  private async makeRequest<T>(endpoint: string, options: ApiRequestOptions = {}): Promise<T> {
+    const { method = 'GET', body, params, headers: customHeaders = {} } = options;
+
+    // 헤더 설정
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...customHeaders,
+    };
+
+    // 토큰이 있으면 Authorization 헤더 추가
+    const token = TokenManager.getAccessToken();
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
     }
-  );
 
-  // 응답 인터셉터: 에러 처리 및 토큰 갱신
-  instance.interceptors.response.use(
-    (response: AxiosResponse) => {
-      return response;
-    },
-    async error => {
-      const originalRequest = error.config;
+    // URL 구성
+    const url = buildUrl(this.baseURL, endpoint, params);
 
-      // 401 에러이고 재시도하지 않은 경우 토큰 갱신 시도
-      if (error.response?.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
+    // 요청 설정
+    const fetchOptions: RequestInit = {
+      method,
+      headers,
+    };
 
-        try {
-          const refreshToken = TokenManager.getRefreshToken();
-          if (!refreshToken) {
-            throw new Error('리프레시 토큰이 없습니다.');
+    // body가 있으면 추가
+    if (body && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
+      fetchOptions.body = JSON.stringify(body);
+    }
+
+    try {
+      const response = await fetch(url, fetchOptions);
+
+      // 401 에러 시 토큰 갱신 시도
+      if (response.status === 401 && endpoint !== '/auth/refresh') {
+        const refreshed = await this.refreshToken();
+        if (refreshed) {
+          // 새 토큰으로 재시도
+          const newToken = TokenManager.getAccessToken();
+          if (newToken) {
+            headers.Authorization = `Bearer ${newToken}`;
+            fetchOptions.headers = headers;
+            return this.makeRequest(endpoint, options);
           }
-
-          // 토큰 갱신 요청 (메인 API 서버 사용)
-          const refreshResponse = await axios.post(
-            `${API_BASE_URL}/auth/refresh`,
-            {
-              refreshToken,
-            }
-          );
-
-          if (refreshResponse.data.result) {
-            const { accessToken, refreshToken: newRefreshToken } =
-              refreshResponse.data.data;
-            TokenManager.setTokens(accessToken, newRefreshToken);
-
-            // 원래 요청 재시도
-            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-            return instance(originalRequest);
-          }
-        } catch (refreshError) {
-          // 토큰 갱신 실패 시 로그아웃 처리
-          TokenManager.clearTokens();
-          if (typeof window !== 'undefined') {
-            window.location.href = '/login';
-          }
+        }
+        // 토큰 갱신 실패 시 로그인 페이지로 리디렉션
+        TokenManager.clearTokens();
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
         }
       }
 
-      // 에러 객체를 한국어 메시지와 함께 생성
+      // 응답이 성공이 아닌 경우
+      if (!response.ok) {
+        let errorData: any = null;
+        try {
+          errorData = await response.json();
+        } catch {
+          // JSON 파싱 실패 시 무시
+        }
+
+        const apiError = {
+          status: response.status,
+          message: getKoreanErrorMessage(
+            response.status,
+            errorData?.message
+          ),
+          timestamp: new Date().toISOString(),
+        };
+
+        throw apiError;
+      }
+
+      return await response.json();
+    } catch (error: any) {
+      if (error.status) {
+        // 이미 처리된 API 에러
+        throw error;
+      }
+      
+      // 네트워크 에러 등
       const apiError = {
-        status: error.response?.status || 500,
-        message: getKoreanErrorMessage(
-          error.response?.status || 500,
-          error.response?.data?.message
-        ),
+        status: 0,
+        message: getKoreanErrorMessage(500, '네트워크 오류가 발생했습니다.'),
         timestamp: new Date().toISOString(),
       };
 
-      return Promise.reject(apiError);
+      throw apiError;
     }
-  );
+  }
 
-  return instance;
-};
+  private async refreshToken(): Promise<boolean> {
+    try {
+      const refreshToken = TokenManager.getRefreshToken();
+      if (!refreshToken) {
+        return false;
+      }
+
+      const response = await fetch(`${this.baseURL}/auth/refresh`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refreshToken }),
+      });
+
+      if (!response.ok) {
+        return false;
+      }
+
+      const data = await response.json();
+      if (data.result && data.data) {
+        TokenManager.setTokens(data.data.accessToken, data.data.refreshToken);
+        return true;
+      }
+
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
+  // HTTP 메서드들
+  async get<T>(endpoint: string, params?: Record<string, any>): Promise<T> {
+    return this.makeRequest<T>(endpoint, { method: 'GET', params });
+  }
+
+  async post<T>(endpoint: string, body?: any): Promise<T> {
+    return this.makeRequest<T>(endpoint, { method: 'POST', body });
+  }
+
+  async put<T>(endpoint: string, body?: any): Promise<T> {
+    return this.makeRequest<T>(endpoint, { method: 'PUT', body });
+  }
+
+  async patch<T>(endpoint: string, body?: any): Promise<T> {
+    return this.makeRequest<T>(endpoint, { method: 'PATCH', body });
+  }
+
+  async delete<T>(endpoint: string): Promise<T> {
+    return this.makeRequest<T>(endpoint, { method: 'DELETE' });
+  }
+}
 
 // API 인스턴스들
-export const mainApi = createApiInstance(API_BASE_URL);
+export const mainApi = new FetchApiClient(API_BASE_URL);
 
 // 토큰 관리 유틸리티 export
 export { TokenManager };

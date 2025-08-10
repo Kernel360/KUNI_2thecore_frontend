@@ -46,16 +46,16 @@ export class AuthService {
       credentials
     );
 
-    if (response.data.result && response.data.data) {
+    if (response.result && response.data) {
       // 토큰을 로컬 스토리지에 저장
       TokenManager.setTokens(
-        response.data.data.accessToken,
-        response.data.data.refreshToken
+        response.data.accessToken,
+        response.data.refreshToken
       );
 
-      return response.data.data;
+      return response.data;
     } else {
-      throw new Error(response.data.message || '회원가입에 실패했습니다.');
+      throw new Error(response.message || '회원가입에 실패했습니다.');
     }
   }
 
@@ -66,16 +66,16 @@ export class AuthService {
       credentials
     );
 
-    if (response.data.result && response.data.data) {
+    if (response.result && response.data) {
       // 토큰을 로컬 스토리지에 저장
       TokenManager.setTokens(
-        response.data.data.accessToken,
-        response.data.data.refreshToken
+        response.data.accessToken,
+        response.data.refreshToken
       );
 
-      return response.data.data;
+      return response.data;
     } else {
-      throw new Error(response.data.message || '로그인에 실패했습니다.');
+      throw new Error(response.message || '로그인에 실패했습니다.');
     }
   }
 
@@ -111,9 +111,9 @@ export class AuthService {
         { refreshToken }
       );
 
-      if (response.data.result && response.data.data) {
+      if (response.result && response.data) {
         const { accessToken, refreshToken: newRefreshToken } =
-          response.data.data;
+          response.data;
         TokenManager.setTokens(accessToken, newRefreshToken);
         return accessToken;
       } else {
@@ -125,14 +125,8 @@ export class AuthService {
     }
   }
 
-  // 현재 토큰으로 인증 상태 확인
-  static async verifyToken(): Promise<boolean> {
-    try {
-      // 간단한 API 호출로 토큰 유효성 검증 (예: 사용자 정보 조회)
-      const response = await mainApi.get('/auth/login');
-      return response.data.result === true;
-    } catch (error) {
-      return false;
-    }
+  // 현재 토큰으로 인증 상태 확인 (로컬에서만 체크)
+  static verifyToken(): boolean {
+    return TokenManager.hasValidTokens();
   }
 }
