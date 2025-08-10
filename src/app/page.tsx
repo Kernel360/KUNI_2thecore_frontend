@@ -1,5 +1,3 @@
-
-
 import CarClustererMap from '@/components/map/car-clusterer-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import MapModal from '@/components/map/map-modal';
@@ -10,8 +8,8 @@ import { useState } from 'react';
 
 export default function Home() {
   const [carStatusFilter, setCarStatusFilter] = useState<
-    '운행' | '수리' | '대기'
-  >('운행');
+    'null' | '운행' | '수리' | '대기'
+  >('null');
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
 
   return (

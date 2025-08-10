@@ -5,7 +5,7 @@ import Map from './map';
 
 export interface Car {
   carNumber: string;
-  status: '운행' | '대기' | '수리';
+  status: 'null' | '운행' | '대기' | '수리';
   latitude: string;
   longtitude: string;
 }
@@ -13,7 +13,7 @@ export interface Car {
 interface CarClustererMapProps {
   width: string;
   height: string;
-  carStatusFilter: '운행' | '대기' | '수리' | 'null';
+  carStatusFilter: 'null' | '운행' | '대기' | '수리';
 }
 
 const statusToImage: { [key in Car['status']]?: string } = {
@@ -169,7 +169,7 @@ export default function CarClustererMap({
         );
 
         return new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatitudeLongtitude(
+          position: new window.kakao.maps.LatLng(
             parseFloat(car.latitude),
             parseFloat(car.longtitude)
           ),
