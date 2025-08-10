@@ -19,7 +19,7 @@ export class AuthService {
   // 로그인
   static async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {
-      const response = await mainApi.put<ApiResponse<LoginResponse>>(
+      const response = await mainApi.post<ApiResponse<LoginResponse>>(
         '/auth/login',
         credentials
       );

@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from 'react';
-import { EmulatorService } from '@/services/emulator-service';
 import { Emulator } from '@/types';
 import IconButton from '@/components/icon-button/icon-button';
 import NumberSearchBox from '@/components/search-box/number-search-box';
@@ -24,10 +23,10 @@ const handleDelete = async (deviceId: string) => {
   }
 
   try {
-    await EmulatorService.deleteEmulator(deviceId);
-    alert('에뮬레이터가 삭제되었습니다.');
-    // 페이지 리로드 또는 상태 업데이트
-    window.location.reload();
+    // await EmulatorService.deleteEmulator(deviceId);
+    // alert('에뮬레이터가 삭제되었습니다.');
+    // // 페이지 리로드 또는 상태 업데이트
+    // window.location.reload();
   } catch (error) {
     console.error('에뮬레이터 삭제 실패:', error);
     alert('에뮬레이터 삭제 중 오류가 발생했습니다.');
@@ -57,8 +56,8 @@ export default function LocalEmulator() {
   useEffect(() => {
     const fetchEmulators = async () => {
       try {
-        const emulatorData = await EmulatorService.getAllEmulators(0, 100);
-        setEmulators(emulatorData.content);
+        // const emulatorData = await EmulatorService.getAllEmulators(0, 100);
+        // setEmulators(emulatorData.content);
       } catch (error) {
         console.error('에뮬레이터 목록 조회 실패:', error);
         // 에러 발생 시 더미 데이터 사용

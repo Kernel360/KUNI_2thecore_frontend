@@ -7,9 +7,7 @@ import axios, {
 import { TokenManager } from './token-manager';
 
 // 환경변수 기반 API 설정
-const API_BASE_URL = process.env.CAR_BASE_URL || 'http://52.78.122.150:8080/';
-const EMULATOR_API_BASE_URL =
-  process.env.EMULATOR_BASE_URL || 'http://52.78.122.150:8082/';
+const API_BASE_URL = process.env.CAR_BASE_URL || 'http://localhost:8080/';
 
 // 한국어 에러 메시지 매핑
 const getKoreanErrorMessage = (status: number, message?: string): string => {
@@ -115,7 +113,6 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
 
 // API 인스턴스들
 export const mainApi = createApiInstance(API_BASE_URL);
-export const emulatorApi = createApiInstance(EMULATOR_API_BASE_URL);
 
 // 토큰 관리 유틸리티 export
 export { TokenManager };
