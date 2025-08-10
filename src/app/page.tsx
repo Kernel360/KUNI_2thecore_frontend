@@ -9,6 +9,7 @@ export default function Home() {
   const [carStatusFilter, setCarStatusFilter] = useState<
     'total' | 'driving' | 'maintenance' | 'idle'
   >('total');
+  
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
 
   return (

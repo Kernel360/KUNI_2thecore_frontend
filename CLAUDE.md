@@ -328,7 +328,9 @@ interface PageComponentArchitecture {
 ## Backend Integration Guidelines
 
 - **API Base URLs**:
+
   - Main API: `http://52.78.122.150:8080/` (cars, auth, logs, maps)
+
 - **Authentication**: JWT tokens with automatic refresh via TokenManager
 - **Error Handling**: Korean localized messages via getKoreanErrorMessage()
 - **Data Flow**: API snake_case → Frontend camelCase transformation
