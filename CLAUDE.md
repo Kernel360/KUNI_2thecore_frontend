@@ -68,7 +68,7 @@ interface PageComponentArchitecture {
         receives: 'carStatusFilter, width, height';
         provides: '카카오맵 기반 차량 위치 클러스터링';
         dependencies: ['KakaoMapScript'];
-        realtime: 'WebSocket 연결을 통한 실시간 GPS 데이터';
+        realtime: 'axios 연결을 통한 last GPS 데이터';
       };
       MapModal: {
         receives: 'isOpen, onClose';
@@ -241,7 +241,7 @@ interface PageComponentArchitecture {
   - `ui/`: shadcn/ui + Radix UI base components (forms, cards, buttons, tables, alerts, inputs, labels)
 - **`src/store/`**: Zustand state management for vehicle details and edit modes
 - **`src/services/`**: API service layer for backend integration
-- **`src/hooks/`**: Custom React hooks (mobile detection, WebSocket)
+- **`src/hooks/`**: Custom React hooks (mobile detection, axios)
 - **`src/types/`**: TypeScript type definitions (API, vehicles, Kakao Maps)
 
 ## Code Conventions
@@ -282,8 +282,7 @@ interface PageComponentArchitecture {
 
 #### Real-time Data Flow
 
-- **WebSocket**: `/ws/map/running` for live car positions
-- **Polling Fallback**: For environments without WebSocket support
+- **Polling Fallback**: For environments without axios support
 - **Data Transformation**: API snake_case → Frontend camelCase
 
 ### Integration Status & Priority
@@ -292,13 +291,13 @@ interface PageComponentArchitecture {
 
 - **✅ Completed**: Core API client setup, JWT token management, Korean error handling
 - **✅ Completed**: Car CRUD operations, statistics API integration
-- **🔄 In Progress**: Real-time WebSocket integration for live GPS tracking
+- **🔄 In Progress**: Real-time axios integration for live GPS tracking
 - **❌ Pending**: Authentication flow, history page implementation
 
 #### Backend Integration Priority
 
 1. **Authentication System**: Complete JWT login/logout flow
-2. **Real-time GPS Data**: WebSocket connection for live car tracking
+2. **Real-time GPS Data**: axios connection for live car tracking
 3. **History Module**: Implement car driving history features
 4. **Error Handling**: Comprehensive API error management
 
@@ -307,7 +306,7 @@ interface PageComponentArchitecture {
 - **Script Loading**: Dynamic Kakao Maps SDK loading via `KakaoMapScript`
 - **Clustering**: `CarClustererMap` for multiple car display with performance optimization
 - **Individual Tracking**: `CarLocationMap` for single car detailed view
-- **Real-time Updates**: WebSocket data integration for live position updates
+- **Real-time Updates**: axios data integration for live position updates
 
 ## Development Workflow
 
@@ -332,4 +331,3 @@ interface PageComponentArchitecture {
 - **Authentication**: JWT tokens with automatic refresh via TokenManager
 - **Error Handling**: Korean localized messages via getKoreanErrorMessage()
 - **Data Flow**: API snake_case → Frontend camelCase transformation
-- **WebSocket**: Real-time car positions via `/ws/map/running`

@@ -7,7 +7,7 @@ export interface Car {
   gpsLongitude: string;
 }
 
-export interface WebSocketCarData {
+export interface axiosCarData {
   loginId: string;
   carNumber: string;
   logList: {
@@ -37,20 +37,20 @@ export default function CarClustererMap({
   const [cars, setCars] = useState<Car[]>([]);
   const clustererRef = useRef<any>(null);
 
-  //   const { connectionStatus, lastMessage, sendMessage } = useWebSocket({
+  //   const { connectionStatus, lastMessage, sendMessage } = useaxios({
   //     url: 'ws://localhost:8082/map/running',
   //     onOpen: () => {
-  //       console.log('지도 WebSocket 연결됨');
+  //       console.log('지도 axios 연결됨');
   //     },
   //     onMessage: (message) => {
   //       if (message.type === 'message' && message.data) {
   //         try {
-  //           const carData = message.data as WebSocketCarData;
+  //           const carData = message.data as axiosCarData;
   //           if (carData.logList && carData.logList.length > 0) {
   //             const latestLog = carData.logList[carData.logList.length - 1];
   //             const newCar: Car = {
   //               carNumber: carData.carNumber,
-  //               status: '운행', // WebSocket으로 받은 차량은 운행 상태로 가정
+  //               status: '운행', // axios으로 받은 차량은 운행 상태로 가정
   //               gpsLatitude: latestLog.latitude,
   //               gpsLongitude: latestLog.longitude
   //             };
@@ -67,15 +67,15 @@ export default function CarClustererMap({
   //             });
   //           }
   //         } catch (error) {
-  //           console.error('WebSocket 데이터 파싱 오류:', error);
+  //           console.error('axios 데이터 파싱 오류:', error);
   //         }
   //       }
   //     },
   //     onError: (error) => {
-  //       console.error('지도 WebSocket 오류:', error);
+  //       console.error('지도 axios 오류:', error);
   //     },
   //     onClose: () => {
-  //       console.log('지도 WebSocket 연결 종료');
+  //       console.log('지도 axios 연결 종료');
   //     },
   //     reconnectAttempts: 5,
   //     reconnectInterval: 3000
@@ -91,7 +91,7 @@ export default function CarClustererMap({
   //       disableClickZoom: true,
   //     });
 
-  //     // WebSocket 연결 상태 확인 후 초기 요청
+  //     // axios 연결 상태 확인 후 초기 요청
   //     if (connectionStatus === 'Open') {
   //       sendMessage({
   //         type: 'request_running_cars',
@@ -139,7 +139,7 @@ export default function CarClustererMap({
   //     <div className="relative">
   //       {connectionStatus !== 'Open' && (
   //         <div className="absolute top-2 right-2 z-10 px-3 py-1 rounded-full text-sm bg-yellow-100 text-yellow-800">
-  //           WebSocket {connectionStatus === 'Connecting' ? '연결 중...' : '연결 끊김'}
+  //           axios {connectionStatus === 'Connecting' ? '연결 중...' : '연결 끊김'}
   //         </div>
   //       )}
   //       <Map width={width} height={height} onLoad={setMap} />
