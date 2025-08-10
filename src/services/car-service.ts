@@ -44,7 +44,7 @@ export class CarService {
   }
 
   // 차량 등록
-  static async createCar(carData: Omit<CarDetail, 'gpsLatitude' | 'gpsLongitude'>): Promise<CarDetail> {
+  static async createCar(carData: Omit<CarDetail, 'latitude' | 'longtitude'>): Promise<CarDetail> {
     const response = await mainApi.post<ApiResponse<CarDetail>>('/api/cars', carData);
     return response.data.data;
   }
@@ -58,6 +58,40 @@ export class CarService {
   // 차량 삭제
   static async deleteCar(carNumber: string): Promise<{ carNumber: string }> {
     const response = await mainApi.delete<ApiResponse<{ carNumber: string }>>(`/api/cars/${carNumber}`);
+    return response.data.data;
+  }
+
+  // 차량 위치 데이터 배치 전송
+  static async sendCarLocationsBatch(
+    locationData: Array<{
+      carNumber: string;
+      coordinates: Array<{ latitude: number; longtitude: number }>;
+    }>
+  ): Promise<void> {
+    const requestData = locationData.map(car => ({
+      carNumber: car.carNumber,
+      coordinates: car.coordinates.map(coord => ({
+        latitude: coord.latitude,
+        longtitude: coord.longtitude
+      }))
+    }));
+
+    await mainApi.post('/api/cars/locations/batch', requestData);
+  }
+
+  // 실시간 차량 위치 데이터 조회
+  static async getCarLocations(): Promise<Array<{
+    carNumber: string;
+    latitude: number;
+    longtitude: number;
+    timestamp?: string;
+  }>> {
+    const response = await mainApi.get<ApiResponse<Array<{
+      carNumber: string;
+      latitude: number;
+      longtitude: number;
+      timestamp?: string;
+    }>>>('/api/cars/locations');
     return response.data.data;
   }
 }

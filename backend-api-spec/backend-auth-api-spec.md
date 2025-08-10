@@ -3,7 +3,6 @@
 ## 서버 정보
 
 - **차량 전체**: Port 8080
-- **애뮬레이터**: Port 8081
 
 ## 공통 Request Header
 
@@ -97,7 +96,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 	"loginId":"로그인 id"
 	"password": "비밀번호"
 }
-- **request example**:
+- **request example**: 
 - **response**:{
    "result": true,
    "message": "deletedAdminId admin deleted successfully.",
@@ -148,7 +147,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **상태**: 완료
 - **request**: 요청 본문 없음
 헤더에 Authorization: Bearer {accessToken} 필
-- **request example**:
+- **request example**: X
 - **response**:{
   "result": Boolean,
   "message": String,
@@ -179,7 +178,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
     "expiredAt": String
   }
 }
-
 - **response example**:{
   "result": true, // 성공 여부
   "message": "엑세스 토큰 갱신 성공", // 처리 결과 메시지

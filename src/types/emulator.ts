@@ -10,15 +10,18 @@ export interface Emulator {
   emulatorStatus: EmulatorStatus;
 }
 
-/** WebSocket 메시지 타입 */
-export interface WebSocketMessage {
+/** GPS 로그 데이터 타입 */
+export interface GpsLogData {
+  latitude: string;
+  longitude: string;
+  timestamp: string;
+}
+
+/** GPS 배치 전송 메시지 타입 (WebSocket 대신 axios 사용) */
+export interface GpsBatchRequest {
   loginId: string;
   carNumber: string;
-  logList: Array<{
-    latitude: string;
-    longitude: string;
-    timestamp: string;
-  }>;
+  logList: GpsLogData[];
 }
 
 // API 요청 타입들

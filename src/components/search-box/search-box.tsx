@@ -1,5 +1,6 @@
-import { Car } from '@/lib/api';
 import { CarService } from '@/services/car-service';
+import { Car } from '@/types';
+import { useEffect, useState } from 'react';
 import BrandFilterBox from './filter-box';
 import floatingStyles from './floating.module.css';
 import ListBox from './list-box/list-box';
@@ -8,13 +9,11 @@ import NumberSearchBox from './number-search-box';
 const SearchBox = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<'운행' | '대기' | '점검' | null>(null);
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const carData = await CarService.getAllCars(1, 7); // 첫 번째 페이지, 50개
+        const carData = await CarService.getAllCars(1, 50); // 첫 번째 페이지, 50개
         setCars(carData.content);
       } catch (error) {
         console.error('차량 목록 조회 실패:', error);
@@ -36,7 +35,7 @@ const SearchBox = () => {
             carNumber: '34라 3456',
             brand: '삼성',
             model: 'SM5',
-            status: '점검',
+            status: '수리',
           },
         ];
         setCars(fallbackCars);
@@ -47,60 +46,6 @@ const SearchBox = () => {
 
     fetchCars();
   }, []);
-
-  const handleModalOpen = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCarRegister = async (data: CarFormData) => {
-    try {
-      // CarFormData를 백엔드 API 형식으로 변환
-      const carData = {
-        brand: data.brand,
-        model: data.model,
-        carYear: parseInt(data.carYear.replace('년', '')), // "2023년" -> 2023
-        carType: data.carType,
-        carNumber: data.carNumber,
-        sumDist: parseFloat(data.sumDist.replace(/[,\s]/g, '').replace('km', '')) // "45,678 km" -> 45678.0
-      };
-
-      const response = await CarService.createCar(carData);
-      console.log('차량 등록 성공:', response);
-
-      // 차량 목록 새로고침
-      await refreshCarList();
-
-      alert('차량이 성공적으로 등록되었습니다.');
-    } catch (error) {
-      console.error('차량 등록 실패:', error);
-      alert('차량 등록에 실패했습니다. 다시 시도해주세요.');
-    }
-  };
-
-  const refreshCarList = async () => {
-    try {
-      const carData_refresh = await CarService.getAllCars(1, 50);
-      setCars(carData_refresh.content);
-    } catch (error) {
-      console.error('차량 목록 새로고침 실패:', error);
-    }
-  };
-
-  const handleFilterResults = (filteredCars: Car[]) => {
-    setCars(filteredCars);
-  };
-
-  const handleSearchResults = (searchResults: Car[]) => {
-    setCars(searchResults);
-  };
-
-  const handleStatusChange = (status: '운행' | '대기' | '점검' | null) => {
-    setSelectedStatus(status);
-  };
 
   if (loading) {
     return (
@@ -125,11 +70,8 @@ const SearchBox = () => {
           position: 'relative',
         }}
       >
-        <NumberSearchBox onSearchResults={handleSearchResults} />
-        <BrandFilterBox 
-          onFilterResults={handleFilterResults} 
-          onStatusChange={handleStatusChange}
-        />
+        <NumberSearchBox />
+        <BrandFilterBox />
         {cars.map((car, idx) => (
           <ListBox
             key={idx}
@@ -137,23 +79,12 @@ const SearchBox = () => {
             brand={car.brand}
             model={car.model}
             status={car.status}
-            onDelete={refreshCarList}
           />
         ))}
       </div>
       <div className={floatingStyles.floatingContainer}>
-        <button
-          className={floatingStyles.floatingButton}
-          onClick={handleModalOpen}
-        >
-          +
-        </button>
+        <button className={floatingStyles.floatingButton}>+</button>
       </div>
-      <CarRegisterModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-        onSubmit={handleCarRegister}
-      />
     </>
   );
 };
