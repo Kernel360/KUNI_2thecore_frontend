@@ -1,5 +1,3 @@
-
-
 import IconButton from '@/components/icon-button/icon-button';
 import {
   AlertDialog,
@@ -25,7 +23,7 @@ interface ListBoxProps {
   status: string;
 }
 
-const allowedStatus = ['운행중', '대기중', '수리중'] as const;
+const allowedStatus = ['운행', '대기', '수리'] as const;
 type StatusType = (typeof allowedStatus)[number];
 
 const ListBox: React.FC<ListBoxProps> = ({
@@ -40,7 +38,7 @@ const ListBox: React.FC<ListBoxProps> = ({
 
   const safeStatus: StatusType = allowedStatus.includes(status as StatusType)
     ? (status as StatusType)
-    : '대기중';
+    : '대기';
 
   const handleClick = () => {
     setDetail({

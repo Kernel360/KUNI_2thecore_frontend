@@ -1,6 +1,3 @@
-
-
-import CarClustererMap from '@/components/map/car-clusterer-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import MapModal from '@/components/map/map-modal';
 import MenuBox from '@/components/menu-box/menu-box';
@@ -10,8 +7,9 @@ import { useState } from 'react';
 
 export default function Home() {
   const [carStatusFilter, setCarStatusFilter] = useState<
-    '운행중' | '수리중' | '대기중'
-  >('운행중');
+    'total' | 'driving' | 'maintenance' | 'idle'
+  >('total');
+  
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
 
   return (
@@ -31,11 +29,11 @@ export default function Home() {
             </div>
             <div className="relative flex-1 max-h-[800px] mb-9 rounded-2xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-xl">
               <KakaoMapScript />
-              <CarClustererMap
+              {/* <CarClustererMap
                 width="100%"
                 height="100%"
                 carStatusFilter={carStatusFilter}
-              />
+              /> */}
             </div>
           </div>
         </div>

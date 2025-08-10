@@ -1,63 +1,155 @@
-import { mainApi } from '@/lib/api';
-import { ApiResponse, PageResponse } from '@/types/api';
-import { Car, CarDetail, CarSummary, CarFilterRequest } from '@/types';
+import { ApiResponse, mainApi, PageResponse } from '@/lib/api';
+
+// 차량 기본 정보 타입
+export interface Car {
+  carNumber: string;
+  brand: string;
+  model: string;
+  status: '운행' | '대기' | '수리';
+}
+
+// 차량 상세 정보 타입
+export interface CarDetail extends Car {
+  latitude?: number;
+  longitude?: number;
+}
+
+// 차량 통계 타입
+export interface CarSummary {
+  totalCars: number;
+  runningCars: number;
+  waitingCars: number;
+  repairingCars: number;
+}
+
+// 차량 검색 필터 요청 타입
+export interface CarFilterRequest {
+  carNumber?: string;
+  brand?: string;
+  status?: string[];
+}
 
 export class CarService {
   // 모든 차량 조회 (페이징)
-  static async getAllCars(page: number = 1, size: number = 10): Promise<PageResponse<CarDetail>> {
-    const response = await mainApi.get<ApiResponse<PageResponse<CarDetail>>>('/api/cars', {
-      params: { page, size }
-    });
+  static async getAllCars(
+    page: number = 1,
+    size: number = 10
+  ): Promise<PageResponse<CarDetail>> {
+    const response = await mainApi.get<ApiResponse<PageResponse<CarDetail>>>(
+      '/cars',
+      {
+        params: { page, size },
+      }
+    );
     return response.data.data;
   }
 
   // 특정 차량 상세 조회
   static async getCar(carNumber: string): Promise<CarDetail> {
-    const response = await mainApi.get<ApiResponse<CarDetail>>(`/api/cars/${carNumber}`);
+    const response = await mainApi.get<ApiResponse<CarDetail>>(
+      `/cars/${carNumber}`
+    );
     return response.data.data;
   }
 
-  // 차량 통계 조회 (전체/운행중/대기중/수리중)
+  // 차량 통계 조회 (전체/운행/대기/수리)
   static async getCarStatistics(): Promise<CarSummary> {
-    const response = await mainApi.get<ApiResponse<CarSummary>>('/api/cars/statistics');
+    const response =
+      await mainApi.get<ApiResponse<CarSummary>>('/cars/statistics');
     return response.data.data;
   }
 
   // 차량 검색/필터링
   static async searchCars(
-    filter: CarFilterRequest, 
-    page: number = 1, 
+    filter: CarFilterRequest,
+    page: number = 1,
     size: number = 10
   ): Promise<PageResponse<Car>> {
-    const response = await mainApi.get<ApiResponse<PageResponse<Car>>>('/api/cars/search', {
-      params: { ...filter, page, offset: size }
-    });
+    const response = await mainApi.get<ApiResponse<PageResponse<Car>>>(
+      '/cars/search',
+      {
+        params: { ...filter, page, offset: size },
+      }
+    );
     return response.data.data;
   }
 
   // 특정 상태의 차량들 조회
   static async getCarsByStatus(statuses: string[]): Promise<Car[]> {
-    const response = await mainApi.get<ApiResponse<Car[]>>('/api/cars/status', {
-      params: { status: statuses }
+    const response = await mainApi.get<ApiResponse<Car[]>>('/cars/status', {
+      params: { status: statuses },
     });
     return response.data.data;
   }
 
   // 차량 등록
-  static async createCar(carData: Omit<CarDetail, 'gpsLatitude' | 'gpsLongitude'>): Promise<CarDetail> {
-    const response = await mainApi.post<ApiResponse<CarDetail>>('/api/cars', carData);
+  static async createCar(
+    carData: Omit<CarDetail, 'latitude' | 'longtitude'>
+  ): Promise<CarDetail> {
+    const response = await mainApi.post<ApiResponse<CarDetail>>(
+      '/api/cars',
+      carData
+    );
     return response.data.data;
   }
 
   // 차량 정보 수정
-  static async updateCar(carNumber: string, carData: Partial<CarDetail>): Promise<CarDetail> {
-    const response = await mainApi.patch<ApiResponse<CarDetail>>(`/api/cars/${carNumber}`, carData);
+  static async updateCar(
+    carNumber: string,
+    carData: Partial<CarDetail>
+  ): Promise<CarDetail> {
+    const response = await mainApi.patch<ApiResponse<CarDetail>>(
+      `/cars/${carNumber}`,
+      carData
+    );
     return response.data.data;
   }
 
   // 차량 삭제
   static async deleteCar(carNumber: string): Promise<{ carNumber: string }> {
-    const response = await mainApi.delete<ApiResponse<{ carNumber: string }>>(`/api/cars/${carNumber}`);
+    const response = await mainApi.delete<ApiResponse<{ carNumber: string }>>(
+      `/cars/${carNumber}`
+    );
+    return response.data.data;
+  }
+
+  // 차량 위치 데이터 배치 전송
+  static async sendCarLocationsBatch(
+    locationData: Array<{
+      carNumber: string;
+      coordinates: Array<{ latitude: number; longtitude: number }>;
+    }>
+  ): Promise<void> {
+    const requestData = locationData.map(car => ({
+      carNumber: car.carNumber,
+      coordinates: car.coordinates.map(coord => ({
+        latitude: coord.latitude,
+        longtitude: coord.longtitude,
+      })),
+    }));
+
+    await mainApi.post('/api/cars/locations/batch', requestData);
+  }
+
+  // 실시간 차량 위치 데이터 조회
+  static async getCarLocations(): Promise<
+    Array<{
+      carNumber: string;
+      latitude: number;
+      longtitude: number;
+      timestamp?: string;
+    }>
+  > {
+    const response = await mainApi.get<
+      ApiResponse<
+        Array<{
+          carNumber: string;
+          latitude: number;
+          longtitude: number;
+          timestamp?: string;
+        }>
+      >
+    >('/api/cars/locations');
     return response.data.data;
   }
 }

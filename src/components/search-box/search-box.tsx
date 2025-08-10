@@ -1,6 +1,6 @@
 import { Car } from '@/lib/api';
 import { CarService } from '@/services/car-service';
-import { Car } from '@/types';
+import { useEffect, useState } from 'react';
 import BrandFilterBox from './filter-box';
 import floatingStyles from './floating.module.css';
 import ListBox from './list-box/list-box';
@@ -37,7 +37,7 @@ const SearchBox = () => {
             carNumber: '34라 3456',
             brand: '삼성',
             model: 'SM5',
-            status: '점검',
+            status: '수리',
           },
         ];
         setCars(fallbackCars);
@@ -99,7 +99,7 @@ const SearchBox = () => {
     setCars(searchResults);
   };
 
-  const handleStatusChange = (status: '운행' | '대기' | '점검' | null) => {
+  const handleStatusChange = (status: '운행' | '대기' | '수리' | null) => {
     setSelectedStatus(status);
   };
 

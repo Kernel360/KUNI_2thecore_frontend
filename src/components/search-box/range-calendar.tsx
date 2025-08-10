@@ -1,5 +1,3 @@
-
-
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -15,19 +13,22 @@ interface RangeCalendarProps {
   onDateRangeChange?: (range: DateRange | undefined) => void;
 }
 
-export function RangeCalendar({ dateRange: externalDateRange, onDateRangeChange }: RangeCalendarProps) {
+export function RangeCalendar({
+  dateRange: externalDateRange,
+  onDateRangeChange,
+}: RangeCalendarProps) {
   const [open, setOpen] = React.useState(false);
-  const [internalDateRange, setInternalDateRange] = React.useState<DateRange | undefined>(
-    undefined
-  );
+  const [internalDateRange, setInternalDateRange] = React.useState<
+    DateRange | undefined
+  >(undefined);
 
   const dateRange = externalDateRange ?? internalDateRange;
   const setDateRange = onDateRangeChange ?? setInternalDateRange;
 
   const formatDateRange = (range: DateRange | undefined) => {
     if (!range?.from) return '렌트시작일 - 렌트종료일';
-    if (!range?.to) return range.from.toLocaleDateString();
-    return `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`;
+    if (!range?.to) return range.from.toLocaleDatestring();
+    return `${range.from.toLocaleDatestring()} - ${range.to.toLocaleDatestring()}`;
   };
 
   return (

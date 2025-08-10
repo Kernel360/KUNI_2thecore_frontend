@@ -1,15 +1,14 @@
-
-import { useEffect, useState } from 'react';
-import { CarService } from '@/services/car-service';
-import { CarDetail } from '@/types';
 import CarLocationMap from '@/components/map/car-location-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import TopBar from '@/components/ui/topBar';
+import { CarService } from '@/services/car-service';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { Detail, useDetailStore } from '@/store/detail-store';
+import { CarDetail } from '@/types';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './detail.module.css';
 const mockDetail = {
@@ -71,7 +70,7 @@ const DetailPage = () => {
       };
 
       await CarService.updateCar(carNumber, updateData);
-      
+
       // 편집 모드 종료
       setDetailChange(false);
 
