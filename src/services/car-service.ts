@@ -1,4 +1,4 @@
-import { mainApi, ApiResponse, PageResponse } from '@/lib/api';
+import { ApiResponse, mainApi, PageResponse } from '@/lib/api';
 
 // 차량 기본 정보 타입
 export interface Car {
@@ -10,8 +10,8 @@ export interface Car {
 
 // 차량 상세 정보 타입
 export interface CarDetail extends Car {
-  gpsLatitude?: number;
-  gpsLongitude?: number;
+  latitude?: number;
+  longitude?: number;
 }
 
 // 차량 통계 타입
@@ -54,9 +54,8 @@ export class CarService {
 
   // 차량 통계 조회 (전체/운행/대기/수리)
   static async getCarStatistics(): Promise<CarSummary> {
-    const response = await mainApi.get<ApiResponse<CarSummary>>(
-      '/cars/statistics'
-    );
+    const response =
+      await mainApi.get<ApiResponse<CarSummary>>('/cars/statistics');
     return response.data.data;
   }
 
@@ -85,10 +84,10 @@ export class CarService {
 
   // 차량 등록
   static async createCar(
-    carData: Omit<CarDetail, 'gpsLatitude' | 'gpsLongitude'>
+    carData: Omit<CarDetail, 'latitude' | 'longtitude'>
   ): Promise<CarDetail> {
     const response = await mainApi.post<ApiResponse<CarDetail>>(
-      '/cars',
+      '/api/cars',
       carData
     );
     return response.data.data;
@@ -111,6 +110,46 @@ export class CarService {
     const response = await mainApi.delete<ApiResponse<{ carNumber: string }>>(
       `/cars/${carNumber}`
     );
+    return response.data.data;
+  }
+
+  // 차량 위치 데이터 배치 전송
+  static async sendCarLocationsBatch(
+    locationData: Array<{
+      carNumber: string;
+      coordinates: Array<{ latitude: number; longtitude: number }>;
+    }>
+  ): Promise<void> {
+    const requestData = locationData.map(car => ({
+      carNumber: car.carNumber,
+      coordinates: car.coordinates.map(coord => ({
+        latitude: coord.latitude,
+        longtitude: coord.longtitude,
+      })),
+    }));
+
+    await mainApi.post('/api/cars/locations/batch', requestData);
+  }
+
+  // 실시간 차량 위치 데이터 조회
+  static async getCarLocations(): Promise<
+    Array<{
+      carNumber: string;
+      latitude: number;
+      longtitude: number;
+      timestamp?: string;
+    }>
+  > {
+    const response = await mainApi.get<
+      ApiResponse<
+        Array<{
+          carNumber: string;
+          latitude: number;
+          longtitude: number;
+          timestamp?: string;
+        }>
+      >
+    >('/api/cars/locations');
     return response.data.data;
   }
 }

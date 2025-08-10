@@ -2,10 +2,10 @@ import { mainApi, ApiResponse } from '@/lib/api';
 
 // 차량 통계 데이터 타입
 export interface CarStatistics {
-  totalCars: number;
-  runningCars: number;
-  waitingCars: number;
-  repairingCars: number;
+  total: number;
+  driving: number;
+  idle: number;
+  maintenance: number;
 }
 
 export class StatisticsService {

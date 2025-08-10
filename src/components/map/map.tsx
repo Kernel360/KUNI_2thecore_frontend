@@ -13,26 +13,40 @@ export default function Map({ width, height, onLoad }: MapProps) {
   const [mapType, setMapType] = useState<'roadmap' | 'skyview'>('roadmap');
 
   useEffect(() => {
+    console.log('Map useEffect triggered');
+    console.log('window.kakao exists:', !!window.kakao);
+    console.log('window.kakao.maps exists:', !!window.kakao?.maps);
+    console.log('mapRef.current exists:', !!mapRef.current);
+    
     if (
       typeof window !== 'undefined' &&
       window.kakao &&
       window.kakao.maps &&
       mapRef.current
     ) {
+      console.log('Attempting to load kakao map...');
       window.kakao.maps.load(() => {
+        console.log('Kakao maps loaded, creating map instance...');
         const mapContainer = mapRef.current;
-        if (!mapContainer) return;
+        if (!mapContainer) {
+          console.log('Map container not found');
+          return;
+        }
 
         const options = {
           center: new window.kakao.maps.LatLng(36.5, 127.8),
           level: 12,
         };
+        console.log('Creating map with options:', options);
         const map = new window.kakao.maps.Map(mapContainer, options);
+        console.log('Map created successfully:', !!map);
         setMapInstance(map);
         if (onLoad) {
           onLoad(map);
         }
       });
+    } else {
+      console.log('Kakao maps prerequisites not met');
     }
   }, [onLoad]);
 
