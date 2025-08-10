@@ -6,8 +6,8 @@ import styles from './status-box.module.css';
 import StatusText from './status-text';
 
 interface StatusContainerProps {
-  carStatusFilter: '운행' | '수리' | '대기';
-  setCarStatusFilter: (status: '운행' | '수리' | '대기') => void;
+  carStatusFilter: 'null' | '운행' | '수리' | '대기';
+  setCarStatusFilter: (status: 'null' | '운행' | '수리' | '대기') => void;
 }
 
 const StatusContainer = ({
@@ -64,8 +64,15 @@ const StatusContainer = ({
           {error}
         </div>
       )}
-      <div className={styles.totalCar}>
-        <StatusText num={carSummary.total} text="전체 차량" />
+      <div
+        onClick={() => setCarStatusFilter('null')}
+        className="cursor-pointer transition-transform duration-200 hover:scale-105"
+      >
+        <StatusBox
+          num={carSummary.total}
+          text="전체 차량"
+          active={carStatusFilter === 'null'}
+        />
       </div>
       <div
         onClick={() => setCarStatusFilter('운행')}

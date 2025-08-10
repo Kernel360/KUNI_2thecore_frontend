@@ -3,7 +3,6 @@
 ## 서버 정보
 
 - **차량 전체**: Port 8080
-- **애뮬레이터**: Port 8081
 
 ## 공통 Request Header
 
@@ -47,32 +46,32 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Path**: `/api/admin/signup`
 - **상태**: 완료
 - **request**:{
-  "loginId": string,
-  "password": string
-  }
+	"loginId": String,
+	"password": String
+}
 - **request example**:{
-  "loginId": "test" , // "로그인 id"
-  "password": "test1234" // "비밀번호"
-  }
+	"loginId": "test" , // "로그인 id"
+	"password": "test1234" // "비밀번호"
+}
 - **response**:{
-  "result": boolean,
-  "message": string,
+  "result": Boolean,
+  "message": String,
   "data": {
-  "accessToken": string,
-  "refreshToken": string,
-  "expiredAt": string
+    "accessToken": String,
+    "refreshToken": String,
+    "expiredAt": String
   }
-  }
+}
 
 - **response example**:{
-  "result": true, // 요청 성공 여부
-  "message": "로그인 성공", // 처리 결과 메시지
+  "result": true,                                  // 요청 성공 여부
+  "message": "로그인 성공",                         // 처리 결과 메시지
   "data": {
-  "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxODQ5OCwiZXhwIjoxNzU1MjE4NDk4fQ.iDyvnpso9Z2uOOCMSWD4L60JrUjoZsz76u4xLRWGvUU", // 액세스 토큰 (JWT)
-  "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxODQ5OCwiZXhwIjoxNzU2NDMyODk4fQ.DsKfaKOVJz8L0ewjkybm_9CVi4YOmrgefgzE1XyIrwM", // 리프레시 토큰 (JWT)
-  "expiredAt": "2025-08-15T09:41:38.2036524" // 액세스 토큰 만료 시각 (ISO 8601 형식)
+    "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxODQ5OCwiZXhwIjoxNzU1MjE4NDk4fQ.iDyvnpso9Z2uOOCMSWD4L60JrUjoZsz76u4xLRWGvUU",   // 액세스 토큰 (JWT)
+    "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxODQ5OCwiZXhwIjoxNzU2NDMyODk4fQ.DsKfaKOVJz8L0ewjkybm_9CVi4YOmrgefgzE1XyIrwM",  // 리프레시 토큰 (JWT)
+    "expiredAt": "2025-08-15T09:41:38.2036524"       // 액세스 토큰 만료 시각 (ISO 8601 형식)
   }
-  }
+}
 
 ### 1.2 회원 정보 수정
 
@@ -82,9 +81,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **request**:{}
 - **request example**:{}
 - **response**:{
-  "result": boolean,
-  "message": string,
-  }
+  "result": Boolean,
+  "message": String,
+}
 - **response example**:{
   }
 
@@ -94,15 +93,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Path**: `/api/admin/{loginId}`
 - **상태**: 완료
 - **request**:{
-  "loginId":"로그인 id"
-  "password": "비밀번호"
-  }
-- **request example**:
+	"loginId":"로그인 id"
+	"password": "비밀번호"
+}
+- **request example**: 
 - **response**:{
-  "result": true,
-  "message": "deletedAdminId admin deleted successfully.",
-  "data": null
-  }
+   "result": true,
+   "message": "deletedAdminId admin deleted successfully.",
+   "data": null
+}
 - **response example**:
 
 ### 1.4 로그인
@@ -111,35 +110,35 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Path**: `/api/auth/login`
 - **상태**: 완료
 - **request**:{
-  "loginId": string,
-  "password": string
-  }
+	"loginId": String,
+	"password": String
+}
 - **request**:{
-  "loginId": string,
-  "password": string
-  }
+	"loginId": String,
+	"password": String
+}
 - **request example**:{
-  "loginId": "test" , // "로그인 id"
-  "password": "test1234" // "비밀번호"
-  }
+	"loginId": "test" , // "로그인 id"
+	"password": "test1234" // "비밀번호"
+}
 - **response**:{
-  "result": boolean,
-  "message": string,
+  "result": Boolean,
+  "message": String,
   "data": {
-  "accessToken": string,
-  "refreshToken": string,
-  "expiredAt": string
+    "accessToken": String,
+    "refreshToken": String,
+    "expiredAt": String
   }
-  }
+}
 - **response example**:{
-  "result": true, // 요청 성공 여부
-  "message": "로그인 성공", // 처리 결과 메시지
+  "result": true,                                  // 요청 성공 여부
+  "message": "로그인 성공",                         // 처리 결과 메시지
   "data": {
-  "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxODQ5OCwiZXhwIjoxNzU1MjE4NDk4fQ.iDyvnpso9Z2uOOCMSWD4L60JrUjoZsz76u4xLRWGvUU", // 액세스 토큰 (JWT)
-  "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxODQ5OCwiZXhwIjoxNzU2NDMyODk4fQ.DsKfaKOVJz8L0ewjkybm_9CVi4YOmrgefgzE1XyIrwM", // 리프레시 토큰 (JWT)
-  "expiredAt": "2025-08-15T09:41:38.2036524" // 액세스 토큰 만료 시각 (ISO 8601 형식)
+    "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxODQ5OCwiZXhwIjoxNzU1MjE4NDk4fQ.iDyvnpso9Z2uOOCMSWD4L60JrUjoZsz76u4xLRWGvUU",   // 액세스 토큰 (JWT)
+    "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxODQ5OCwiZXhwIjoxNzU2NDMyODk4fQ.DsKfaKOVJz8L0ewjkybm_9CVi4YOmrgefgzE1XyIrwM",  // 리프레시 토큰 (JWT)
+    "expiredAt": "2025-08-15T09:41:38.2036524"       // 액세스 토큰 만료 시각 (ISO 8601 형식)
   }
-  }
+}
 
 ### 1.5 로그아웃
 
@@ -147,17 +146,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Path**: `/api/auth/logout`
 - **상태**: 완료
 - **request**: 요청 본문 없음
-  헤더에 Authorization: Bearer {accessToken} 필
-- **request example**:
+헤더에 Authorization: Bearer {accessToken} 필
+- **request example**: X
 - **response**:{
-  "result": boolean,
-  "message": string,
-  }
+  "result": Boolean,
+  "message": String,
+}
 - **response example**:{
   "result": true, // 성공 여부
   "message": "로그아웃 처리 완료", // 처리 결과 메시지
   "data": null // 데이터
-  }
+}
 
 ### 1.6 리프레시 토큰 검증
 
@@ -165,27 +164,26 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Path**: `/api/auth/refresh`
 - **상태**: 완료
 - **request**:{
-  "refreshToken": string
-  }
+  "refreshToken": String
+}
 - **request example**:{
   "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxNzIxMywiZXhwIjoxNzU2NDMxNjEzfQ.j-z1JTCOuBTNUgcvz5oNTIZDpDiSnxlAkRjg23nioYk" // 리프레시 토큰
-  }
+}
 - **response**:{
-  "result": boolean,
-  "message": string,
+  "result": Boolean,
+  "message": String,
   "data": {
-  "accessToken": string,
-  "refreshToken": string,
-  "expiredAt": string
+    "accessToken": String,
+    "refreshToken": String,
+    "expiredAt": String
   }
-  }
-
+}
 - **response example**:{
   "result": true, // 성공 여부
   "message": "엑세스 토큰 갱신 성공", // 처리 결과 메시지
   "data": {
-  "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxNzIzOSwiZXhwIjoxNzU1MjE3MjM5fQ.h7LZyKY3aon9jJDPGnsTpvNnJ1np4reYacNFdDvyoas", // 새로 발급된 액세스 토큰
-  "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxNzIzOSwiZXhwIjoxNzU2NDMxNjM5fQ.9CORf3jqMwerBqmvpxI9Zv3yngy9TYDZXs6FhUXHvFo", // 새로 발급된 리프레시 토큰
-  "expiredAt": "2025-08-15T09:20:39.3362867" // 액세스 토큰 만료 시간 (ISO 8601 형식)
+    "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxNzIzOSwiZXhwIjoxNzU1MjE3MjM5fQ.h7LZyKY3aon9jJDPGnsTpvNnJ1np4reYacNFdDvyoas", // 새로 발급된 액세스 토큰
+    "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxNzIzOSwiZXhwIjoxNzU2NDMxNjM5fQ.9CORf3jqMwerBqmvpxI9Zv3yngy9TYDZXs6FhUXHvFo", // 새로 발급된 리프레시 토큰
+    "expiredAt": "2025-08-15T09:20:39.3362867" // 액세스 토큰 만료 시간 (ISO 8601 형식)
   }
-  }
+}
