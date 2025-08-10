@@ -16,10 +16,10 @@ export interface CarDetail extends Car {
 
 // 차량 통계 타입
 export interface CarSummary {
-  totalCars: number;
-  runningCars: number;
-  waitingCars: number;
-  repairingCars: number;
+  total: number;
+  running: number;
+  waiting: number;
+  repairing: number;
 }
 
 // 차량 검색 필터 요청 타입 (백엔드 API 2.6 명세에 정확히 맞게 수정)
@@ -75,15 +75,7 @@ export class CarService {
       page,
       offset,
     };
-    
-    // 빈 문자열이나 undefined 값 제거
-    Object.keys(searchParams).forEach(key => {
-      if (searchParams[key as keyof CarSearchParams] === '' || 
-          searchParams[key as keyof CarSearchParams] === undefined) {
-        delete searchParams[key as keyof CarSearchParams];
-      }
-    });
-    
+
     const response = await mainApi.get<ApiResponse<PageResponse<Car>>>(
       '/cars/search',
       {
@@ -95,7 +87,7 @@ export class CarService {
 
   // 특정 상태의 차량들 조회
   static async getCarsByStatus(statuses: string[]): Promise<Car[]> {
-    const response = await mainApi.get<ApiResponse<Car[]>>('/cars/status', {
+    const response = await mainApi.get<ApiResponse<Car[]>>('/cars/search', {
       params: { status: statuses },
     });
     return response.data.data;

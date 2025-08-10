@@ -10,6 +10,11 @@ const SearchBox = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // 입력창 상태들을 SearchBox에서 관리
+  const [carNumber, setCarNumber] = useState('');
+  const [brandModel, setBrandModel] = useState('');
+  const [status, setStatus] = useState('');
+
   // 초기 차량 목록 로드
   useEffect(() => {
     loadInitialCars();
@@ -24,35 +29,13 @@ const SearchBox = () => {
     } catch (error) {
       console.error('차량 목록 조회 실패:', error);
       setError('차량 목록을 불러오는데 실패했습니다.');
-      // 에러 발생 시 더미 데이터 사용
-      const fallbackCars: Car[] = [
-        {
-          carNumber: '12가 1234',
-          brand: '현대',
-          model: '소나타',
-          status: '운행',
-        },
-        {
-          carNumber: '23나 2345',
-          brand: '기아',
-          model: 'K5',
-          status: '대기',
-        },
-        {
-          carNumber: '34라 3456',
-          brand: '삼성',
-          model: 'SM5',
-          status: '수리',
-        },
-      ];
-      setCars(fallbackCars);
     } finally {
       setLoading(false);
     }
   };
 
   // 차량 번호로 검색 (백엔드 API 2.6 명세에 맞게 수정)
-  const handleNumberSearch = async (carNumber: string) => {
+  const handleNumberSearch = async () => {
     if (!carNumber.trim()) {
       setError('차량 번호를 입력해주세요.');
       return;
@@ -80,17 +63,11 @@ const SearchBox = () => {
   };
 
   // 필터 적용 (브랜드/모델 + 상태) - 백엔드 API 2.6 명세에 맞게 수정
-  const handleFilterApply = async (
-    brand: string,
-    model: string,
-    status: string
-  ) => {
-    // 필수 요소 검증: 차량 번호 또는 상태 중 하나는 필수
-    if (!brand && !model && !status) {
-      setError('차량 번호, 브랜드/모델, 또는 상태 중 하나를 입력해주세요.');
-      return;
-    }
-
+  const handleFilterApply = async () => {
+    // 브랜드와 모델을 분리 (공백으로 구분)
+    const parts = brandModel.trim().split(/\s+/);
+    const brand = parts[0] || '';
+    const model = parts.slice(1).join(' ') || '';
     try {
       setLoading(true);
       setError(null);
@@ -105,16 +82,15 @@ const SearchBox = () => {
       if (brand && model) {
         searchParams.brand = brand.trim();
         searchParams.model = model.trim();
-        // twoParam 로직: 브랜드 + 모델명 길이가 1인 경우에만 false
-        searchParams.twoParam = (brand.trim() + model.trim()).length > 1;
+        searchParams.twoParam = true;
       } else if (brand) {
         // 브랜드만 입력된 경우
         searchParams.brand = brand.trim();
-        searchParams.twoParam = true; // 모든 조건이 안들어가있을때도 true
+        searchParams.twoParam = false;
       } else if (model) {
         // 모델만 입력된 경우
-        searchParams.model = model.trim();
-        searchParams.twoParam = true;
+        searchParams.brand = model.trim();
+        searchParams.twoParam = false;
       }
 
       // 상태 처리
@@ -155,8 +131,18 @@ const SearchBox = () => {
           position: 'relative',
         }}
       >
-        <NumberSearchBox onSearch={handleNumberSearch} />
-        <BrandFilterBox onFilterApply={handleFilterApply} />
+        <NumberSearchBox 
+          value={carNumber}
+          onChange={setCarNumber}
+          onSearch={handleNumberSearch} 
+        />
+        <BrandFilterBox 
+          brandModel={brandModel}
+          setBrandModel={setBrandModel}
+          status={status}
+          setStatus={setStatus}
+          onFilterApply={handleFilterApply} 
+        />
 
         {error && (
           <div style={{ color: 'red', textAlign: 'center', padding: '10px' }}>
