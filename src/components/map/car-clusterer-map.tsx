@@ -95,7 +95,7 @@ export default function CarClustererMap({
   //     if (connectionStatus === 'Open') {
   //       sendMessage({
   //         type: 'request_running_cars',
-  //         timestamp: new Date().toISOString()
+  //         timestamp: new Date().toISOstring()
   //       });
   //     }
   //   }, [map, connectionStatus, sendMessage]);

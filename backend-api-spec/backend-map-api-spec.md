@@ -47,11 +47,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Path**: `ws/map/running`
 - **설명**: 운행 중인 차량 위도 경도를 통해 지도 위에서 조회
 - **상태**: 완료
-- **request**: 
-Websocket 연결을 위한 header만 필요합니다
+- **request**:
+  Websocket 연결을 위한 header만 필요합니다
 
 GET /map/running HTTP/1.1
-Host: hub-server-address.com:8082 
+Host: hub-server-address.com:8082
 Authorization: Bearer
 eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoidXNlcjEyMyIsImlhdCI6MTY5MDY5OTIwMCwiZXhwIjoxNjkwNzAzODAwfQ.SflKxwRJSMeKKF2QT4fwpMeJf3
 6POk6yJV_adQssw5c
@@ -59,6 +59,7 @@ Connection: Upgrade
 Upgrade: websocket
 Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
 Sec-WebSocket-Version: 13
+
 - **response**:"
   websocket으로 보내는 JSON 메시지
   {
@@ -82,25 +83,25 @@ Sec-WebSocket-Version: 13
 - **설명**: 주행 경로 표시를 위한 정보 조회
 - **상태**: 시작 전
 - **query parameters**:
-rentDate : 렌트 시작일
-returnDate : 렌트 종료일
-status : 상태
-brand: 브랜드
-model: 모델명
-carNumber : 차량 번호
+  rentDate : 렌트 시작일
+  returnDate : 렌트 종료일
+  status : 상태
+  brand: 브랜드
+  model: 모델명
+  carNumber : 차량 번호
 - **request**:X
 - **request example**:X
 - **response**:{
-	"result": true,
-	"message":"정보 조회가 성공적으로 완료되었습니다.",
-	"data": {
-		"carNumber": "차량 번호",
-		"startLocation": "출발지",
-		"startLatitude": "출발지 위도",
-		"startLongitude": "출발지 경도",
-		"endLocation": "도착지",
-		"endLatitude": "도착지 위도",
-		"endLongitude": "도착지 경도",
-		"drivingTime": "주행 시간"
-	}
-}
+  "result": true,
+  "message":"정보 조회가 성공적으로 완료되었습니다.",
+  "data": {
+  "carNumber": "차량 번호",
+  "startLocation": "출발지",
+  "startLatitude": "출발지 위도",
+  "startLongitude": "출발지 경도",
+  "endLocation": "도착지",
+  "endLatitude": "도착지 위도",
+  "endLongitude": "도착지 경도",
+  "drivingTime": "주행 시간"
+  }
+  }
