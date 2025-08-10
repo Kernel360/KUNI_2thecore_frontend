@@ -6,7 +6,7 @@ import Map from './map';
 
 export interface Car {
   carNumber: string;
-  status: '운행중' | '대기중' | '수리중';
+  status: '운행' | '대기' | '수리';
   gpsLatitude: string;
   gpsLongitude: string;
 }
@@ -21,13 +21,18 @@ export interface WebSocketCarData {
   }[];
 }
 
-const statusToImage: { [key in Car['status']]?: string } = {
-  운행중: '/car_green.png',
-  수리중: '/car_red.png',
-  대기중: '/car_yellow.png',
-};
+interface CarClustererMapProps {
+  width: string;
+  height: string;
+  carStatusFilter: '운행' | '대기' | '수리' | 'null';
+}
 
-export default function CarClustererMap({ width, height, carStatusFilter }: { width: string; height: string; carStatusFilter: '운행중' | '수리중' | '대기중' | 'null' }) {
+const statusToImage: { [key in Car['status']]?: string } = {
+  운행: '/car_green.png',
+  수리: '/car_red.png',
+  대기: '/car_yellow.png',
+};
+export default function CarClustererMap({ width, height, carStatusFilter }: CarClustererMapProps) {
   const [map, setMap] = useState<any>(null);
   const [cars, setCars] = useState<Car[]>([]);
   const clustererRef = useRef<any>(null);
@@ -45,7 +50,7 @@ export default function CarClustererMap({ width, height, carStatusFilter }: { wi
             const latestLog = carData.logList[carData.logList.length - 1];
             const newCar: Car = {
               carNumber: carData.carNumber,
-              status: '운행중', // WebSocket으로 받은 차량은 운행중 상태로 가정
+              status: '운행', // WebSocket으로 받은 차량은 운행 상태로 가정
               gpsLatitude: latestLog.latitude,
               gpsLongitude: latestLog.longitude
             };
@@ -101,7 +106,7 @@ export default function CarClustererMap({ width, height, carStatusFilter }: { wi
     clustererRef.current.clear();
 
     const filteredCars =
-      carStatusFilter === '운행중'
+      carStatusFilter === '운행'
         ? cars
         : cars.filter(car => car.status === carStatusFilter);
 

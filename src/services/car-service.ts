@@ -17,7 +17,7 @@ export class CarService {
     return response.data.data;
   }
 
-  // 차량 통계 조회 (전체/운행중/대기중/수리중)
+  // 차량 통계 조회 (전체/운행/대기/수리)
   static async getCarStatistics(): Promise<CarSummary> {
     const response = await mainApi.get<ApiResponse<CarSummary>>('/api/cars/statistics');
     return response.data.data;

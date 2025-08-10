@@ -26,7 +26,7 @@ import historyStyles from './history-list-box.module.css';
 //  	memo : string;
 // }
 
-const allowedStatus = ['운행중', '대기중', '수리중'] as const;
+const allowedStatus = ['운행', '대기', '수리'] as const;
 type StatusType = (typeof allowedStatus)[number];
 
 const dummyHis = [
@@ -36,10 +36,10 @@ const dummyHis = [
     model: '소나타',
     rentDate: '2025-01-15',
     returnDate: '2024-01-17',
-    startLocation: '서울시 중구',
+    startLocation: '서울시 구',
     endLocation: '서울시 강남구',
     totalDist: '127km',
-    status: '대기중',
+    status: '대기',
     memo: '접촉사고 1회',
   },
   {
@@ -51,7 +51,7 @@ const dummyHis = [
     startLocation: '서울시 서초구',
     endLocation: '대구광역시',
     totalDist: '45km',
-    status: '운행중',
+    status: '운행',
     memo: '사고 없음',
   },
   {
@@ -63,7 +63,7 @@ const dummyHis = [
     startLocation: '대전광역시',
     endLocation: '서울시 마포구',
     totalDist: '87km',
-    status: '수리중',
+    status: '수리',
     memo: '주차사고 1회',
   },
 ];

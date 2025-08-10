@@ -1,6 +1,5 @@
 import { Car } from '@/lib/api';
 import { CarService } from '@/services/car-service';
-import { Car } from '@/types';
 import BrandFilterBox from './filter-box';
 import floatingStyles from './floating.module.css';
 import ListBox from './list-box/list-box';

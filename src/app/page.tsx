@@ -10,8 +10,8 @@ import { useState } from 'react';
 
 export default function Home() {
   const [carStatusFilter, setCarStatusFilter] = useState<
-    '운행중' | '수리중' | '대기중'
-  >('운행중');
+    '운행' | '수리' | '대기'
+  >('운행');
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
 
   return (

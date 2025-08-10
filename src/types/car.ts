@@ -1,7 +1,7 @@
 // 차량 관련 타입 정의 (통합)
 
 /** 차량 상태 타입 */
-export type CarStatus = '운행중' | '대기중' | '수리중';
+export type CarStatus = '운행' | '대기' | '수리' | 'null';
 
 /** 기본 차량 정보 */
 export interface Car {
@@ -41,9 +41,9 @@ export interface CarSummary {
 /** 차량 통계 정보 (백엔드 API 응답 형식) */
 export interface CarStatistics {
   total: number;
-  operating: number;
-  waiting: number;
-  inspecting: number;
+  driving: number;
+  idle: number;
+  maintenance: number;
 }
 
 /** GPS 로그 정보 */
