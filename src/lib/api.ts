@@ -1,11 +1,15 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { ApiResponse, ApiError } from '@/types/api';
+import { ApiError } from '@/types/api';
+import axios, {
+  AxiosInstance,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios';
 import { TokenManager } from './token-manager';
 
 // 환경변수 기반 API 설정
-const API_BASE_URL = process.env.CAR_BASE_URL || 'http://localhost:8080/api';
-const EMULATOR_API_BASE_URL = process.env.EMULATOR_BASE_URL || 'http://localhost:8081/api';
-
+const API_BASE_URL = process.env.CAR_BASE_URL || 'http://52.78.122.150:8080/';
+const EMULATOR_API_BASE_URL =
+  process.env.EMULATOR_BASE_URL || 'http://52.78.122.150:8082/';
 
 // 한국어 에러 메시지 매핑
 const getKoreanErrorMessage = (status: number, message?: string): string => {
@@ -19,7 +23,9 @@ const getKoreanErrorMessage = (status: number, message?: string): string => {
     503: '서버가 일시적으로 사용할 수 없습니다. 잠시 후 다시 시도해주세요.',
   };
 
-  return message || defaultMessages[status] || '알 수 없는 오류가 발생했습니다.';
+  return (
+    message || defaultMessages[status] || '알 수 없는 오류가 발생했습니다.'
+  );
 };
 
 // Axios 인스턴스 생성 함수
@@ -28,7 +34,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
     baseURL,
     timeout: 3000,
     headers: {
-      'Authorization': 'Bearer ' + (TokenManager.getAccessToken() || ''),
+      Authorization: 'Bearer ' + (TokenManager.getAccessToken() || ''),
     },
   });
 
@@ -41,7 +47,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
       }
       return config;
     },
-    (error) => {
+    error => {
       return Promise.reject(error);
     }
   );
@@ -51,7 +57,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
     (response: AxiosResponse) => {
       return response;
     },
-    async (error) => {
+    async error => {
       const originalRequest = error.config;
 
       // 401 에러이고 재시도하지 않은 경우 토큰 갱신 시도
@@ -65,14 +71,18 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
           }
 
           // 토큰 갱신 요청 (메인 API 서버 사용)
-          const refreshResponse = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-            refreshToken,
-          });
+          const refreshResponse = await axios.post(
+            `${API_BASE_URL}/auth/refresh`,
+            {
+              refreshToken,
+            }
+          );
 
           if (refreshResponse.data.result) {
-            const { accessToken, refreshToken: newRefreshToken } = refreshResponse.data.data;
+            const { accessToken, refreshToken: newRefreshToken } =
+              refreshResponse.data.data;
             TokenManager.setTokens(accessToken, newRefreshToken);
-            
+
             // 원래 요청 재시도
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             return instance(originalRequest);

@@ -1,6 +1,6 @@
 import { mainApi } from '@/lib/api';
-import { ApiResponse } from '@/types/api';
 import { TokenManager } from '@/lib/token-manager';
+import { ApiResponse } from '@/types/api';
 
 // 로그인 요청 타입
 export interface LoginRequest {
@@ -19,14 +19,17 @@ export class AuthService {
   // 로그인
   static async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {
-      const response = await mainApi.post<ApiResponse<LoginResponse>>('/auth/login', credentials);
-      
+      const response = await mainApi.put<ApiResponse<LoginResponse>>(
+        '/auth/login',
+        credentials
+      );
+
       if (response.data.result && response.data.data) {
-        const { accessToken, refreshToken} = response.data.data;
-        
+        const { accessToken, refreshToken } = response.data.data;
+
         // 토큰을 로컬 스토리지에 저장
         TokenManager.setTokens(accessToken, refreshToken);
-        
+
         return response.data.data;
       } else {
         throw new Error(response.data.message || '로그인에 실패했습니다.');
@@ -63,12 +66,15 @@ export class AuthService {
         throw new Error('리프레시 토큰이 없습니다.');
       }
 
-      const response = await mainApi.post<ApiResponse<{ accessToken: string; refreshToken: string }>>('/auth/refresh', {
+      const response = await mainApi.post<
+        ApiResponse<{ accessToken: string; refreshToken: string }>
+      >('/auth/refresh', {
         refreshToken,
       });
 
       if (response.data.result && response.data.data) {
-        const { accessToken, refreshToken: newRefreshToken } = response.data.data;
+        const { accessToken, refreshToken: newRefreshToken } =
+          response.data.data;
         TokenManager.setTokens(accessToken, newRefreshToken);
         return accessToken;
       } else {
