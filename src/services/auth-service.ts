@@ -125,14 +125,8 @@ export class AuthService {
     }
   }
 
-  // 현재 토큰으로 인증 상태 확인
-  static async verifyToken(): Promise<boolean> {
-    try {
-      // 간단한 API 호출로 토큰 유효성 검증 (예: 사용자 정보 조회)
-      const response = await mainApi.get('/auth/login');
-      return response.data.result === true;
-    } catch (error) {
-      return false;
-    }
+  // 현재 토큰으로 인증 상태 확인 (로컬에서만 체크)
+  static verifyToken(): boolean {
+    return TokenManager.hasValidTokens();
   }
 }

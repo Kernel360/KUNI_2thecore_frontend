@@ -5,11 +5,8 @@ import axios, {
 } from 'axios';
 import { TokenManager } from './token-manager';
 
-// 환경변수 기반 API 설정
-const API_BASE_URL =
-  process.env.CAR_BASE_URL || 'http://52.78.122.150:8080/api';
-const EMULATOR_BASE_URL =
-  process.env.EMULATOR_BASE_URL || 'http://localhost:8081';
+// 환경변수 기반 API 설정 (프록시 사용)
+const API_BASE_URL = process.env.CAR_BASE_URL || '/api';
 
 // 공통 API 응답 타입 (모든 API에서 사용)
 export interface ApiResponse<T = any> {
