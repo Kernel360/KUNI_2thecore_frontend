@@ -68,7 +68,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
     baseURL,
     timeout: 3000,
     headers: {
-      Authorization: 'Bearer ' + (TokenManager.getAccessToken() || ''),
+      'Content-Type': 'application/json',
     },
   });
 
