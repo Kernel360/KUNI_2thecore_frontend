@@ -1,7 +1,7 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
-import StatusText from './status-text';
+import React from 'react';
 import styles from './status-box.module.css';
+import StatusText from './status-text';
 
 interface StatusBoxProps {
   num: number;

@@ -20,7 +20,15 @@ const statusToImage: { [key in Car['status']]?: string } = {
   운행: '/car_green.png',
   수리: '/car_red.png',
   대기: '/car_yellow.png',
+  운행: '/car_green.png',
+  수리: '/car_red.png',
+  대기: '/car_yellow.png',
 };
+export default function CarClustererMap({
+  width,
+  height,
+  carStatusFilter,
+}: CarClustererMapProps) {
 export default function CarClustererMap({
   width,
   height,
@@ -118,15 +126,15 @@ export default function CarClustererMap({
     }
   };
 
-  useEffect(() => {
-    if (!map) return;
+  //   useEffect(() => {
+  //     if (!map) return;
 
-    clustererRef.current = new window.kakao.maps.MarkerClusterer({
-      map: map,
-      averageCenter: true,
-      minLevel: 10,
-      disableClickZoom: true,
-    });
+  //     clustererRef.current = new window.kakao.maps.MarkerClusterer({
+  //       map: map,
+  //       averageCenter: true,
+  //       minLevel: 10,
+  //       disableClickZoom: true,
+  //     });
 
     // 정적 차량 데이터 설정 (수리중, 대기중)
     setStaticCars(dummyStaticCars);
@@ -140,10 +148,10 @@ export default function CarClustererMap({
     loadRunningCarLocations();
   }, [map, isReading, loadedCars.length, startReading]);
 
-  useEffect(() => {
-    if (!clustererRef.current) return;
+  //   useEffect(() => {
+  //     if (!clustererRef.current) return;
 
-    clustererRef.current.clear();
+  //     clustererRef.current.clear();
 
     // 모든 차량 데이터 합치기 (운행 중인 차량 + 정적 차량)
     const allCars = [...runningCars, ...staticCars];
@@ -156,17 +164,17 @@ export default function CarClustererMap({
       filteredCars = allCars.filter(car => car.status === carStatusFilter);
     }
 
-    const markers = filteredCars
-      .filter(car => statusToImage[car.status])
-      .map(car => {
-        const imageSrc = statusToImage[car.status]!;
-        const imageSize = new window.kakao.maps.Size(32, 32);
-        const imageOption = { offset: new window.kakao.maps.Point(16, 32) };
-        const markerImage = new window.kakao.maps.MarkerImage(
-          imageSrc,
-          imageSize,
-          imageOption
-        );
+  //     const markers = filteredCars
+  //       .filter(car => statusToImage[car.status])
+  //       .map(car => {
+  //         const imageSrc = statusToImage[car.status]!;
+  //         const imageSize = new window.kakao.maps.Size(32, 32);
+  //         const imageOption = { offset: new window.kakao.maps.Point(16, 32) };
+  //         const markerImage = new window.kakao.maps.MarkerImage(
+  //           imageSrc,
+  //           imageSize,
+  //           imageOption
+  //         );
 
         return new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(

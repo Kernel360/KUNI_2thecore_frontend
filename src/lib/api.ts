@@ -1,4 +1,3 @@
-import { ApiError } from '@/types/api';
 import axios, {
   AxiosInstance,
   AxiosResponse,
@@ -6,8 +5,45 @@ import axios, {
 } from 'axios';
 import { TokenManager } from './token-manager';
 
-// 환경변수 기반 API 설정
+// 환경변수 기반 API 설정 (프록시 사용)
 const API_BASE_URL = process.env.CAR_BASE_URL || '/api';
+
+// 공통 API 응답 타입 (모든 API에서 사용)
+export interface ApiResponse<T = any> {
+  result: boolean;
+  message: string | null;
+  data: T;
+}
+
+// 페이징 응답 타입 (차량 목록 등에서 사용)
+export interface PageResponse<T> {
+  content: T[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    sort: {
+      empty: boolean;
+      sorted: boolean;
+      unsorted: boolean;
+    };
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  first: boolean;
+  numberOfElements: number;
+  size: number;
+  number: number;
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  empty: boolean;
+}
 
 // 한국어 에러 메시지 매핑
 const getKoreanErrorMessage = (status: number, message?: string): string => {
@@ -42,6 +78,9 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
       const token = TokenManager.getAccessToken();
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+      } else {
+        // 토큰이 없으면 Authorization 헤더 제거
+        delete config.headers.Authorization;
       }
       return config;
     },
@@ -95,7 +134,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
       }
 
       // 에러 객체를 한국어 메시지와 함께 생성
-      const apiError: ApiError = {
+      const apiError = {
         status: error.response?.status || 500,
         message: getKoreanErrorMessage(
           error.response?.status || 500,
@@ -113,10 +152,6 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
 
 // API 인스턴스들 - 모두 메인 서버 사용
 export const mainApi = createApiInstance(API_BASE_URL);
-export const emulatorApi = createApiInstance(API_BASE_URL);
 
 // 토큰 관리 유틸리티 export
 export { TokenManager };
-
-// API 응답 타입 재export (하위 호환성)
-export type { ApiResponse } from '@/types/api';

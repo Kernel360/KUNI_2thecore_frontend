@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react';
 import CarClustererMap from './car-clusterer-map';
 import KakaoMapScript from './kakao-map-script';

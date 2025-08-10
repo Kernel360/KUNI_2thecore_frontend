@@ -1,6 +1,11 @@
-import { mainApi } from '@/lib/api';
-import { ApiResponse } from '@/types/api';
+import { ApiResponse, mainApi } from '@/lib/api';
 import { TokenManager } from '@/lib/token-manager';
+
+// 회원가입 요청 타입
+export interface SignupRequest {
+  loginId: string;
+  password: string;
+}
 
 // 로그인 요청 타입
 export interface LoginRequest {
@@ -8,39 +13,77 @@ export interface LoginRequest {
   password: string;
 }
 
-// 로그인 응답 타입
-export interface LoginResponse {
-  accessToken: string;
+// 토큰 갱신 요청 타입
+export interface RefreshTokenRequest {
   refreshToken: string;
 }
 
+// 인증 토큰 데이터 타입
+export interface AuthTokenData {
+  accessToken: string;
+  refreshToken: string;
+  expiredAt: string;
+}
+
+// 회원가입 응답 타입
+export interface SignupResponse extends ApiResponse<AuthTokenData> {}
+
+// 로그인 응답 타입
+export interface LoginResponse extends ApiResponse<AuthTokenData> {}
+
+// 로그아웃 응답 타입
+export interface LogoutResponse extends ApiResponse<null> {}
+
+// 토큰 갱신 응답 타입
+export interface RefreshTokenResponse extends ApiResponse<AuthTokenData> {}
+
 // 인증 서비스
 export class AuthService {
+  // 회원가입
+  static async signup(credentials: SignupRequest): Promise<AuthTokenData> {
+    const response = await mainApi.post<SignupResponse>(
+      '/admin/signup',
+      credentials
+    );
+
+    if (response.data.result && response.data.data) {
+      // 토큰을 로컬 스토리지에 저장
+      TokenManager.setTokens(
+        response.data.data.accessToken,
+        response.data.data.refreshToken
+      );
+
+      return response.data.data;
+    } else {
+      throw new Error(response.data.message || '회원가입에 실패했습니다.');
+    }
+  }
+
   // 로그인
-  static async login(credentials: LoginRequest): Promise<LoginResponse> {
-    try {
-      const response = await mainApi.post<ApiResponse<LoginResponse>>('/auth/login', credentials);
-      
-      if (response.data.result && response.data.data) {
-        const { accessToken, refreshToken} = response.data.data;
-        
-        // 토큰을 로컬 스토리지에 저장
-        TokenManager.setTokens(accessToken, refreshToken);
-        
-        return response.data.data;
-      } else {
-        throw new Error(response.data.message || '로그인에 실패했습니다.');
-      }
-    } catch (error: any) {
-      throw new Error(error.message || '로그인 중 오류가 발생했습니다.');
+  static async login(credentials: LoginRequest): Promise<AuthTokenData> {
+    const response = await mainApi.post<LoginResponse>(
+      '/auth/login',
+      credentials
+    );
+
+    if (response.data.result && response.data.data) {
+      // 토큰을 로컬 스토리지에 저장
+      TokenManager.setTokens(
+        response.data.data.accessToken,
+        response.data.data.refreshToken
+      );
+
+      return response.data.data;
+    } else {
+      throw new Error(response.data.message || '로그인에 실패했습니다.');
     }
   }
 
   // 로그아웃
   static async logout(): Promise<void> {
     try {
-      // 서버에 로그아웃 요청 (선택사항)
-      await mainApi.post('/auth/logout');
+      // 서버에 로그아웃 요청
+      await mainApi.post<LogoutResponse>('/auth/logout');
     } catch (error) {
       // 서버 로그아웃 실패해도 로컬 토큰은 제거
       console.warn('서버 로그아웃 실패:', error);
@@ -63,12 +106,14 @@ export class AuthService {
         throw new Error('리프레시 토큰이 없습니다.');
       }
 
-      const response = await mainApi.post<ApiResponse<{ accessToken: string; refreshToken: string }>>('/auth/refresh', {
-        refreshToken,
-      });
+      const response = await mainApi.post<RefreshTokenResponse>(
+        '/auth/refresh',
+        { refreshToken }
+      );
 
       if (response.data.result && response.data.data) {
-        const { accessToken, refreshToken: newRefreshToken } = response.data.data;
+        const { accessToken, refreshToken: newRefreshToken } =
+          response.data.data;
         TokenManager.setTokens(accessToken, newRefreshToken);
         return accessToken;
       } else {
@@ -80,14 +125,8 @@ export class AuthService {
     }
   }
 
-  // 현재 토큰으로 인증 상태 확인
-  static async verifyToken(): Promise<boolean> {
-    try {
-      // 간단한 API 호출로 토큰 유효성 검증 (예: 사용자 정보 조회)
-      const response = await mainApi.get('/auth/verify');
-      return response.data.result === true;
-    } catch (error) {
-      return false;
-    }
+  // 현재 토큰으로 인증 상태 확인 (로컬에서만 체크)
+  static verifyToken(): boolean {
+    return TokenManager.hasValidTokens();
   }
 }
