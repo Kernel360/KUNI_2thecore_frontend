@@ -1,4 +1,4 @@
-import { mainApi, ApiResponse, PageResponse } from '@/lib/api';
+import { ApiResponse, mainApi, PageResponse } from '@/lib/api';
 
 // 차량 기본 정보 타입
 export interface Car {
@@ -10,8 +10,8 @@ export interface Car {
 
 // 차량 상세 정보 타입
 export interface CarDetail extends Car {
-  gpsLatitude?: number;
-  gpsLongitude?: number;
+  latitude?: number;
+  longitude?: number;
 }
 
 // 차량 통계 타입
@@ -54,9 +54,8 @@ export class CarService {
 
   // 차량 통계 조회 (전체/운행/대기/수리)
   static async getCarStatistics(): Promise<CarSummary> {
-    const response = await mainApi.get<ApiResponse<CarSummary>>(
-      '/cars/statistics'
-    );
+    const response =
+      await mainApi.get<ApiResponse<CarSummary>>('/cars/statistics');
     return response.data.data;
   }
 
@@ -95,14 +94,6 @@ export class CarService {
   }
 
   // 차량 정보 수정
-  static async updateCar(
-    carNumber: string,
-    carData: Partial<CarDetail>
-  ): Promise<CarDetail> {
-    const response = await mainApi.patch<ApiResponse<CarDetail>>(
-      `/cars/${carNumber}`,
-      carData
-    );
   static async updateCar(
     carNumber: string,
     carData: Partial<CarDetail>

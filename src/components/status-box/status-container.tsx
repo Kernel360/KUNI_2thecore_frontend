@@ -1,20 +1,21 @@
 import { StatisticsService } from '@/services/statistics-service';
-import { CarStatistics } from '@/types';
 import { useEffect, useState } from 'react';
 import StatusBox from './status-box';
 import styles from './status-box.module.css';
 import StatusText from './status-text';
 
 interface StatusContainerProps {
-  carStatusFilter: 'null' | '운행' | '수리' | '대기';
-  setCarStatusFilter: (status: 'null' | '운행' | '수리' | '대기') => void;
+  carStatusFilter: 'total' | 'driving' | 'maintenance' | 'idle';
+  setCarStatusFilter: (
+    status: 'total' | 'driving' | 'maintenance' | 'idle'
+  ) => void;
 }
 
 const StatusContainer = ({
   carStatusFilter,
   setCarStatusFilter,
 }: StatusContainerProps) => {
-  const [carSummary, setCarSummary] = useState<CarStatistics>({
+  const [carSummary, setCarSummary] = useState({
     total: 0,
     driving: 0,
     idle: 0,
@@ -65,43 +66,43 @@ const StatusContainer = ({
         </div>
       )}
       <div
-        onClick={() => setCarStatusFilter('null')}
+        onClick={() => setCarStatusFilter('total')}
         className="cursor-pointer transition-transform duration-200 hover:scale-105"
       >
         <StatusBox
-          num={carSummary.total}
+          num={carSummary['total']}
           text="전체 차량"
-          active={carStatusFilter === 'null'}
+          active={carStatusFilter === 'total'}
         />
       </div>
       <div
-        onClick={() => setCarStatusFilter('운행')}
+        onClick={() => setCarStatusFilter('driving')}
         className="cursor-pointer transition-transform duration-200 hover:scale-105"
       >
         <StatusBox
-          num={carSummary.driving}
+          num={carSummary['driving']}
           text="운행 중"
-          active={carStatusFilter === '운행'}
+          active={carStatusFilter === 'driving'}
         />
       </div>
       <div
-        onClick={() => setCarStatusFilter('대기')}
+        onClick={() => setCarStatusFilter('idle')}
         className="cursor-pointer transition-transform duration-200 hover:scale-105"
       >
         <StatusBox
-          num={carSummary.idle}
+          num={carSummary['idle']}
           text="대기 중"
-          active={carStatusFilter === '대기'}
+          active={carStatusFilter === 'idle'}
         />
       </div>
       <div
-        onClick={() => setCarStatusFilter('수리')}
+        onClick={() => setCarStatusFilter('maintenance')}
         className="cursor-pointer transition-transform duration-200 hover:scale-105"
       >
         <StatusBox
-          num={carSummary.maintenance}
+          num={carSummary['maintenance']}
           text="수리 중"
-          active={carStatusFilter === '수리'}
+          active={carStatusFilter === 'maintenance'}
         />
       </div>
     </div>
