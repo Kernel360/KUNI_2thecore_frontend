@@ -10,8 +10,8 @@ export interface Car {
 
 // 차량 상세 정보 타입
 export interface CarDetail extends Car {
-  gpsLatitude?: number;
-  gpsLongitude?: number;
+  latitude?: number;
+  longitude?: number;
 }
 
 // 차량 통계 타입
