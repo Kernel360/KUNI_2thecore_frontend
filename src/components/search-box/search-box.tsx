@@ -19,9 +19,9 @@ const SearchBox = () => {
         console.error('차량 목록 조회 실패:', error);
         // 에러 발생 시 더미 데이터 사용
         const fallbackCars: Car[] = [
-          { carNumber: '12가 1234', brand: '현대', model: '소나타', status: '운행중' },
-          { carNumber: '23나 2345', brand: '기아', model: 'K5', status: '대기중' },
-          { carNumber: '34라 3456', brand: '삼성', model: 'SM5', status: '수리중' },
+          { carNumber: '12가 1234', brand: '현대', model: '소나타', status: '운행' },
+          { carNumber: '23나 2345', brand: '기아', model: 'K5', status: '대기' },
+          { carNumber: '34라 3456', brand: '삼성', model: 'SM5', status: '수리' },
         ];
         setCars(fallbackCars);
       } finally {

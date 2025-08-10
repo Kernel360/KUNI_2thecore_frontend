@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -10,8 +12,55 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import TopBar from '@/components/ui/topBar';
+import { AuthService } from '@/services/auth-service';
+import { TokenManager } from '@/lib/token-manager';
 
 export default function Login() {
+  const [credentials, setCredentials] = useState({
+    loginId: '',
+    password: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  // 이미 로그인된 상태면 메인 페이지로 리다이렉트
+  useEffect(() => {
+    if (TokenManager.hasValidTokens()) {
+      navigate('/');
+    }
+  }, [navigate]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCredentials(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    if (error) setError('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!credentials.loginId || !credentials.password) {
+      setError('아이디와 비밀번호를 입력해주세요.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      await AuthService.login(credentials);
+      navigate('/');
+    } catch (error: any) {
+      setError(error.message || '로그인에 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-center h-full">
       <TopBar title="로그인"></TopBar>
@@ -21,17 +70,37 @@ export default function Login() {
           <CardDescription>아이디와 비밀번호를 입력하세요.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4">
               <Label htmlFor="loginId">아이디</Label>
-              <Input id="loginId" type="text" required />
+              <Input 
+                id="loginId" 
+                name="loginId"
+                type="text" 
+                value={credentials.loginId}
+                onChange={handleChange}
+                required 
+              />
               <Label htmlFor="password">비밀번호</Label>
-              <Input id="password" type="password" required />
+              <Input 
+                id="password" 
+                name="password"
+                type="password" 
+                value={credentials.password}
+                onChange={handleChange}
+                required 
+              />
+              {error && (
+                <div className="text-red-500 text-sm text-center">
+                  {error}
+                </div>
+              )}
               <Button
                 type="submit"
                 className="w-full bg-blue-500 hover:bg-blue-600"
+                disabled={loading}
               >
-                로그인
+                {loading ? '로그인 중...' : '로그인'}
               </Button>
             </div>
           </form>

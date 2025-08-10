@@ -1,5 +1,3 @@
-
-
 import { useEffect, useRef, useState } from 'react';
 import Map from './map';
 
@@ -80,4 +78,3 @@ export default function CarLocationMap({
     </div>
   );
 }
-
