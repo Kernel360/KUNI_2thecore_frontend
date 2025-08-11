@@ -187,4 +187,3 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
     "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtcXRlc3QiLCJlbWFpbCI6Im1xdGVzdCIsImlhdCI6MTc1NDYxNzIzOSwiZXhwIjoxNzU2NDMxNjM5fQ.9CORf3jqMwerBqmvpxI9Zv3yngy9TYDZXs6FhUXHvFo", // 새로 발급된 리프레시 토큰
     "expiredAt": "2025-08-15T09:20:39.3362867" // 액세스 토큰 만료 시간 (ISO 8601 형식)
   }
-}

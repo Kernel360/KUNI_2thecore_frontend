@@ -42,38 +42,65 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 
 ### 5.1 운행 중인 차량 실시간 위치
 
-- **Method**: GET (WebSocket)
-- **Path**: `ws/map/running`
+- **Method**: GET (axios)
+- **Path**: `/api/car/locations`
 - **설명**: 운행 중인 차량 위도 경도를 통해 지도 위에서 조회
 - **상태**: 완료
-- **request**:
-  Websocket 연결을 위한 header만 필요합니다
-
-GET /map/running HTTP/1.1
-Host: hub-server-address.com:8082
-Authorization: Bearer
-eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoidXNlcjEyMyIsImlhdCI6MTY5MDY5OTIwMCwiZXhwIjoxNjkwNzAzODAwfQ.SflKxwRJSMeKKF2QT4fwpMeJf3
-6POk6yJV_adQssw5c
-Connection: Upgrade
-Upgrade: websocket
-Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
-Sec-WebSocket-Version: 13
-
-- **response**:"
-  websocket으로 보내는 JSON 메시지
+- **request**:{
+  "status" : String // (운행, 대기, 수리 중 입력 가능하고
+  //입력하지 않으면 전체 차량을 불러옴
+  }
+- **request example**
   {
-  "loginId": "string",
-  "carNumber": "string",
-  "logList": [
+  "status" : 운행 // 운행중인 차량을 불러옴
+  }
+- **response**:
   {
-  "latitude": "string",
-  "longitude": "string",
-  "timestamp": "datetime"
+  "result": boolean,
+  "message": String,
+  "data": {
+  "carNumber": String,
+  "status": String,
+  "lastLatitude": String,
+  "lastLongitude": String
+  }
+  }
+- **response example**:{
+  "result": true, // 요청 성공 여부 (true: 성공, false: 실패)
+  "message": "전체 차량 위치 조회 완료", // 요청 처리에 대한 메시지
+  "data": [ // 차량 위치 정보 리스트
+  {
+  "carNumber": "12가1234", // 차량 번호
+  "status": "대기", // 차량 상태 (운행, 대기, 수리)
+  "lastLatitude": "12.1238", // 마지막으로 기록된 위도 (GPS 좌표)
+  "lastLongitude": "12.2325" // 마지막으로 기록된 경도 (GPS 좌표)
   },
-  ...
+  {
+  "carNumber": "12가1233",
+  "status": "대기",
+  "lastLatitude": "12.3451",
+  "lastLongitude": "12.3412"
+  },
+  {
+  "carNumber": "12가1236",
+  "status": "대기",
+  "lastLatitude": "35.8585",
+  "lastLongitude": "129.1975"
+  },
+  {
+  "carNumber": "12가3456",
+  "status": "운행",
+  "lastLatitude": null,
+  "lastLongitude": null
+  },
+  {
+  "carNumber": "12가5132",
+  "status": "대기",
+  "lastLatitude": "string",
+   "lastLongitude": "string"
+  }
   ]
   }
-  "
 
 ### 5.2 차량 주행 경로를 위한 정보 조회
 

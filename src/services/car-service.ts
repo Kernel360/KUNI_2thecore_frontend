@@ -22,11 +22,15 @@ export interface CarSummary {
   repairingCars: number;
 }
 
-// 차량 검색 필터 요청 타입
-export interface CarFilterRequest {
-  carNumber?: string;
-  brand?: string;
-  status?: string[];
+// 차량 검색 필터 요청 타입 (백엔드 API 2.6 명세에 정확히 맞게 수정)
+export interface CarSearchParams {
+  carNumber?: string; // 차량 번호
+  model?: string; // 차량 모델
+  brand?: string; // 차량 브랜드
+  status?: string; // 차량 상태 ("운행", "대기", "수리")
+  twoParam?: boolean; // 브랜드 + 모델명 길이 체크
+  page?: number; // 페이지 번호
+  offset?: number; // 페이지당 데이터 수
 }
 
 export class CarService {
@@ -59,16 +63,31 @@ export class CarService {
     return response.data.data;
   }
 
-  // 차량 검색/필터링
+  // 차량 검색/필터링 (백엔드 API 2.6 명세에 정확히 맞게 수정)
   static async searchCars(
-    filter: CarFilterRequest,
+    params: CarSearchParams,
     page: number = 1,
-    size: number = 10
+    offset: number = 10
   ): Promise<PageResponse<Car>> {
+    // 백엔드 API 명세에 맞게 파라미터 구성
+    const searchParams: CarSearchParams = {
+      ...params,
+      page,
+      offset,
+    };
+    
+    // 빈 문자열이나 undefined 값 제거
+    Object.keys(searchParams).forEach(key => {
+      if (searchParams[key as keyof CarSearchParams] === '' || 
+          searchParams[key as keyof CarSearchParams] === undefined) {
+        delete searchParams[key as keyof CarSearchParams];
+      }
+    });
+    
     const response = await mainApi.get<ApiResponse<PageResponse<Car>>>(
       '/cars/search',
       {
-        params: { ...filter, page, offset: size },
+        params: searchParams,
       }
     );
     return response.data.data;

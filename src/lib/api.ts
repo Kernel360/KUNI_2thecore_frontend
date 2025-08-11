@@ -150,7 +150,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
   return instance;
 };
 
-// API 인스턴스들
+// API 인스턴스들 - 모두 메인 서버 사용
 export const mainApi = createApiInstance(API_BASE_URL);
 
 // 토큰 관리 유틸리티 export
