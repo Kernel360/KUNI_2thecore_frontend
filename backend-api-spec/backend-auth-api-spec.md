@@ -158,6 +158,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "data": null // 데이터
 }
 
+
 ### 1.6 리프레시 토큰 검증
 
 - **Method**: POST

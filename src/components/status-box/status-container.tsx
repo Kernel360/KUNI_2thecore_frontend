@@ -1,4 +1,5 @@
 import { StatisticsService } from '@/services/statistics-service';
+import { CarSummary } from '@/services/car-service';
 import { useEffect, useState } from 'react';
 import StatusBox from './status-box';
 import styles from './status-box.module.css';

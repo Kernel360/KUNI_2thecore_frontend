@@ -22,13 +22,33 @@ export function RangeCalendar({
     DateRange | undefined
   >(undefined);
 
+  // 컴포넌트 마운트 시 기본값 설정 (일주일 전부터 오늘까지)
+  React.useEffect(() => {
+    if (!externalDateRange && !internalDateRange) {
+      const today = new Date();
+      const weekAgo = new Date();
+      weekAgo.setDate(today.getDate() - 7);
+      
+      const defaultRange = {
+        from: weekAgo,
+        to: today
+      };
+      
+      if (onDateRangeChange) {
+        onDateRangeChange(defaultRange);
+      } else {
+        setInternalDateRange(defaultRange);
+      }
+    }
+  }, [externalDateRange, internalDateRange, onDateRangeChange]);
+
   const dateRange = externalDateRange ?? internalDateRange;
   const setDateRange = onDateRangeChange ?? setInternalDateRange;
 
   const formatDateRange = (range: DateRange | undefined) => {
-    if (!range?.from) return '렌트시작일 - 렌트종료일';
-    if (!range?.to) return range.from.toLocaleDatestring();
-    return `${range.from.toLocaleDatestring()} - ${range.to.toLocaleDatestring()}`;
+    if (!range?.from) return '주행시작일 - 주행종료일';
+    if (!range?.to) return range.from.toLocaleDateString();
+    return `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`;
   };
 
   return (
