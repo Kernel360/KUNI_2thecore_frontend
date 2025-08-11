@@ -1,5 +1,6 @@
 import { Car, CarSearchParams, CarService } from '@/services/car-service';
 import { useEffect, useState } from 'react';
+import CarRegisterModal, { CarFormData } from './car-register-modal';
 import BrandFilterBox from './filter-box';
 import floatingStyles from './floating.module.css';
 import ListBox from './list-box/list-box';
@@ -14,6 +15,9 @@ const SearchBox = () => {
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
   const [status, setStatus] = useState('');
+
+  // 모달 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 초기 차량 목록 로드
   useEffect(() => {
@@ -108,6 +112,38 @@ const SearchBox = () => {
     }
   };
 
+  // 차량 등록 핸들러
+  const handleCarRegister = async (formData: CarFormData) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const carData = {
+        brand: formData.brand,
+        model: formData.model,
+        carYear: parseInt(formData.carYear),
+        carType: formData.carType,
+        carNumber: formData.carNumber,
+        sumDist: parseFloat(formData.sumDist),
+      };
+
+      await CarService.createCar(carData);
+      loadInitialCars(); // 등록 후 목록 새로고침
+    } catch (error) {
+      console.error('차량 등록 실패:', error);
+      setError('차량 등록에 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 차량 삭제 핸들러 - List-Box에서 삭제 성공 시 호출됨
+  const handleCarDelete = (deletedCarNumber: string) => {
+    // 삭제된 차량을 cars 배열에서 제거
+    setCars(prevCars => prevCars.filter(car => car.carNumber !== deletedCarNumber));
+    console.log(`차량 목록에서 ${deletedCarNumber} 제거 완료`);
+  };
+
   if (loading) {
     return (
       <div
@@ -131,17 +167,17 @@ const SearchBox = () => {
           position: 'relative',
         }}
       >
-        <NumberSearchBox 
+        <NumberSearchBox
           value={carNumber}
           onChange={setCarNumber}
-          onSearch={handleNumberSearch} 
+          onSearch={handleNumberSearch}
         />
-        <BrandFilterBox 
+        <BrandFilterBox
           brandModel={brandModel}
           setBrandModel={setBrandModel}
           status={status}
           setStatus={setStatus}
-          onFilterApply={handleFilterApply} 
+          onFilterApply={handleFilterApply}
         />
 
         {error && (
@@ -162,13 +198,25 @@ const SearchBox = () => {
               brand={car.brand}
               model={car.model}
               status={car.status}
+              onDelete={handleCarDelete}
             />
           ))
         )}
       </div>
       <div className={floatingStyles.floatingContainer}>
-        <button className={floatingStyles.floatingButton}>+</button>
+        <button
+          className={floatingStyles.floatingButton}
+          onClick={() => setIsModalOpen(true)}
+        >
+          +
+        </button>
       </div>
+
+      <CarRegisterModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleCarRegister}
+      />
     </>
   );
 };

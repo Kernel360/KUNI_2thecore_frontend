@@ -12,8 +12,13 @@ interface BrandFilterBoxProps {
   onFilterApply: () => void;
 }
 
-const BrandFilterBox = ({ brandModel, setBrandModel, status, setStatus, onFilterApply }: BrandFilterBoxProps) => {
-
+const BrandFilterBox = ({
+  brandModel,
+  setBrandModel,
+  status,
+  setStatus,
+  onFilterApply,
+}: BrandFilterBoxProps) => {
   const handleFilterApply = () => {
     onFilterApply();
   };

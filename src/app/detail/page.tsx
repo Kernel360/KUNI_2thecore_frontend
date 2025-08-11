@@ -7,7 +7,6 @@ import TopBar from '@/components/ui/topBar';
 import { CarService } from '@/services/car-service';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { Detail, useDetailStore } from '@/store/detail-store';
-import { CarDetail } from '@/types';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './detail.module.css';
@@ -15,6 +14,12 @@ const mockDetail = {
   year: '2022년',
   drive_dist: '45,678 km',
 };
+interface CarDetail {
+  carNumber: string;
+  brand: string;
+  model: string;
+  status: '운행' | '대기' | '수리';
+}
 
 const DetailPage = () => {
   const navigate = useNavigate();

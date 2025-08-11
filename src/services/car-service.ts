@@ -95,7 +95,7 @@ export class CarService {
 
   // 차량 등록
   static async createCar(
-    carData: Omit<CarDetail, 'latitude' | 'longtitude'>
+    carData: Omit<CarDetail, 'latitude' | 'longtitude' | 'status'>
   ): Promise<CarDetail> {
     const response = await mainApi.post<ApiResponse<CarDetail>>(
       '/api/cars',
@@ -109,7 +109,7 @@ export class CarService {
     carNumber: string,
     carData: Partial<CarDetail>
   ): Promise<CarDetail> {
-    const response = await mainApi.patch<ApiResponse<CarDetail>>(
+    const response = await mainApi.patch<ApiResponse<CarDetail>>( //<ApiResponse<CarDetail>> 지워보기
       `/cars/${carNumber}`,
       carData
     );
@@ -117,8 +117,8 @@ export class CarService {
   }
 
   // 차량 삭제
-  static async deleteCar(carNumber: string): Promise<{ carNumber: string }> {
-    const response = await mainApi.delete<ApiResponse<{ carNumber: string }>>(
+  static async deleteCar(carNumber: string): Promise<{ brand: string; model: string; carNumber: string }> {
+    const response = await mainApi.delete<ApiResponse<{ brand: string; model: string; carNumber: string }>>(
       `/cars/${carNumber}`
     );
     return response.data.data;

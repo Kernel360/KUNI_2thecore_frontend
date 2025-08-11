@@ -150,11 +150,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Method**: DELETE
 - **Path**: `/api/cars/{car_number}`
 - **request**: // 필요없음
-- **response (성공)**:{
-  "brand": string,
-  "model": string,
-  "carNumber": string
-  }
+- **response (성공)**:POST
 - **response example**:{
   "result": true,
   "message": "차량 삭제가 성공적으로 완료되었습니다.",

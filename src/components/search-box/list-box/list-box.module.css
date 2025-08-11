@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 24px;
+  padding: 10px 24px;
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -10,7 +10,7 @@
   transition: all 0.3s ease;
   cursor: pointer;
   width: 98%;
-  margin: 12px auto;
+  margin: 4px auto;
 }
 
 .container:hover {

@@ -10,8 +10,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { CarService } from '@/services/car-service';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { useDetailStore } from '@/store/detail-store';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Status from '../status';
 import styles from './list-box.module.css';
@@ -21,6 +23,7 @@ interface ListBoxProps {
   brand: string;
   model: string;
   status: string;
+  onDelete?: (carNumber: string) => void; // 삭제 성공 시 부모 컴포넌트에 알림
 }
 
 const allowedStatus = ['운행', '대기', '수리'] as const;
@@ -31,10 +34,15 @@ const ListBox: React.FC<ListBoxProps> = ({
   model,
   brand,
   status,
+  onDelete,
 }) => {
   const setDetail = useDetailStore(state => state.setDetail);
   const navigate = useNavigate();
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
+  
+  // 삭제 관련 상태
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const safeStatus: StatusType = allowedStatus.includes(status as StatusType)
     ? (status as StatusType)
@@ -63,9 +71,35 @@ const ListBox: React.FC<ListBoxProps> = ({
     navigate('/detail');
   };
 
-  const handleDelete = (e: React.MouseEvent) => {
+  const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    alert(`삭제됨: ${carNumber}`);
+    
+    try {
+      setIsDeleting(true);
+      setDeleteError(null);
+      
+      // 백엔드 API 호출 - CarService의 deleteCar 메서드 사용
+      await CarService.deleteCar(carNumber);
+      
+      // 삭제 성공 시 부모 컴포넌트에 알림
+      if (onDelete) {
+        onDelete(carNumber);
+      }
+      
+      // 성공 메시지 (선택적으로 표시)
+      console.log(`차량 ${carNumber} 삭제가 완료되었습니다.`);
+      
+    } catch (error: any) {
+      // 에러 처리 - API에서 반환된 한국어 메시지 사용
+      const errorMessage = error.message || '차량 삭제에 실패했습니다.';
+      setDeleteError(errorMessage);
+      console.error('차량 삭제 실패:', error);
+      
+      // 에러 메시지를 사용자에게 표시 (alert 사용)
+      alert(errorMessage);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   function AlertDialogDemo() {
@@ -93,8 +127,9 @@ const ListBox: React.FC<ListBoxProps> = ({
             <AlertDialogAction
               className={styles.alertButton}
               onClick={handleDelete}
+              disabled={isDeleting}
             >
-              삭제
+              {isDeleting ? '삭제 중...' : '삭제'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
