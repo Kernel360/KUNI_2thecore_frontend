@@ -65,50 +65,6 @@ const SearchBox = () => {
       setLoading(false);
     }
   };
-    loadInitialCars();
-  }, []);
-
-  const loadInitialCars = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const carData = await CarService.getAllCars(1, 50);
-      setCars(carData.content);
-    } catch (error) {
-      console.error('차량 목록 조회 실패:', error);
-      setError('차량 목록을 불러오는데 실패했습니다.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 차량 번호로 검색 (백엔드 API 2.6 명세에 맞게 수정)
-  const handleNumberSearch = async () => {
-    if (!carNumber.trim()) {
-      setError('차량 번호를 입력해주세요.');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      // 백엔드 API 2.6 명세에 맞게 파라미터 구성
-      const searchParams: CarSearchParams = {
-        carNumber: carNumber.trim(),
-        page: 1,
-        offset: 50,
-      };
-
-      const result = await CarService.searchCars(searchParams, 1, 50);
-      setCars(result.content);
-    } catch (error) {
-      console.error('차량 번호 검색 실패:', error);
-      setError('차량 검색에 실패했습니다.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // 필터 적용 (브랜드/모델 + 상태) - 백엔드 API 2.6 명세에 맞게 수정
   const handleFilterApply = async () => {
@@ -184,15 +140,14 @@ const SearchBox = () => {
   // 차량 삭제 핸들러 - List-Box에서 삭제 성공 시 호출됨
   const handleCarDelete = (deletedCarNumber: string) => {
     // 삭제된 차량을 cars 배열에서 제거
-    setCars(prevCars => prevCars.filter(car => car.carNumber !== deletedCarNumber));
+    setCars(prevCars =>
+      prevCars.filter(car => car.carNumber !== deletedCarNumber)
+    );
     console.log(`차량 목록에서 ${deletedCarNumber} 제거 완료`);
   };
 
   if (loading) {
     return (
-      <div
-        style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}
-      >
       <div
         style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}
       >

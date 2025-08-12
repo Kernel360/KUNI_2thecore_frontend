@@ -95,7 +95,7 @@ export class CarService {
 
   // 차량 등록
   static async createCar(
-    carData: Omit<CarDetail, 'latitude' | 'longtitude'>
+    carData: Omit<CarDetail, 'latitude' | 'longtitude' | 'status'>
   ): Promise<CarDetail> {
     const response = await mainApi.post<ApiResponse<CarDetail>>(
       '/api/cars',
