@@ -6,8 +6,8 @@ import Map from './map';
 export interface Car {
   carNumber: string;
   status: '운행' | '대기' | '수리';
-  latitude: string;
-  longtitude: string;
+  lastLatitude: string;
+  lastLongitude: string;
 }
 
 interface CarClustererMapProps {
@@ -31,46 +31,6 @@ export default function CarClustererMap({
   const [runningCars, setRunningCars] = useState<Car[]>([]);
   const [staticCars, setStaticCars] = useState<Car[]>([]);
   const clustererRef = useRef<any>(null);
-
-  // 정적 차량 더미 데이터 (수리중, 대기중)
-  const dummyStaticCars: Car[] = [
-    {
-      carNumber: '12가1234',
-      status: '대기',
-      latitude: '37.5665',
-      longtitude: '126.9780',
-    }, // 서울
-    {
-      carNumber: '23나2345',
-      status: '수리',
-      latitude: '35.1796',
-      longtitude: '129.0756',
-    }, // 부산
-    {
-      carNumber: '34다3456',
-      status: '대기',
-      latitude: '35.8714',
-      longtitude: '128.6014',
-    }, // 대구
-    {
-      carNumber: '45라4567',
-      status: '수리',
-      latitude: '37.4563',
-      longtitude: '126.7052',
-    }, // 인천
-    {
-      carNumber: '56마5678',
-      status: '대기',
-      latitude: '36.3504',
-      longtitude: '127.3845',
-    }, // 대전
-    {
-      carNumber: '67바6789',
-      status: '수리',
-      latitude: '35.1595',
-      longtitude: '126.8526',
-    }, // 광주
-  ];
 
   // GPX 파일 목록
   const gpxFiles = [
@@ -110,8 +70,8 @@ export default function CarClustererMap({
       const carData: Car[] = locations.map(loc => ({
         carNumber: loc.carNumber,
         status: '운행',
-        latitude: loc.latitude.toString(),
-        longtitude: loc.longtitude.toString(),
+        lastLatitude: loc.lastLatitude.toString(),
+        lastLongitude: loc.lastLongitude.toString(),
       }));
       setRunningCars(carData);
     } catch (error) {
@@ -128,9 +88,6 @@ export default function CarClustererMap({
       minLevel: 10,
       disableClickZoom: true,
     });
-
-    // 정적 차량 데이터 설정 (수리중, 대기중)
-    setStaticCars(dummyStaticCars);
 
     // GPX 시뮬레이션 시작 (페이지 로딩 시 한 번만)
     if (!isReading && loadedCars.length > 0) {
@@ -151,7 +108,7 @@ export default function CarClustererMap({
 
     // 필터링
     let filteredCars: Car[];
-    if (carStatusFilter === 'null') {
+    if (carStatusFilter === null) {
       filteredCars = allCars;
     } else {
       filteredCars = allCars.filter(car => car.status === carStatusFilter);
@@ -171,8 +128,8 @@ export default function CarClustererMap({
 
         return new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(
-            parseFloat(car.latitude),
-            parseFloat(car.longtitude)
+            parseFloat(car.lastLatitude),
+            parseFloat(car.lastLongitude)
           ),
           image: markerImage,
           title: car.carNumber,

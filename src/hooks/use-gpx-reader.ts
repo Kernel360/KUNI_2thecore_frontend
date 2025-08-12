@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 interface GPXCoordinate {
-  latitude: number;
-  longtitude: number;
+  lastLatitude: string;
+  lastLongitude: string;
 }
 
 interface UseGPXReaderOptions {
@@ -44,13 +44,13 @@ export const useGPXReader = ({
 
       const coordinates: GPXCoordinate[] = [];
       for (let i = 0; i < trackPoints.length; i++) {
-        const latitude = parseFloat(
-          trackPoints[i].getAttribute('latitude') || '0'
-        );
-        const longtitude = parseFloat(
-          trackPoints[i].getAttribute('longtitude') || '0'
-        );
-        coordinates.push({ latitude, longtitude: longtitude });
+        const lastLatitude = parseFloat(
+          trackPoints[i].getAttribute('lastLatitude') || '0'
+        ).toFixed(4);
+        const lastLongitude = parseFloat(
+          trackPoints[i].getAttribute('lastLongitude') || '0'
+        ).toFixed(4);
+        coordinates.push({ lastLatitude, lastLongitude });
       }
 
       return coordinates;

@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import Map from './map';
 
 export interface Car {
-  last_latitude: string;
-  last_longitude: string;
+  lastLatitude: string;
+  lastLongitude: string;
 }
 
 export default function CarLocationMap({
@@ -21,8 +21,8 @@ export default function CarLocationMap({
 
   useEffect(() => {
     setCarLocation({
-      last_latitude: '37.566826',
-      last_longitude: '126.9786567',
+      lastLatitude: '37.566826',
+      lastLongitude: '126.9786567',
     });
   }, []);
 
@@ -31,8 +31,8 @@ export default function CarLocationMap({
 
     if (carLocation) {
       const position = new window.kakao.maps.LatLng(
-        parseFloat(carLocation.last_latitude),
-        parseFloat(carLocation.last_longitude)
+        parseFloat(carLocation.lastLatitude),
+        parseFloat(carLocation.lastLongitude)
       );
 
       const marker = new window.kakao.maps.Marker({

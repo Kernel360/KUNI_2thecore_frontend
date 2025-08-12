@@ -10,16 +10,16 @@ export interface Car {
 
 // 차량 상세 정보 타입
 export interface CarDetail extends Car {
-  latitude?: number;
-  longtitude?: number;
+  lastLatitude?: string;
+  lastLongitude?: string;
 }
 
 // 차량 통계 타입
 export interface CarSummary {
   total: number;
-  running: number;
-  waiting: number;
-  repairing: number;
+  driving: number; //운행중
+  maintenance: number; //수리중
+  idle: number; //점검중
 }
 
 // 차량 검색 필터 요청 타입 (백엔드 API 2.6 명세에 정확히 맞게 수정)
@@ -95,10 +95,10 @@ export class CarService {
 
   // 차량 등록
   static async createCar(
-    carData: Omit<CarDetail, 'latitude' | 'longtitude' | 'status'>
+    carData: Omit<CarDetail, 'lastLatitude' | 'L' | 'status'>
   ): Promise<CarDetail> {
     const response = await mainApi.post<ApiResponse<CarDetail>>(
-      '/api/cars',
+      '/cars',
       carData
     );
     return response.data.data;
@@ -128,26 +128,26 @@ export class CarService {
   static async sendCarLocationsBatch(
     locationData: Array<{
       carNumber: string;
-      coordinates: Array<{ latitude: number; longtitude: number }>;
+      coordinates: Array<{ lastLatitude: string; lastLongitude: string }>;
     }>
   ): Promise<void> {
     const requestData = locationData.map(car => ({
       carNumber: car.carNumber,
       coordinates: car.coordinates.map(coord => ({
-        latitude: coord.latitude,
-        longtitude: coord.longtitude,
+        lastLatitude: coord.lastLatitude,
+        lastLongitude: coord.lastLongitude,
       })),
     }));
 
-    await mainApi.post('/api/cars/locations/batch', requestData);
+    await mainApi.post('/cars/locations/batch', requestData);
   }
 
   // 실시간 차량 위치 데이터 조회
   static async getCarLocations(): Promise<
     Array<{
       carNumber: string;
-      latitude: number;
-      longtitude: number;
+      lastLatitude: string;
+      lastLongitude: string;
       timestamp?: string;
     }>
   > {
@@ -155,12 +155,12 @@ export class CarService {
       ApiResponse<
         Array<{
           carNumber: string;
-          latitude: number;
-          longtitude: number;
+          lastLatitude: string;
+          lastLongitude: string;
           timestamp?: string;
         }>
       >
-    >('/api/cars/locations');
+    >('/cars/locations');
     return response.data.data;
   }
 }
