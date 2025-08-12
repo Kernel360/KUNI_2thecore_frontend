@@ -24,12 +24,12 @@ export default function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // 이미 로그인된 상태면 메인 페이지로 리다이렉트
-  useEffect(() => {
-    if (TokenManager.hasValidTokens()) {
-      navigate('/');
-    }
-  }, [navigate]);
+  // // 이미 로그인된 상태면 메인 페이지로 리다이렉트
+  // useEffect(() => {
+  //   if (TokenManager.hasValidTokens()) {
+  //     navigate('/');
+  //   }
+  // }, [navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

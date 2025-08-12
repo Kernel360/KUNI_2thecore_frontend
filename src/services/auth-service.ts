@@ -50,7 +50,8 @@ export class AuthService {
       // 토큰을 로컬 스토리지에 저장
       TokenManager.setTokens(
         response.data.data.accessToken,
-        response.data.data.refreshToken
+        response.data.data.refreshToken,
+        credentials.loginId
       );
 
       return response.data.data;
@@ -70,7 +71,8 @@ export class AuthService {
       // 토큰을 로컬 스토리지에 저장
       TokenManager.setTokens(
         response.data.data.accessToken,
-        response.data.data.refreshToken
+        response.data.data.refreshToken,
+        credentials.loginId
       );
 
       return response.data.data;
@@ -114,7 +116,12 @@ export class AuthService {
       if (response.data.result && response.data.data) {
         const { accessToken, refreshToken: newRefreshToken } =
           response.data.data;
-        TokenManager.setTokens(accessToken, newRefreshToken);
+        const currentLoginId = TokenManager.getLoginId();
+        TokenManager.setTokens(
+          accessToken,
+          newRefreshToken,
+          currentLoginId
+        );
         return accessToken;
       } else {
         throw new Error('토큰 갱신에 실패했습니다.');

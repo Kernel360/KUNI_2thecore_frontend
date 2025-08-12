@@ -17,9 +17,9 @@ export interface CarDetail extends Car {
 // 차량 통계 타입
 export interface CarSummary {
   total: number;
-  running: number;
-  waiting: number;
-  repairing: number;
+  driving: number;
+  idle: number;
+  maintenance: number;
 }
 
 // 차량 검색 필터 요청 타입 (백엔드 API 2.6 명세에 정확히 맞게 수정)
@@ -98,8 +98,8 @@ export class CarService {
     carData: Omit<CarDetail, 'latitude' | 'longtitude' | 'status'>
   ): Promise<CarDetail> {
     const response = await mainApi.post<ApiResponse<CarDetail>>(
-      '/api/cars',
-      carData
+      '/cars',
+      { carData, loginId: localStorage.getItem('loginId') }
     );
     return response.data.data;
   }
@@ -139,7 +139,7 @@ export class CarService {
       })),
     }));
 
-    await mainApi.post('/api/cars/locations/batch', requestData);
+    await mainApi.post('/cars/locations/batch', requestData);
   }
 
   // 실시간 차량 위치 데이터 조회
@@ -160,7 +160,7 @@ export class CarService {
           timestamp?: string;
         }>
       >
-    >('/api/cars/locations');
+    >('/cars/locations');
     return response.data.data;
   }
 }
