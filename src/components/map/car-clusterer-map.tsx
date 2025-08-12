@@ -13,7 +13,7 @@ export interface Car {
 interface CarClustererMapProps {
   width: string;
   height: string;
-  carStatusFilter: 'null' | '운행' | '대기' | '수리';
+  carStatusFilter: 'total' | '운행' | '대기' | '수리';
 }
 
 const statusToImage: { [key in Car['status']]?: string } = {
