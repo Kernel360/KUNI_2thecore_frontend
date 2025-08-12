@@ -17,6 +17,9 @@ interface HistoryListBoxProps {
   onSort?: (sortBy: string, order: 'asc' | 'desc') => void;
 }
 
+const allowedStatus = ['운행', '대기', '수리'] as const;
+type StatusType = (typeof allowedStatus)[number];
+
 const HistoryListBox = ({
   historyData,
   loading = false,
@@ -127,12 +130,12 @@ const HistoryListBox = ({
                   {log.endPoint}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
-                  {log.status}
-                </TableCell>
-                <TableCell className={historyStyles.tableCell}>
                   {log.driveDist
                     ? `${(log.driveDist / 1000).toFixed(1)}km`
                     : '-'}
+                </TableCell>
+                <TableCell className={historyStyles.tableCell}>
+                  {log.status}
                 </TableCell>
               </TableRow>
             ))

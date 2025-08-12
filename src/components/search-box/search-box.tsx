@@ -183,7 +183,7 @@ const SearchBox = () => {
         />
 
         {error && (
-          <div style={{ color: 'red', textAlign: 'center', padding: '10px' }}>
+          <div style={{ color: 'red', textAlign: 'center', padding: '50px' }}>
             {error}
           </div>
         )}
