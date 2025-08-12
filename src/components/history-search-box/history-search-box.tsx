@@ -45,7 +45,8 @@ const HistorySearchBox = ({
       };
       
       const result = await HistoryService.getDriveLogs(queryParams, 1, 50);
-      onSearchResults(result);
+      console.log('loadInitialLogs result:', result);
+      onSearchResults(result.content);
     } catch (error) {
       console.error('주행 기록 조회 실패:', error);
       onSearchResults([]);
@@ -75,8 +76,8 @@ const HistorySearchBox = ({
       }
 
       const result = await HistoryService.getDriveLogs(queryParams, 1, 50);
-      onSearchResults(result);
       console.log('검색 결과:', result);
+      onSearchResults(result.content);
     } catch (error) {
       console.error('주행 기록 검색 실패:', error);
       alert('주행 기록 검색에 실패했습니다.');
@@ -125,7 +126,7 @@ const HistorySearchBox = ({
       }
 
       const result = await HistoryService.getDriveLogs(queryParams, 1, 50);
-      onSearchResults(result);
+      onSearchResults(result.content);
     } catch (error) {
       console.error('필터 검색 실패:', error);
       alert('필터 검색에 실패했습니다.');

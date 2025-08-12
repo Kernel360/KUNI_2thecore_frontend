@@ -4,16 +4,11 @@
 }
 
 .tableHeadDefault {
-  width: 150px;
-}
-
-.tableHeadWithPadding {
-  width: 150px;
-  padding: 10px;
+  width: 130px;
 }
 
 .tableHeadSmall {
-  width: 90px;
+  width: 70px;
 }
 
 .tableCell {

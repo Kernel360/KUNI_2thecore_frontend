@@ -1,4 +1,4 @@
-import { ApiResponse, mainApi } from '@/lib/api';
+import { ApiResponse, mainApi, PageResponse } from '@/lib/api';
 
 // API 쿼리 파라미터 타입 (API 스펙 기반)
 export interface DriveLogQueryParams {
@@ -33,7 +33,7 @@ export class HistoryService {
     params?: DriveLogQueryParams,
     page: number = 1,
     offset: number = 50
-  ): Promise<DriveLog[]> {
+  ): Promise<PageResponse<DriveLog>> {
     // Date 객체를 ISO 문자열로 변환
     const formattedParams = params
       ? {
@@ -49,7 +49,7 @@ export class HistoryService {
         }
       : undefined;
 
-    const response = await mainApi.get<ApiResponse<DriveLog[]>>('/drivelogs', {
+    const response = await mainApi.get<ApiResponse<PageResponse<DriveLog>>>('/drivelogs', {
       params: formattedParams,
     });
     return response.data.data;

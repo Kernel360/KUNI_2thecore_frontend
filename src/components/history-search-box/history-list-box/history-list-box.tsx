@@ -41,7 +41,7 @@ const HistoryListBox = ({
       <Table className={historyStyles.historyTable}>
         <TableHeader>
           <TableRow>
-            <TableHead className={historyStyles.tableHeadWithPadding}>
+            <TableHead className={historyStyles.tableHeadDefault}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
@@ -56,7 +56,7 @@ const HistoryListBox = ({
               브랜드
             </TableHead>
             <TableHead className={historyStyles.tableHeadSmall}>모델</TableHead>
-            <TableHead className={historyStyles.tableHeadWithPadding}>
+            <TableHead className={historyStyles.tableHeadDefault}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
@@ -67,7 +67,7 @@ const HistoryListBox = ({
                 />
               </div>
             </TableHead>
-            <TableHead className={historyStyles.tableHeadWithPadding}>
+            <TableHead className={historyStyles.tableHeadDefault}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
@@ -87,7 +87,7 @@ const HistoryListBox = ({
             <TableHead className={historyStyles.tableHeadSmall}>
               주행거리
             </TableHead>
-            <TableHead className={historyStyles.tableHeadDefault}>
+            <TableHead className={historyStyles.tableHeadSmall}>
               상태
             </TableHead>
           </TableRow>
