@@ -19,7 +19,7 @@ export interface CarSummary {
   total: number;
   driving: number; //운행중
   maintenance: number; //수리중
-  idle: number; //점검중
+  idle: number; //대기중
 }
 
 // 차량 검색 필터 요청 타입 (백엔드 API 2.6 명세에 정확히 맞게 수정)
@@ -95,7 +95,7 @@ export class CarService {
 
   // 차량 등록
   static async createCar(
-    carData: Omit<CarDetail, 'lastLatitude' | 'L' | 'status'>
+    carData: Omit<CarDetail, 'lastLatitude' | 'lastLongitude' | 'status'>
   ): Promise<CarDetail> {
     const response = await mainApi.post<ApiResponse<CarDetail>>(
       '/cars',
@@ -146,6 +146,7 @@ export class CarService {
   static async getCarLocations(): Promise<
     Array<{
       carNumber: string;
+      status: '운행' | '대기' | '수리';
       lastLatitude: string;
       lastLongitude: string;
       timestamp?: string;
@@ -155,6 +156,7 @@ export class CarService {
       ApiResponse<
         Array<{
           carNumber: string;
+          status: '운행' | '대기' | '수리';
           lastLatitude: string;
           lastLongitude: string;
           timestamp?: string;
