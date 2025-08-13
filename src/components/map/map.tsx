@@ -17,11 +17,7 @@ export default function Map({ width, height, onLoad }: MapProps) {
 
     // Kakao Maps 스크립트가 로드될 때까지 대기
     const checkKakaoMaps = () => {
-      if (
-        typeof window !== 'undefined' &&
-        window.kakao &&
-        window.kakao.maps
-      ) {
+      if (typeof window !== 'undefined' && window.kakao && window.kakao.maps) {
         window.kakao.maps.load(() => {
           const options = {
             center: new window.kakao.maps.LatLng(36.5, 127.8),
@@ -29,6 +25,9 @@ export default function Map({ width, height, onLoad }: MapProps) {
           };
 
           const map = new window.kakao.maps.Map(mapRef.current, options);
+
+          map.setMaxLevel(13);
+
           setMapInstance(map);
 
           if (onLoad) {
