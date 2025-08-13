@@ -29,6 +29,7 @@ export default function CarClustererMap({
   const [map, setMap] = useState<any>(null);
   const [cars, setCars] = useState<Car[]>([]);
   const clustererRef = useRef<any>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const loadCarLocations = async () => {
     try {
@@ -60,7 +61,21 @@ export default function CarClustererMap({
       disableClickZoom: true,
     });
 
+    // 초기 로딩
     loadCarLocations();
+
+    // 5초마다 차량 위치 업데이트
+    intervalRef.current = setInterval(() => {
+      loadCarLocations();
+    }, 5000);
+
+    // cleanup 함수
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
   }, [map]);
 
   useEffect(() => {
