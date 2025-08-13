@@ -27,7 +27,8 @@ export default function CarClustererMap({
   carStatusFilter,
 }: CarClustererMapProps) {
   const [map, setMap] = useState<any>(null);
-  const [cars, setCars] = useState<Car[]>([]);
+  const [runningCars, setRunningCars] = useState<Car[]>([]);
+  const [staticCars, setStaticCars] = useState<Car[]>([]);
   const clustererRef = useRef<any>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -87,16 +88,6 @@ export default function CarClustererMap({
     const filteredCars =
       carStatusFilter === 'total'
         ? cars
-        : cars.filter(car => car.status === carStatusFilter);
-
-    const markers = filteredCars
-      .filter(car => statusToImage[car.status])
-      .map(car => {
-        const imageSrc = statusToImage[car.status]!;
-        const imageSize = new window.kakao.maps.Size(32, 32);
-        const imageOption = { offset: new window.kakao.maps.Point(16, 32) };
-        const markerImage = new window.kakao.maps.MarkerImage(
-          imageSrc,
           imageSize,
           imageOption
         );
@@ -112,7 +103,7 @@ export default function CarClustererMap({
       });
 
     clustererRef.current.addMarkers(markers);
-  }, [cars, carStatusFilter]);
+  }, [runningCars, staticCars, carStatusFilter]);
 
   return <Map width={width} height={height} onLoad={setMap} />;
 }

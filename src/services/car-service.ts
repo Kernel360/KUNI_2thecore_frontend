@@ -75,7 +75,6 @@ export class CarService {
       page,
       offset,
     };
-
     const response = await mainApi.get<ApiResponse<PageResponse<Car>>>(
       '/cars/search',
       {
