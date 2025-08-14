@@ -14,12 +14,12 @@ const SearchBox = () => {
   // 입력창 상태들을 SearchBox에서 관리
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('운행');
 
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 초기 차량 목록 로드
+  // 초기 차량 목록 로드 및 status 변경 시 재로드
   useEffect(() => {
     loadInitialCars();
   }, []);
@@ -28,7 +28,15 @@ const SearchBox = () => {
     try {
       setLoading(true);
       setError(null);
-      const carData = await CarService.getAllCars(1, 50);
+
+      // 초기 로드 시 기본 상태 필터 적용
+      const searchParams: CarSearchParams = {
+        status: status, // 기본값 "운행"
+        page: 1,
+        offset: 50,
+      };
+
+      const carData = await CarService.searchCars(searchParams, 1, 50);
       setCars(carData.content);
     } catch (error) {
       console.error('차량 목록 조회 실패:', error);
