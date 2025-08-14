@@ -32,7 +32,7 @@ export class HistoryService {
   static async getDriveLogs(
     params?: DriveLogQueryParams,
     page: number = 1,
-    offset: number = 50
+    offset: number = 10
   ): Promise<PageResponse<DriveLog>> {
     // Date 객체를 ISO 문자열로 변환
     const formattedParams = params
