@@ -41,10 +41,10 @@ const HistorySearchBox = ({
         startTime: dateRange.from,
         endTime: dateRange.to,
         page: 1,
-        offset: 50,
+        offset: 10,
       };
       
-      const result = await HistoryService.getDriveLogs(queryParams, 1, 50);
+      const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
       console.log('loadInitialLogs result:', result);
       onSearchResults(result.content);
     } catch (error) {
@@ -67,7 +67,7 @@ const HistorySearchBox = ({
         startTime: dateRange.from,
         endTime: dateRange.to,
         page: 1,
-        offset: 50,
+        offset: 10,
       };
 
       // 차량 번호가 입력된 경우만 추가
@@ -75,7 +75,7 @@ const HistorySearchBox = ({
         queryParams.carNumber = carNumber.trim();
       }
 
-      const result = await HistoryService.getDriveLogs(queryParams, 1, 50);
+      const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
       console.log('검색 결과:', result);
       onSearchResults(result.content);
     } catch (error) {
@@ -104,7 +104,7 @@ const HistorySearchBox = ({
         startTime: dateRange.from,
         endTime: dateRange.to,
         page: 1,
-        offset: 50,
+        offset: 10,
       };
 
       // 브랜드와 모델 처리
@@ -125,7 +125,7 @@ const HistorySearchBox = ({
         queryParams.status = status;
       }
 
-      const result = await HistoryService.getDriveLogs(queryParams, 1, 50);
+      const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
       onSearchResults(result.content);
     } catch (error) {
       console.error('필터 검색 실패:', error);

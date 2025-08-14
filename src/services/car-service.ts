@@ -41,7 +41,7 @@ export class CarService {
   // 모든 차량 조회 (페이징)
   static async getAllCars(
     page: number = 1,
-    offset: number = 50
+    offset: number = 10
   ): Promise<PageResponse<CarDetail>> {
     const response = await mainApi.get<ApiResponse<PageResponse<CarDetail>>>(
       '/cars/search',
