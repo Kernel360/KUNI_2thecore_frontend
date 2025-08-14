@@ -160,7 +160,6 @@ const DetailPage = () => {
               <Input
                 className={styles.input}
                 value={status}
-                readOnly={!detailChange}
                 onChange={
                   detailChange
                     ? e => handleChange('status', e.target.value)

@@ -43,7 +43,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 ### 3.1 차량 주행 기록 조회
 
 - **Method**: GET
-- **Path**: `/api/logs`
+- **Path**: `/api/drivelogs`
 - **상태**: 완료
 - **query parameters**:
   interface DriveLogQueryParams {
