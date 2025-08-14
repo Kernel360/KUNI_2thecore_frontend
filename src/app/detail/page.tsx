@@ -15,7 +15,6 @@ const DetailPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const urlCarNumber = searchParams.get('carNumber');
-
   const {
     carNumber,
     brand,
@@ -97,13 +96,6 @@ const DetailPage = () => {
       let finalBrand = brand;
       let finalModel = model;
       [finalBrand, finalModel] = brandModel.split(' ');
-
-      // const firstSpaceIndex = brand.indexOf(' ');
-      // if (firstSpaceIndex !== -1) {
-      //   // 공백이 있으면 첫 번째 공백 기준으로 나누기
-      //   finalBrand = brand.substring(0, firstSpaceIndex);
-      //   finalModel = brand.substring(firstSpaceIndex);
-      // }
       console.log('분리된 브랜드,모델명');
       console.log(finalBrand, finalModel);
 
