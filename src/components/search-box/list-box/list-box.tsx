@@ -57,7 +57,7 @@ const ListBox = forwardRef<HTMLDivElement, ListBoxProps>(({
       status: safeStatus,
     });
     setDetailChange(false);
-    navigate('/detail');
+    navigate(`/detail?carNumber=${encodeURIComponent(carNumber)}`);
   };
 
   const handleEdit = (e: React.MouseEvent) => {
@@ -70,7 +70,7 @@ const ListBox = forwardRef<HTMLDivElement, ListBoxProps>(({
       status: safeStatus,
     });
     setDetailChange(true);
-    navigate('/detail');
+    navigate(`/detail?carNumber=${encodeURIComponent(carNumber)}`);
   };
 
   const handleDelete = async (e: React.MouseEvent) => {

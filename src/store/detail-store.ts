@@ -1,3 +1,4 @@
+import { CarDetail } from '@/services/car-service';
 import { create } from 'zustand';
 import { CarDetail } from '@/services/car-service';
 
@@ -11,6 +12,8 @@ export const useDetailStore = create<DetailStore>(set => ({
   model: '',
   brandModel: '',
   status: '' as '운행' | '대기' | '수리',
+  lastLatitude: '',
+  lastLongitude: '',
   carYear: 0,
   sumDist: 0,
   carType: '',

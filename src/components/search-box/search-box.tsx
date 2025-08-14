@@ -15,7 +15,7 @@ const SearchBox = () => {
   // 입력창 상태들을 SearchBox에서 관리
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('운행');
 
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);

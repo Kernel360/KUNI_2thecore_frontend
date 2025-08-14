@@ -54,7 +54,9 @@ export class CarService {
 
   // 특정 차량 상세 조회
   static async getCar(carNumber: string): Promise<CarDetail> {
-    const response = await mainApi.get(`/cars/${carNumber}`);
+    const response = await mainApi.get('/cars', {
+      params: { carNumber },
+    });
     return response.data.data;
   }
 
@@ -69,7 +71,7 @@ export class CarService {
   static async searchCars(
     params: CarSearchParams,
     page: number = 1,
-    offset: number = 10
+    offset: number = 50
   ): Promise<PageResponse<Car>> {
     // 백엔드 API 명세에 맞게 파라미터 구성
     const searchParams: CarSearchParams = {
@@ -113,7 +115,9 @@ export class CarService {
     carNumber: string,
     carData: Partial<CarDetail>
   ): Promise<CarDetail> {
-    const response = await mainApi.patch(`/cars/${carNumber}`, carData);
+    const response = await mainApi.patch('/cars', carData, {
+      params: { carNumber },
+    });
     return response.data.data;
   }
 

@@ -47,7 +47,7 @@ interface PageComponentArchitecture {
 
     stateManagement: {
       localState: {
-        carStatusFilter: "'운행중' | '수리중' | '대기중' - 차량 상태 필터";
+        carStatusFilter: "'운행' | '수리' | '대기' - 차량 상태 필터";
         isMapModalOpen: 'boolean - 지도 모달 표시 상태';
       };
       props: 'carStatusFilter를 StatusContainer와 CarClustererMap에 전달';
@@ -234,7 +234,7 @@ interface PageComponentArchitecture {
 - **`src/components/`**: Feature-organized reusable components
   - `map/`: Kakao Maps integration with clustering (`car-clusterer-map`), individual location tracking (`car-location-map`), and script loading
   - `search-box/`: Complete vehicle search system with number search, brand filtering, dropdown selection, and paginated list display
-  - `status-box/`: Real-time status counters (전체/운행중/대기중/수리중) with clickable filtering
+  - `status-box/`: Real-time status counters (전체/운행/대기/수리) with clickable filtering
   - `menu-box/`: Main navigation menu with emoji icons (🗺️ 지도, 🚗 차량 검색, 📊 주행 기록, ⚒️ 차량 관리)
   - `user-box/`: User information and authentication display
   - `icon-button/`: Custom icon button components with delete functionality
@@ -251,7 +251,7 @@ interface PageComponentArchitecture {
 ## Core Data Types
 
 ```typescript
-// Car: { carNumber: string, brand: string, model: string, status: '운행중'|'대기중'|'수리중' }
+// Car: { carNumber: string, brand: string, model: string, status: '운행'|'대기'|'수리' }
 // Emulator: { deviceId: string, carNumber: string, emulatorStatus: 'ON'|'OFF' }
 // Korean License Plates: "12가 1234", "23나 2345" format
 ```
@@ -260,7 +260,7 @@ interface PageComponentArchitecture {
 
 - `detail-store.ts`: Car detail info (carNumber, brand, model, status)
 - `detail-change.ts`: Edit mode toggle (detailChange: boolean)
-- Status types: `'운행중' | '대기중' | '수리중'` + `'null'` for all cars
+- Status types: `'운행' | '대기' | '수리'` + `'null'` for all cars
 
 ### Backend Integration Architecture
 
