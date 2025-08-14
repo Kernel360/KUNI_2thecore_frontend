@@ -53,6 +53,7 @@ const ListBox: React.FC<ListBoxProps> = ({
       carNumber: carNumber,
       brand,
       model,
+      brandModel: `${brand} ${model}`,
       status: safeStatus,
     });
     setDetailChange(false);
@@ -65,6 +66,7 @@ const ListBox: React.FC<ListBoxProps> = ({
       carNumber: carNumber,
       brand,
       model,
+      brandModel: `${brand} ${model}`,
       status: safeStatus,
     });
     setDetailChange(true);

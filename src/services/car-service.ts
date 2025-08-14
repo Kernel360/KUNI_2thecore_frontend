@@ -5,6 +5,7 @@ export interface Car {
   carNumber: string;
   brand: string;
   model: string;
+  brandModel: string;
   status: '운행' | '대기' | '수리';
 }
 
@@ -12,6 +13,9 @@ export interface Car {
 export interface CarDetail extends Car {
   latitude?: number;
   longtitude?: number;
+  carYear?: number;
+  sumDist?: number;
+  carType?: string;
 }
 
 // 차량 통계 타입
@@ -40,7 +44,7 @@ export class CarService {
     size: number = 10
   ): Promise<PageResponse<CarDetail>> {
     const response = await mainApi.get<ApiResponse<PageResponse<CarDetail>>>(
-      '/cars',
+      '/cars/search',
       {
         params: { page, size },
       }
@@ -50,9 +54,7 @@ export class CarService {
 
   // 특정 차량 상세 조회
   static async getCar(carNumber: string): Promise<CarDetail> {
-    const response = await mainApi.get<ApiResponse<CarDetail>>(
-      `/cars/${carNumber}`
-    );
+    const response = await mainApi.get(`/cars/${carNumber}`);
     return response.data.data;
   }
 
@@ -95,12 +97,15 @@ export class CarService {
 
   // 차량 등록
   static async createCar(
-    carData: Omit<CarDetail, 'latitude' | 'longtitude' | 'status'>
+    carData: Omit<
+      CarDetail,
+      'latitude' | 'longtitude' | 'status' | 'brandModel'
+    >
   ): Promise<CarDetail> {
-    const response = await mainApi.post<ApiResponse<CarDetail>>(
-      '/cars',
-      { carData, loginId: localStorage.getItem('loginId') }
-    );
+    const response = await mainApi.post('/cars', {
+      ...carData,
+      loginId: localStorage.getItem('loginId'),
+    });
     return response.data.data;
   }
 
@@ -109,10 +114,7 @@ export class CarService {
     carNumber: string,
     carData: Partial<CarDetail>
   ): Promise<CarDetail> {
-    const response = await mainApi.patch<ApiResponse<CarDetail>>(
-      `/cars/${carNumber}`,
-      carData
-    );
+    const response = await mainApi.patch(`/cars/${carNumber}`, carData);
     return response.data.data;
   }
 
