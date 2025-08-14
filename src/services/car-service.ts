@@ -11,19 +11,19 @@ export interface Car {
 
 // 차량 상세 정보 타입
 export interface CarDetail extends Car {
-  latitude?: number;
-  longtitude?: number;
   carYear?: number;
   sumDist?: number;
   carType?: string;
+  lastLatitude?: string;
+  lastLongitude?: string;
 }
 
 // 차량 통계 타입
 export interface CarSummary {
   total: number;
-  driving: number;
-  idle: number;
-  maintenance: number;
+  driving: number; //운행중
+  idle: number; //대기중
+  maintenance: number; //수리중
 }
 
 // 차량 검색 필터 요청 타입 (백엔드 API 2.6 명세에 정확히 맞게 수정)
@@ -41,12 +41,12 @@ export class CarService {
   // 모든 차량 조회 (페이징)
   static async getAllCars(
     page: number = 1,
-    size: number = 10
+    offset: number = 50
   ): Promise<PageResponse<CarDetail>> {
     const response = await mainApi.get<ApiResponse<PageResponse<CarDetail>>>(
       '/cars/search',
       {
-        params: { page, size },
+        params: { page, offset },
       }
     );
     return response.data.data;
@@ -69,7 +69,7 @@ export class CarService {
   static async searchCars(
     params: CarSearchParams,
     page: number = 1,
-    offset: number = 10
+    offset: number = 50
   ): Promise<PageResponse<Car>> {
     // 백엔드 API 명세에 맞게 파라미터 구성
     const searchParams: CarSearchParams = {
@@ -77,7 +77,6 @@ export class CarService {
       page,
       offset,
     };
-
     const response = await mainApi.get<ApiResponse<PageResponse<Car>>>(
       '/cars/search',
       {
@@ -99,7 +98,7 @@ export class CarService {
   static async createCar(
     carData: Omit<
       CarDetail,
-      'latitude' | 'longtitude' | 'status' | 'brandModel'
+      'lastLatitude' | 'lastLongitude' | 'status' | 'brandModel'
     >
   ): Promise<CarDetail> {
     const response = await mainApi.post('/cars', {
@@ -130,14 +129,14 @@ export class CarService {
   static async sendCarLocationsBatch(
     locationData: Array<{
       carNumber: string;
-      coordinates: Array<{ latitude: number; longtitude: number }>;
+      coordinates: Array<{ lastLatitude: string; lastLongitude: string }>;
     }>
   ): Promise<void> {
     const requestData = locationData.map(car => ({
       carNumber: car.carNumber,
       coordinates: car.coordinates.map(coord => ({
-        latitude: coord.latitude,
-        longtitude: coord.longtitude,
+        lastLatitude: coord.lastLatitude,
+        lastLongitude: coord.lastLongitude,
       })),
     }));
 
@@ -148,8 +147,9 @@ export class CarService {
   static async getCarLocations(): Promise<
     Array<{
       carNumber: string;
-      latitude: number;
-      longtitude: number;
+      status: '운행' | '대기' | '수리';
+      lastLatitude: string;
+      lastLongitude: string;
       timestamp?: string;
     }>
   > {
@@ -157,8 +157,9 @@ export class CarService {
       ApiResponse<
         Array<{
           carNumber: string;
-          latitude: number;
-          longtitude: number;
+          status: '운행' | '대기' | '수리';
+          lastLatitude: string;
+          lastLongitude: string;
           timestamp?: string;
         }>
       >

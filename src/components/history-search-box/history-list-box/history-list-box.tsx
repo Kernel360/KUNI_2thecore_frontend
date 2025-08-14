@@ -17,6 +17,9 @@ interface HistoryListBoxProps {
   onSort?: (sortBy: string, order: 'asc' | 'desc') => void;
 }
 
+const allowedStatus = ['운행', '대기', '수리'] as const;
+type StatusType = (typeof allowedStatus)[number];
+
 const HistoryListBox = ({
   historyData,
   loading = false,
@@ -38,7 +41,7 @@ const HistoryListBox = ({
       <Table className={historyStyles.historyTable}>
         <TableHeader>
           <TableRow>
-            <TableHead className={historyStyles.tableHeadWithPadding}>
+            <TableHead className={historyStyles.tableHeadDefault}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
@@ -53,7 +56,7 @@ const HistoryListBox = ({
               브랜드
             </TableHead>
             <TableHead className={historyStyles.tableHeadSmall}>모델</TableHead>
-            <TableHead className={historyStyles.tableHeadWithPadding}>
+            <TableHead className={historyStyles.tableHeadDefault}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
@@ -64,7 +67,7 @@ const HistoryListBox = ({
                 />
               </div>
             </TableHead>
-            <TableHead className={historyStyles.tableHeadWithPadding}>
+            <TableHead className={historyStyles.tableHeadDefault}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
@@ -84,7 +87,7 @@ const HistoryListBox = ({
             <TableHead className={historyStyles.tableHeadSmall}>
               주행거리
             </TableHead>
-            <TableHead className={historyStyles.tableHeadDefault}>
+            <TableHead className={historyStyles.tableHeadSmall}>
               상태
             </TableHead>
           </TableRow>
@@ -127,12 +130,12 @@ const HistoryListBox = ({
                   {log.endPoint}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
-                  {log.status}
-                </TableCell>
-                <TableCell className={historyStyles.tableCell}>
                   {log.driveDist
                     ? `${(log.driveDist / 1000).toFixed(1)}km`
                     : '-'}
+                </TableCell>
+                <TableCell className={historyStyles.tableCell}>
+                  {log.status}
                 </TableCell>
               </TableRow>
             ))

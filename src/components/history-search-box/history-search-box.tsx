@@ -3,7 +3,7 @@ import {
   DriveLogQueryParams,
   HistoryService,
 } from '@/services/history-service';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import BrandFilterBox from '../search-box/filter-box';
 import styles from '../search-box/search-filter.module.css';
@@ -21,7 +21,39 @@ const HistorySearchBox = ({
   onLoadingChange,
 }: HistorySearchBoxProps) => {
   const [carNumber, setCarNumber] = useState('');
+  const [brandModel, setBrandModel] = useState('');
+  const [status, setStatus] = useState('');
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+
+  // 초기 주행 기록 목록 로드 (dateRange가 설정된 후)
+  useEffect(() => {
+    if (dateRange?.from && dateRange?.to) {
+      loadInitialLogs();
+    }
+  }, [dateRange]);
+
+  const loadInitialLogs = async () => {
+    if (!dateRange?.from || !dateRange?.to) return;
+    
+    try {
+      onLoadingChange(true);
+      const queryParams: DriveLogQueryParams = {
+        startTime: dateRange.from,
+        endTime: dateRange.to,
+        page: 1,
+        offset: 50,
+      };
+      
+      const result = await HistoryService.getDriveLogs(queryParams, 1, 50);
+      console.log('loadInitialLogs result:', result);
+      onSearchResults(result.content);
+    } catch (error) {
+      console.error('주행 기록 조회 실패:', error);
+      onSearchResults([]);
+    } finally {
+      onLoadingChange(false);
+    }
+  };
 
   const handleSearch = async () => {
     if (!dateRange?.from || !dateRange?.to) {
@@ -29,12 +61,13 @@ const HistorySearchBox = ({
       return;
     }
 
-    onLoadingChange(true);
     try {
+      onLoadingChange(true);
       const queryParams: DriveLogQueryParams = {
-        status: '운행',
         startTime: dateRange.from,
         endTime: dateRange.to,
+        page: 1,
+        offset: 50,
       };
 
       // 차량 번호가 입력된 경우만 추가
@@ -42,10 +75,62 @@ const HistorySearchBox = ({
         queryParams.carNumber = carNumber.trim();
       }
 
-      const driveLogs = await HistoryService.getDriveLogs(queryParams);
-      onSearchResults(driveLogs);
+      const result = await HistoryService.getDriveLogs(queryParams, 1, 50);
+      console.log('검색 결과:', result);
+      onSearchResults(result.content);
+    } catch (error) {
+      console.error('주행 기록 검색 실패:', error);
+      alert('주행 기록 검색에 실패했습니다.');
+      onSearchResults([]);
+    } finally {
+      onLoadingChange(false);
+    }
+  };
 
-      console.log('검색 결과:', driveLogs);
+  // 필터 적용 (브랜드/모델 + 상태)
+  const handleFilterApply = async () => {
+    if (!dateRange?.from || !dateRange?.to) {
+      alert('주행 기간을 선택해주세요.');
+      return;
+    }
+
+    try {
+      onLoadingChange(true);
+      const parts = brandModel.trim().split(/\s+/);
+      const brand = parts[0] || '';
+      const model = parts.slice(1).join(' ') || '';
+
+      const queryParams: DriveLogQueryParams = {
+        startTime: dateRange.from,
+        endTime: dateRange.to,
+        page: 1,
+        offset: 50,
+      };
+
+      // 브랜드와 모델 처리
+      if (brand && model) {
+        queryParams.brand = brand.trim();
+        queryParams.model = model.trim();
+        queryParams.twoParam = true;
+      } else if (brand) {
+        queryParams.brand = brand.trim();
+        queryParams.twoParam = false;
+      } else if (model) {
+        queryParams.brand = model.trim();
+        queryParams.twoParam = false;
+      }
+
+      // 상태 처리
+      if (status) {
+        queryParams.status = status;
+      }
+
+      const result = await HistoryService.getDriveLogs(queryParams, 1, 50);
+      onSearchResults(result.content);
+    } catch (error) {
+      console.error('필터 검색 실패:', error);
+      alert('필터 검색에 실패했습니다.');
+      onSearchResults([]);
     } finally {
       onLoadingChange(false);
     }
@@ -71,10 +156,16 @@ const HistorySearchBox = ({
         </Button>
       </div>
       <div className="flex flex-row p-3">
-        <BrandFilterBox />
+        <BrandFilterBox
+          brandModel={brandModel}
+          setBrandModel={setBrandModel}
+          status={status}
+          setStatus={setStatus}
+          onFilterApply={handleFilterApply}
+        />
         <Button
           className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
-          rounded-xl shadow-lg shadow-sky-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
+          rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
         >
           엑셀 다운로드
         </Button>
