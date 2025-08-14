@@ -50,7 +50,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   carNumber?: string; // 차량 번호
   rentDate?: string; // 렌트 시작일 (형식: YYYY-MM-DD)
   returnDate?: string; // 렌트 종료일 (형식: YYYY-MM-DD)
-  status?: string; // 차량 상태 (ex: 운행중, 대기중, 점검중)
+  status?: string; // 차량 상태 (ex: 운행, 대기, 점검중)
   brand?: string; // 브랜드명
   model?: string; // 모델명
   }

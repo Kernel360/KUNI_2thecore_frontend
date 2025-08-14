@@ -11,8 +11,8 @@ export interface Car {
 
 // 차량 상세 정보 타입
 export interface CarDetail extends Car {
-  latitude?: number;
-  longtitude?: number;
+  lastLatitude?: number;
+  lastLongitude?: number;
   carYear?: number;
   sumDist?: number;
   carType?: string;
@@ -54,7 +54,9 @@ export class CarService {
 
   // 특정 차량 상세 조회
   static async getCar(carNumber: string): Promise<CarDetail> {
-    const response = await mainApi.get(`/cars/${carNumber}`);
+    const response = await mainApi.get('/cars', {
+      params: { carNumber },
+    });
     return response.data.data;
   }
 
@@ -99,7 +101,7 @@ export class CarService {
   static async createCar(
     carData: Omit<
       CarDetail,
-      'latitude' | 'longtitude' | 'status' | 'brandModel'
+      'lastLatitude' | 'lastLongitude' | 'status' | 'brandModel'
     >
   ): Promise<CarDetail> {
     const response = await mainApi.post('/cars', {
@@ -114,7 +116,9 @@ export class CarService {
     carNumber: string,
     carData: Partial<CarDetail>
   ): Promise<CarDetail> {
-    const response = await mainApi.patch(`/cars/${carNumber}`, carData);
+    const response = await mainApi.patch('/cars', carData, {
+      params: { carNumber },
+    });
     return response.data.data;
   }
 
@@ -130,14 +134,14 @@ export class CarService {
   static async sendCarLocationsBatch(
     locationData: Array<{
       carNumber: string;
-      coordinates: Array<{ latitude: number; longtitude: number }>;
+      coordinates: Array<{ latitude: number; longitude: number }>;
     }>
   ): Promise<void> {
     const requestData = locationData.map(car => ({
       carNumber: car.carNumber,
       coordinates: car.coordinates.map(coord => ({
         latitude: coord.latitude,
-        longtitude: coord.longtitude,
+        longitude: coord.longitude,
       })),
     }));
 
@@ -149,7 +153,7 @@ export class CarService {
     Array<{
       carNumber: string;
       latitude: number;
-      longtitude: number;
+      longitude: number;
       timestamp?: string;
     }>
   > {
@@ -158,7 +162,7 @@ export class CarService {
         Array<{
           carNumber: string;
           latitude: number;
-          longtitude: number;
+          longitude: number;
           timestamp?: string;
         }>
       >

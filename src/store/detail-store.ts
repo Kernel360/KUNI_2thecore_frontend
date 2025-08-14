@@ -11,6 +11,8 @@ export const useDetailStore = create<DetailStore>(set => ({
   model: '',
   brandModel: '',
   status: '' as '운행' | '대기' | '수리',
+  lastLatitude: 0,
+  lastLongitude: 0,
   carYear: 0,
   sumDist: 0,
   carType: '',

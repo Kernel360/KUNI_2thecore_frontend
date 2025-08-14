@@ -308,8 +308,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "carType": "소형",
   "carNumber": "12가1234",
   "sumDist": 23.42,
-  "lastLatitude": "123.23",
-  "lastLongitude": "123.23"
+  "lastLatitude": "123.2313",
+  "lastLongitude": "123.2313"
   }
   }
 

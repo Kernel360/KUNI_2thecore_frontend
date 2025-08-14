@@ -32,7 +32,7 @@ export default function CarClustererMap({
   const [staticCars, setStaticCars] = useState<Car[]>([]);
   const clustererRef = useRef<any>(null);
 
-  // 정적 차량 더미 데이터 (수리중, 대기중)
+  // 정적 차량 더미 데이터 (수리, 대기)
   const dummyStaticCars: Car[] = [
     {
       carNumber: '12가1234',
@@ -129,7 +129,7 @@ export default function CarClustererMap({
       disableClickZoom: true,
     });
 
-    // 정적 차량 데이터 설정 (수리중, 대기중)
+    // 정적 차량 데이터 설정 (수리, 대기)
     setStaticCars(dummyStaticCars);
 
     // GPX 시뮬레이션 시작 (페이지 로딩 시 한 번만)
