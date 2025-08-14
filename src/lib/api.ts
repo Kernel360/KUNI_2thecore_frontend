@@ -6,9 +6,11 @@ import axios, {
 import { TokenManager } from './token-manager';
 
 // 환경변수 기반 API 설정
-const API_BASE_URL =
-  import.meta.env.VITE_CAR_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_CAR_BASE_URL;
 
+const loginId = localStorage.getItem('loginId')
+  ? localStorage.getItem('loginId')
+  : '';
 // 공통 API 응답 타입 (모든 API에서 사용)
 export interface ApiResponse<T = any> {
   result: boolean;
@@ -116,10 +118,10 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
             }
           );
 
-          if (refreshResponse.data.result) {
+          if (refreshResponse.data.resultc && loginId) {
             const { accessToken, refreshToken: newRefreshToken } =
               refreshResponse.data.data;
-            TokenManager.setTokens(accessToken, newRefreshToken);
+            TokenManager.setTokens(accessToken, newRefreshToken, loginId);
 
             // 원래 요청 재시도
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;

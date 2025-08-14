@@ -5,11 +5,15 @@ export interface Car {
   carNumber: string;
   brand: string;
   model: string;
+  brandModel: string;
   status: '운행' | '대기' | '수리';
 }
 
 // 차량 상세 정보 타입
 export interface CarDetail extends Car {
+  carYear?: number;
+  sumDist?: number;
+  carType?: string;
   lastLatitude?: string;
   lastLongitude?: string;
 }
@@ -18,8 +22,8 @@ export interface CarDetail extends Car {
 export interface CarSummary {
   total: number;
   driving: number; //운행중
-  maintenance: number; //수리중
   idle: number; //대기중
+  maintenance: number; //수리중
 }
 
 // 차량 검색 필터 요청 타입 (백엔드 API 2.6 명세에 정확히 맞게 수정)
@@ -40,7 +44,7 @@ export class CarService {
     offset: number = 50
   ): Promise<PageResponse<CarDetail>> {
     const response = await mainApi.get<ApiResponse<PageResponse<CarDetail>>>(
-      '/cars',
+      '/cars/search',
       {
         params: { page, offset },
       }
@@ -50,9 +54,7 @@ export class CarService {
 
   // 특정 차량 상세 조회
   static async getCar(carNumber: string): Promise<CarDetail> {
-    const response = await mainApi.get<ApiResponse<CarDetail>>(
-      `/cars/${carNumber}`
-    );
+    const response = await mainApi.get(`/cars/${carNumber}`);
     return response.data.data;
   }
 
@@ -94,12 +96,15 @@ export class CarService {
 
   // 차량 등록
   static async createCar(
-    carData: Omit<CarDetail, 'lastLatitude' | 'lastLongitude' | 'status'>
+    carData: Omit<
+      CarDetail,
+      'lastLatitude' | 'lastLongitude' | 'status' | 'brandModel'
+    >
   ): Promise<CarDetail> {
-    const response = await mainApi.post<ApiResponse<CarDetail>>(
-      '/cars',
-      carData
-    );
+    const response = await mainApi.post('/cars', {
+      ...carData,
+      loginId: localStorage.getItem('loginId'),
+    });
     return response.data.data;
   }
 
@@ -108,10 +113,7 @@ export class CarService {
     carNumber: string,
     carData: Partial<CarDetail>
   ): Promise<CarDetail> {
-    const response = await mainApi.patch<ApiResponse<CarDetail>>(
-      `/cars/${carNumber}`,
-      carData
-    );
+    const response = await mainApi.patch(`/cars/${carNumber}`, carData);
     return response.data.data;
   }
 

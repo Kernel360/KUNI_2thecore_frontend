@@ -282,19 +282,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **상태**: 완료
 - **request**://필요없음
 - **response**:{
-  "result": boolean
-  "message": null,
-  "data": {
-  "brand": string,
-  "model": string,
-  "carYear": Int,
-  "status": string,
-  "carType": string,
-  "carNumber": string,
-  "sumDist": Double,
-  "lastLatitude": string,
-  "lastLongitude": string
-  }
+    "result": boolean,
+    "message": string,
+    "data": {
+        "brand": string,
+        "model": string,
+        "car_year": Integer,
+        "status": string, 
+        "car_type": string,
+        "car_number": string,
+        "lastLatitude": string,
+		    "lastLongitude": string,
+        "sum_dist": double
+    }
+}
   }
 - **Response example**:{
   "result": true,
