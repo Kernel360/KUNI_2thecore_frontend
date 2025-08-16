@@ -1,6 +1,5 @@
 import { CarDetail } from '@/services/car-service';
 import { create } from 'zustand';
-import { CarDetail } from '@/services/car-service';
 
 type DetailStore = CarDetail & {
   setDetail: (detail: CarDetail) => void;
