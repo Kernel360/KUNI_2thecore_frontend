@@ -47,12 +47,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **설명**: 운행 중인 차량 위도 경도를 통해 지도 위에서 조회
 - **상태**: 완료
 - **request**:{
-  "status" : String // (운행, 대기, 수리 중 입력 가능하고
+  "status" : String // 운행, 대기, 수리 중 입력 가능하고
   //입력하지 않으면 전체 차량을 불러옴
   }
 - **request example**
   {
-  "status" : 운행 // 운행중인 차량을 불러옴
+  "status" : 운행 // 운행인 차량을 불러옴
   }
 - **response**:
   {
@@ -97,7 +97,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "carNumber": "12가5132",
   "status": "대기",
   "lastLatitude": "string",
-   "lastLongitude": "string"
+  "lastLongitude": "string"
   }
   ]
   }

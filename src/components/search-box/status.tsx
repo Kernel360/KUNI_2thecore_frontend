@@ -16,12 +16,12 @@ const Status: React.FC<StatusProps> = ({ status }) => {
     <span
       style={{
         display: 'inline-block',
-        padding: '8px 20px',
+        padding: '7px 15px',
         borderRadius: '20px',
         background: style.bg,
         color: style.color,
         fontWeight: 700,
-        fontSize: '1.3rem',
+        fontSize: '1rem',
         textAlign: 'center',
         minWidth: '70px',
       }}

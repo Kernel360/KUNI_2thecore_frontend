@@ -5,21 +5,25 @@ export interface Car {
   carNumber: string;
   brand: string;
   model: string;
+  brandModel: string;
   status: '운행' | '대기' | '수리';
 }
 
 // 차량 상세 정보 타입
 export interface CarDetail extends Car {
-  latitude?: number;
-  longitude?: number;
+  carYear?: number;
+  sumDist?: number;
+  carType?: string;
+  lastLatitude?: string;
+  lastLongitude?: string;
 }
 
 // 차량 통계 타입
 export interface CarSummary {
-  totalCars: number;
-  runningCars: number;
-  waitingCars: number;
-  repairingCars: number;
+  total: number;
+  driving: number; //운행중
+  idle: number; //대기중
+  maintenance: number; //수리중
 }
 
 // 차량 검색 필터 요청 타입 (백엔드 API 2.6 명세에 정확히 맞게 수정)
@@ -37,12 +41,12 @@ export class CarService {
   // 모든 차량 조회 (페이징)
   static async getAllCars(
     page: number = 1,
-    size: number = 10
+    offset: number = 10
   ): Promise<PageResponse<CarDetail>> {
     const response = await mainApi.get<ApiResponse<PageResponse<CarDetail>>>(
-      '/cars',
+      '/cars/search',
       {
-        params: { page, size },
+        params: { page, offset },
       }
     );
     return response.data.data;
@@ -50,9 +54,9 @@ export class CarService {
 
   // 특정 차량 상세 조회
   static async getCar(carNumber: string): Promise<CarDetail> {
-    const response = await mainApi.get<ApiResponse<CarDetail>>(
-      `/cars/${carNumber}`
-    );
+    const response = await mainApi.get('/cars', {
+      params: { carNumber },
+    });
     return response.data.data;
   }
 
@@ -67,7 +71,7 @@ export class CarService {
   static async searchCars(
     params: CarSearchParams,
     page: number = 1,
-    offset: number = 10
+    offset: number = 50
   ): Promise<PageResponse<Car>> {
     // 백엔드 API 명세에 맞게 파라미터 구성
     const searchParams: CarSearchParams = {
@@ -75,15 +79,6 @@ export class CarService {
       page,
       offset,
     };
-    
-    // 빈 문자열이나 undefined 값 제거
-    Object.keys(searchParams).forEach(key => {
-      if (searchParams[key as keyof CarSearchParams] === '' || 
-          searchParams[key as keyof CarSearchParams] === undefined) {
-        delete searchParams[key as keyof CarSearchParams];
-      }
-    });
-    
     const response = await mainApi.get<ApiResponse<PageResponse<Car>>>(
       '/cars/search',
       {
@@ -95,7 +90,7 @@ export class CarService {
 
   // 특정 상태의 차량들 조회
   static async getCarsByStatus(statuses: string[]): Promise<Car[]> {
-    const response = await mainApi.get<ApiResponse<Car[]>>('/cars/status', {
+    const response = await mainApi.get<ApiResponse<Car[]>>('/cars/search', {
       params: { status: statuses },
     });
     return response.data.data;
@@ -103,12 +98,15 @@ export class CarService {
 
   // 차량 등록
   static async createCar(
-    carData: Omit<CarDetail, 'latitude' | 'longtitude'>
+    carData: Omit<
+      CarDetail,
+      'lastLatitude' | 'lastLongitude' | 'status' | 'brandModel'
+    >
   ): Promise<CarDetail> {
-    const response = await mainApi.post<ApiResponse<CarDetail>>(
-      '/api/cars',
-      carData
-    );
+    const response = await mainApi.post('/cars', {
+      ...carData,
+      loginId: localStorage.getItem('loginId'),
+    });
     return response.data.data;
   }
 
@@ -117,10 +115,9 @@ export class CarService {
     carNumber: string,
     carData: Partial<CarDetail>
   ): Promise<CarDetail> {
-    const response = await mainApi.patch<ApiResponse<CarDetail>>(
-      `/cars/${carNumber}`,
-      carData
-    );
+    const response = await mainApi.patch('/cars', carData, {
+      params: { carNumber },
+    });
     return response.data.data;
   }
 
@@ -136,26 +133,27 @@ export class CarService {
   static async sendCarLocationsBatch(
     locationData: Array<{
       carNumber: string;
-      coordinates: Array<{ latitude: number; longtitude: number }>;
+      coordinates: Array<{ lastLatitude: string; lastLongitude: string }>;
     }>
   ): Promise<void> {
     const requestData = locationData.map(car => ({
       carNumber: car.carNumber,
       coordinates: car.coordinates.map(coord => ({
-        latitude: coord.latitude,
-        longtitude: coord.longtitude,
+        lastLatitude: coord.lastLatitude,
+        lastLongitude: coord.lastLongitude,
       })),
     }));
 
-    await mainApi.post('/api/cars/locations/batch', requestData);
+    await mainApi.post('/cars/locations/batch', requestData);
   }
 
   // 실시간 차량 위치 데이터 조회
   static async getCarLocations(): Promise<
     Array<{
       carNumber: string;
-      latitude: number;
-      longtitude: number;
+      status: '운행' | '대기' | '수리';
+      lastLatitude: string;
+      lastLongitude: string;
       timestamp?: string;
     }>
   > {
@@ -163,12 +161,13 @@ export class CarService {
       ApiResponse<
         Array<{
           carNumber: string;
-          latitude: number;
-          longtitude: number;
+          status: '운행' | '대기' | '수리';
+          lastLatitude: string;
+          lastLongitude: string;
           timestamp?: string;
         }>
       >
-    >('/api/cars/locations');
+    >('/cars/locations');
     return response.data.data;
   }
 }

@@ -28,14 +28,14 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       className={cn(
         'bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent',
-        string.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
-        string.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
+        'rtl:**:[.rdp-button\\_next>svg]:rotate-180',
+        'rtl:**:[.rdp-button\\_previous>svg]:rotate-180',
         className
       )}
       captionLayout={captionLayout}
       formatters={{
         formatMonthDropdown: date =>
-          date.toLocalestring('default', { month: 'short' }),
+          date.toLocaleString('default', { month: 'short' }),
         ...formatters,
       }}
       classNames={{
@@ -188,7 +188,7 @@ function CalendarDayButton({
       ref={ref}
       variant="ghost"
       size="icon"
-      data-day={day.date.toLocaleDatestring()}
+      data-day={day.date.toLocaleDateString()}
       data-selected-single={
         modifiers.selected &&
         !modifiers.range_start &&

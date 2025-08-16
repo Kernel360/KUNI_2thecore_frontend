@@ -13,13 +13,6 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
-    proxy: {
-      '/api': {
-        target: 'http://52.78.122.150:8080',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
   },
   build: {
     outDir: 'dist',

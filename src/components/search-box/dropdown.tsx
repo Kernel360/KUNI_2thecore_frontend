@@ -15,13 +15,13 @@ interface DropdownProps {
 
 export function Dropdown({ value, onValueChange }: DropdownProps) {
   const handleValueChange = (newValue: string) => {
-    // "all" 값을 빈 문자열로 변환하여 부모 컴포넌트에 전달
-    const actualValue = newValue === 'all' ? '' : newValue;
+    // "total" 값을 빈 문자열로 변환하여 부모 컴포넌트에 전달
+    const actualValue = newValue === 'total' ? '' : newValue;
     onValueChange?.(actualValue);
   };
 
-  // 부모에서 받은 빈 문자열을 "all"로 변환
-  const displayValue = value === '' ? 'all' : value;
+  // 부모에서 받은 빈 문자열을 "total"로 변환
+  const displayValue = value === '' ? 'total' : value;
 
   return (
     <Select value={displayValue} onValueChange={handleValueChange}>
@@ -34,7 +34,7 @@ export function Dropdown({ value, onValueChange }: DropdownProps) {
         sideOffset={4}
       >
         <SelectGroup>
-          <SelectItem className={styles.dropdownItem} value="all">
+          <SelectItem className={styles.dropdownItem} value="total">
             전체 상태
           </SelectItem>
           <SelectItem className={styles.dropdownItem} value="운행">

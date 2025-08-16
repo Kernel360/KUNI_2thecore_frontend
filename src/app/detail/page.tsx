@@ -4,25 +4,51 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import TopBar from '@/components/ui/topBar';
-import { CarService } from '@/services/car-service';
+import { CarDetail, CarService } from '@/services/car-service';
 import { setDetailChangeStore } from '@/store/detail-change';
-import { Detail, useDetailStore } from '@/store/detail-store';
-import { CarDetail } from '@/types';
+import { useDetailStore } from '@/store/detail-store';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './detail.module.css';
-const mockDetail = {
-  year: '2022년',
-  drive_dist: '45,678 km',
-};
 
 const DetailPage = () => {
   const navigate = useNavigate();
-  const { carNumber, brand, model, status, setDetail } = useDetailStore();
+  const [searchParams] = useSearchParams();
+  const urlCarNumber = searchParams.get('carNumber');
+  const {
+    carNumber,
+    brand,
+    model,
+    status,
+    carYear,
+    sumDist,
+    carType,
+    setDetail,
+    brandModel,
+    lastLatitude,
+    lastLongitude,
+  } = useDetailStore();
   const detailChange = setDetailChangeStore(state => state.detailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
   // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리
-  const safeStatus = status ?? '대기중';
+  const safeStatus = status ?? '대기';
+
+  // URL에서 carNumber가 있으면 API 호출해서 데이터 가져오기
+  useEffect(() => {
+    if (urlCarNumber) {
+      const fetchCarDetail = async () => {
+        try {
+          const carDetail = await CarService.getCar(urlCarNumber);
+          setDetail(carDetail);
+        } catch (error) {
+          console.error('차량 정보 로드 실패:', error);
+          alert('차량 정보를 불러오는데 실패했습니다.');
+          navigate('/search');
+        }
+      };
+      fetchCarDetail();
+    }
+  }, [urlCarNumber, carNumber, setDetail, navigate]);
 
   useEffect(() => {
     const checkMap = () => {};
@@ -34,39 +60,52 @@ const DetailPage = () => {
     checkMap();
   }, [detailChange]);
 
-  const handleChange = (field: 'brand_model' | keyof Detail, value: string) => {
-    if (field === 'brand_model') {
-      const [newBrand, ...rest] = value.split(' ');
-      const newModel = rest.join(' ');
+  const handleChange = (
+    field: 'brandModel' | keyof CarDetail,
+    value: string
+  ) => {
+    if (field === 'brandModel') {
       setDetail({
         carNumber,
-        brand: newBrand,
-        model: newModel,
+        brand,
+        brandModel: value,
+        model,
         status,
+        carYear,
+        sumDist,
+        carType,
       });
     } else {
       setDetail({
         carNumber,
         brand,
+        brandModel,
         model,
         status,
+        carYear,
+        sumDist,
+        carType,
         [field]: value,
       });
     }
   };
 
   const handleSave = async () => {
-    if (!carNumber) {
-      alert('차량 번호가 필요합니다.');
-      return;
-    }
-
     try {
+      // 브랜드와 모델을 분리하는 로직
+      let finalBrand = brand;
+      let finalModel = model;
+      [finalBrand, finalModel] = brandModel.split(' ');
+      console.log('분리된 브랜드,모델명');
+      console.log(finalBrand, finalModel);
+
       const updateData: Partial<CarDetail> = {
-        carNumber,
-        brand,
-        model,
+        brand: finalBrand,
+        model: finalModel,
         status,
+        carYear,
+        sumDist,
+        carType,
       };
 
       await CarService.updateCar(carNumber, updateData);
@@ -97,24 +136,15 @@ const DetailPage = () => {
             <div className={styles.formGrid}>
               <label className={styles.label}>차량 번호</label>
 
+              <Input className={styles.input} value={carNumber} readOnly />
+              <label className={styles.label}>차량 브랜드 이름</label>
               <Input
                 className={styles.input}
-                value={carNumber}
+                value={`${brandModel}`}
                 readOnly={!detailChange}
                 onChange={
                   detailChange
-                    ? e => handleChange('carNumber', e.target.value)
-                    : undefined
-                }
-              />
-              <label className={styles.label}>차종</label>
-              <Input
-                className={styles.input}
-                value={`${brand} ${model}`}
-                readOnly={!detailChange}
-                onChange={
-                  detailChange
-                    ? e => handleChange('brand_model', e.target.value)
+                    ? e => handleChange('brandModel', e.target.value)
                     : undefined
                 }
               />
@@ -122,7 +152,6 @@ const DetailPage = () => {
               <Input
                 className={styles.input}
                 value={status}
-                readOnly={!detailChange}
                 onChange={
                   detailChange
                     ? e => handleChange('status', e.target.value)
@@ -132,18 +161,38 @@ const DetailPage = () => {
               <label className={styles.label}>차량 연식</label>
               <Input
                 className={styles.input}
-                value={mockDetail.year}
-                readOnly={true}
+                value={carYear}
+                readOnly={!detailChange}
+                onChange={
+                  detailChange
+                    ? e => handleChange('carYear', e.target.value)
+                    : undefined
+                }
               />
-              <label className={styles.label}>주행거리</label>
+              <label className={styles.label}>주행 거리</label>
               <Input
                 className={styles.input}
-                value={mockDetail.drive_dist}
-                readOnly={true}
+                value={sumDist}
+                readOnly={!detailChange}
+                onChange={
+                  detailChange
+                    ? e => handleChange('sumDist', e.target.value)
+                    : undefined
+                }
+              />
+              <label className={styles.label}>차급</label>
+              <Input
+                className={styles.input}
+                value={carType}
+                readOnly={!detailChange}
+                onChange={
+                  detailChange
+                    ? e => handleChange('carType', e.target.value)
+                    : undefined
+                }
               />
             </div>
 
-            {/* 확인 버튼 - detailChange가 true일 때만 표시 */}
             {detailChange && (
               <div className={styles.buttonContainer}>
                 <Button className={styles.confirmButton} onClick={handleSave}>

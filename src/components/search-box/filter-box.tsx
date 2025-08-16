@@ -1,29 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Dropdown } from './dropdown';
 import styles from './search-filter.module.css';
 
 interface BrandFilterBoxProps {
-  onFilterApply: (brand: string, model: string, status: string) => void;
+  brandModel: string;
+  setBrandModel: (value: string) => void;
+  status: string;
+  setStatus: (value: string) => void;
+  onFilterApply: () => void;
 }
 
-const BrandFilterBox = ({ onFilterApply }: BrandFilterBoxProps) => {
-  const [brandModel, setBrandModel] = useState('');
-  const [status, setStatus] = useState('');
-
+const BrandFilterBox = ({
+  brandModel,
+  setBrandModel,
+  status,
+  setStatus,
+  onFilterApply,
+}: BrandFilterBoxProps) => {
   const handleFilterApply = () => {
-    // 브랜드와 모델을 분리 (공백으로 구분)
-    const parts = brandModel.trim().split(/\s+/);
-    const brand = parts[0] || '';
-    const model = parts.slice(1).join(' ') || '';
-
-    // 최소한 하나의 조건은 있어야 함
-    if (!brand && !model && !status) {
-      return;
-    }
-
-    onFilterApply(brand, model, status);
+    onFilterApply();
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

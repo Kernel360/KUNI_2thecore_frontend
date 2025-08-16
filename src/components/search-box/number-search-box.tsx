@@ -4,17 +4,15 @@ import { Input } from '../ui/input';
 import styles from './search-filter.module.css';
 
 interface NumberSearchBoxProps {
-  onSearch: (carNumber: string) => void;
+  value: string;
+  onChange: (value: string) => void;
+  onSearch: () => void;
 }
 
-const NumberSearchBox = ({ onSearch }: NumberSearchBoxProps) => {
-  const [carNumber, setCarNumber] = useState('');
+const NumberSearchBox = ({ value, onChange, onSearch }: NumberSearchBoxProps) => {
 
   const handleSearch = () => {
-    const trimmedCarNumber = carNumber.trim();
-    if (trimmedCarNumber) {
-      onSearch(trimmedCarNumber);
-    }
+    onSearch();
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -29,8 +27,8 @@ const NumberSearchBox = ({ onSearch }: NumberSearchBoxProps) => {
         type="text"
         placeholder="차량 번호"
         className={styles.numberSearchInput}
-        value={carNumber}
-        onChange={e => setCarNumber(e.target.value)}
+        value={value}
+        onChange={e => onChange(e.target.value)}
         onKeyPress={handleKeyPress}
       />
       <Button className={styles.searchButton} onClick={handleSearch}>
