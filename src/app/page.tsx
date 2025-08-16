@@ -12,6 +12,11 @@ export default function Home() {
   >('total');
 
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+  localStorage.setItem('loginId', 'dev');
+  localStorage.setItem(
+    'accessToken',
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZXYiLCJsb2dpbklkIjoiZGV2IiwidG9rZW5fdHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1NTMyODg1MSwiZXhwIjoxNzU1MzI5NDUxfQ.ehnzwZvMmDzjNL399ZAI6PnbCqsnOV0nKa_CKc9a3w8'
+  );
 
   return (
     <>

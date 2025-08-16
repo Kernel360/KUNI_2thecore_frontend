@@ -1,38 +1,47 @@
-// JWT 토큰 관리 유틸리티
+/**
+ * JWT 토큰 관리 유틸리티
+ * - Access Token: 로컬스토리지에 저장 (10분 유효)
+ * - Refresh Token: 백엔드에서 HttpOnly 쿠키로 자동 관리 (7일 유효)
+ */
 export class TokenManager {
   private static readonly ACCESS_TOKEN_KEY = 'accessToken';
-  private static readonly REFRESH_TOKEN_KEY = 'refreshToken';
   private static readonly LOGIN_ID_KEY = 'loginId';
 
-  // Access Token 저장
-  static setAccessToken(token: string): void {
+  /**
+   * 로그인 시 토큰 저장
+   * @param accessToken JWT 액세스 토큰
+   * @param loginId 사용자 로그인 ID
+   */
+  static setTokens(accessToken: string, loginId: string): void {
     if (typeof window !== 'undefined') {
-      localStorage.setItem(this.ACCESS_TOKEN_KEY, token);
-    }
-  }
-
-  // Refresh Token 저장
-  static setRefreshToken(token: string): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(this.REFRESH_TOKEN_KEY, token);
-    }
-  }
-
-  // loginId 저장
-  static setLoginId(loginId: string): void {
-    if (typeof window !== 'undefined') {
+      localStorage.setItem(this.ACCESS_TOKEN_KEY, accessToken);
       localStorage.setItem(this.LOGIN_ID_KEY, loginId);
     }
   }
 
-  // 두 토큰을 함께 저장
-  static setTokens(accessToken: string, refreshToken: string, loginId: string): void {
-    this.setAccessToken(accessToken);
-    this.setRefreshToken(refreshToken);
-    this.setLoginId(loginId);
+  /**
+   * 새로운 액세스 토큰으로 업데이트
+   * @param accessToken 새로운 JWT 액세스 토큰
+   */
+  static updateAccessToken(accessToken: string): void {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(this.ACCESS_TOKEN_KEY, accessToken);
+    }
   }
 
-  // Access Token 조회
+  /**
+   * Authorization 헤더용 액세스 토큰 조회
+   * @returns Bearer 토큰 형식의 문자열 또는 null
+   */
+  static getAuthHeader(): string | null {
+    const token = this.getAccessToken();
+    return token ? `Bearer ${token}` : null;
+  }
+
+  /**
+   * 액세스 토큰 조회
+   * @returns 액세스 토큰 또는 null
+   */
   static getAccessToken(): string | null {
     if (typeof window !== 'undefined') {
       return localStorage.getItem(this.ACCESS_TOKEN_KEY);
@@ -40,35 +49,32 @@ export class TokenManager {
     return null;
   }
 
-  // Refresh Token 조회
-  static getRefreshToken(): string | null {
+  /**
+   * 로그인 ID 조회
+   * @returns 로그인 ID 또는 null
+   */
+  static getLoginId(): string | null {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem(this.REFRESH_TOKEN_KEY);
+      return localStorage.getItem(this.LOGIN_ID_KEY);
     }
     return null;
   }
 
-  // loginId 조회
-  static getLoginId(): string {
-    if (typeof window !== 'undefined') {
-      const loginId = localStorage.getItem(this.LOGIN_ID_KEY);
-      if (loginId) {
-        return loginId;
-      }
-    }
-    return '저장된 로그인 ID가 없습니다.'; 
-  }
-
-  // 토큰 존재 여부 확인
+  /**
+   * 인증 상태 확인 (액세스 토큰 존재 여부)
+   * @returns 토큰이 있으면 true, 없으면 false
+   */
   static hasValidTokens(): boolean {
-    return !!(this.getAccessToken());
+    return this.getAccessToken() !== null;
   }
 
-  // 모든 토큰 삭제 (로그아웃)
+  /**
+   * 로그아웃 처리 - 로컬 토큰 삭제
+   * (리프레시 토큰은 백엔드에서 쿠키 삭제로 처리)
+   */
   static clearTokens(): void {
     if (typeof window !== 'undefined') {
       localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-      localStorage.removeItem(this.REFRESH_TOKEN_KEY);
       localStorage.removeItem(this.LOGIN_ID_KEY);
     }
   }
