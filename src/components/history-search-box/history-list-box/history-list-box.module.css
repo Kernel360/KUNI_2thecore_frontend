@@ -1,15 +1,10 @@
 .historyTable {
   margin: 0 auto;
-  max-width: 1150px;
+  max-width: 1300px;
 }
 
 .tableHeadDefault {
-  width: 150px;
-}
-
-.tableHeadWithPadding {
-  width: 150px;
-  padding: 10px;
+  width: 120px;
 }
 
 .tableHeadSmall {

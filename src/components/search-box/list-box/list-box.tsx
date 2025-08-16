@@ -13,7 +13,7 @@ import {
 import { CarService } from '@/services/car-service';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { useDetailStore } from '@/store/detail-store';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Status from '../status';
 import styles from './list-box.module.css';
@@ -29,13 +29,13 @@ interface ListBoxProps {
 const allowedStatus = ['운행', '대기', '수리'] as const;
 type StatusType = (typeof allowedStatus)[number];
 
-const ListBox: React.FC<ListBoxProps> = ({
+const ListBox = forwardRef<HTMLDivElement, ListBoxProps>(({
   carNumber,
   model,
   brand,
   status,
   onDelete,
-}) => {
+}, ref) => {
   const setDetail = useDetailStore(state => state.setDetail);
   const navigate = useNavigate();
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
@@ -53,10 +53,11 @@ const ListBox: React.FC<ListBoxProps> = ({
       carNumber: carNumber,
       brand,
       model,
+      brandModel: `${brand} ${model}`,
       status: safeStatus,
     });
     setDetailChange(false);
-    navigate('/detail');
+    navigate(`/detail?carNumber=${encodeURIComponent(carNumber)}`);
   };
 
   const handleEdit = (e: React.MouseEvent) => {
@@ -65,10 +66,11 @@ const ListBox: React.FC<ListBoxProps> = ({
       carNumber: carNumber,
       brand,
       model,
+      brandModel: `${brand} ${model}`,
       status: safeStatus,
     });
     setDetailChange(true);
-    navigate('/detail');
+    navigate(`/detail?carNumber=${encodeURIComponent(carNumber)}`);
   };
 
   const handleDelete = async (e: React.MouseEvent) => {
@@ -138,7 +140,7 @@ const ListBox: React.FC<ListBoxProps> = ({
   }
 
   return (
-    <div className={`${styles.container} cursor-pointer`} onClick={handleClick}>
+    <div ref={ref} className={`${styles.container} cursor-pointer`} onClick={handleClick}>
       <div className={styles.info}>
         <div className={styles.num}>{carNumber}</div>
         <div className={styles.texts}>
@@ -152,6 +154,8 @@ const ListBox: React.FC<ListBoxProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ListBox.displayName = 'ListBox';
 
 export default ListBox;

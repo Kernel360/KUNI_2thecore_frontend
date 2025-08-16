@@ -52,7 +52,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   }
 - **request example**
   {
-  "status" : 운행 // 운행중인 차량을 불러옴
+  "status" : 운행 // 운행인 차량을 불러옴
   }
 - **response**:
   {
@@ -97,7 +97,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "carNumber": "12가5132",
   "status": "대기",
   "lastLatitude": "string",
-   "lastLongitude": "string"
+  "lastLongitude": "string"
   }
   ]
   }

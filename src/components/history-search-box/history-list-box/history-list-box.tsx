@@ -14,22 +14,34 @@ import historyStyles from './history-list-box.module.css';
 interface HistoryListBoxProps {
   historyData: DriveLog[];
   loading?: boolean;
-  onSort?: (sortBy: string, order: 'asc' | 'desc') => void;
+  onSort?: (sortBy: string, order: 'ASC' | 'DESC') => void;
 }
+
+const allowedStatus = ['운행', '대기', '수리'] as const;
+type StatusType = (typeof allowedStatus)[number];
 
 const HistoryListBox = ({
   historyData,
   loading = false,
   onSort,
 }: HistoryListBoxProps) => {
-  const [sortOrder, setSortOrder] = useState<'ascend' | 'descend'>('ascend');
+  const [currentSortBy, setCurrentSortBy] = useState<string>('startTime');
+  const [isAscending, setIsAscending] = useState<boolean>(true); //true: 오름차순, false: 내림차순
 
   const handleSort = (sortBy: string) => {
-    const newSortOrder = sortOrder === 'ascend' ? 'descend' : 'ascend';
-    setSortOrder(newSortOrder);
+    let newIsAscending: boolean;
+
+    if (currentSortBy === sortBy) {
+      newIsAscending = !isAscending;
+    } else {
+      newIsAscending = true;
+    }
+
+    setCurrentSortBy(sortBy);
+    setIsAscending(newIsAscending);
 
     if (onSort) {
-      onSort(sortBy, newSortOrder === 'ascend' ? 'asc' : 'desc');
+      onSort(sortBy, newIsAscending ? 'ASC' : 'DESC');
     }
   };
 
@@ -38,54 +50,104 @@ const HistoryListBox = ({
       <Table className={historyStyles.historyTable}>
         <TableHeader>
           <TableRow>
-            <TableHead className={historyStyles.tableHeadWithPadding}>
+            <TableHead className={historyStyles.tableHeadDefault}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
                 차량번호
                 <div
-                  className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'carNumber' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('carNumber')}
                 />
               </div>
             </TableHead>
             <TableHead className={historyStyles.tableHeadSmall}>
-              브랜드
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                브랜드
+                <div
+                  className={`${styles.sortOrder} ${currentSortBy === 'brand' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
+                  onClick={() => handleSort('brand')}
+                />
+              </div>
             </TableHead>
-            <TableHead className={historyStyles.tableHeadSmall}>모델</TableHead>
-            <TableHead className={historyStyles.tableHeadWithPadding}>
+            <TableHead className={historyStyles.tableHeadSmall}>
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                모델
+                <div
+                  className={`${styles.sortOrder} ${currentSortBy === 'model' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
+                  onClick={() => handleSort('model')}
+                />
+              </div>
+            </TableHead>
+            <TableHead className={historyStyles.tableHeadDefault}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
                 주행시작일
                 <div
-                  className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'startTime' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('startTime')}
                 />
               </div>
             </TableHead>
-            <TableHead className={historyStyles.tableHeadWithPadding}>
+            <TableHead className={historyStyles.tableHeadDefault}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
                 주행종료일
                 <div
-                  className={`${styles.sortOrder} ${styles[sortOrder === 'ascend' ? 'ascend' : 'descend']}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'endTime' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('endTime')}
                 />
               </div>
             </TableHead>
             <TableHead className={historyStyles.tableHeadDefault}>
-              출발지
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                출발지
+                <div
+                  className={`${styles.sortOrder} ${currentSortBy === 'startPoint' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
+                  onClick={() => handleSort('startPoint')}
+                />
+              </div>
             </TableHead>
             <TableHead className={historyStyles.tableHeadDefault}>
-              도착지
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                도착지
+                <div
+                  className={`${styles.sortOrder} ${currentSortBy === 'endPoint' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
+                  onClick={() => handleSort('endPoint')}
+                />
+              </div>
             </TableHead>
             <TableHead className={historyStyles.tableHeadSmall}>
-              주행거리
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                주행거리
+                <div
+                  className={`${styles.sortOrder} ${currentSortBy === 'driveDist' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
+                  onClick={() => handleSort('driveDist')}
+                />
+              </div>
             </TableHead>
-            <TableHead className={historyStyles.tableHeadDefault}>
-              상태
+            <TableHead className={historyStyles.tableHeadSmall}>
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                상태
+                <div
+                  className={`${styles.sortOrder} ${currentSortBy === 'status' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
+                  onClick={() => handleSort('status')}
+                />
+              </div>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -118,7 +180,7 @@ const HistoryListBox = ({
                   {new Date(log.startTime).toLocaleString('ko-KR')}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
-                  {new Date(log.endTime).toLocaleString('ko-KR') || '-'}
+                  {new Date(log.endTime).toLocaleString('ko-KR')}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
                   {log.startPoint}
@@ -127,12 +189,12 @@ const HistoryListBox = ({
                   {log.endPoint}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
-                  {log.status}
-                </TableCell>
-                <TableCell className={historyStyles.tableCell}>
                   {log.driveDist
                     ? `${(log.driveDist / 1000).toFixed(1)}km`
                     : '-'}
+                </TableCell>
+                <TableCell className={historyStyles.tableCell}>
+                  {log.status}
                 </TableCell>
               </TableRow>
             ))

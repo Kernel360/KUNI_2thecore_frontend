@@ -1,4 +1,4 @@
-import { ApiResponse, mainApi } from '@/lib/api';
+import { ApiResponse, mainApi, PageResponse } from '@/lib/api';
 
 // API 쿼리 파라미터 타입 (API 스펙 기반)
 export interface DriveLogQueryParams {
@@ -10,6 +10,10 @@ export interface DriveLogQueryParams {
   endTime?: Date; // 주행 종료 날짜 ("2025-08-16")
   twoParam?: boolean; // 브랜드 + 모델명 길이가 2가 아닌 경우 false
   // 대신 길이가 0인 경우는 true
+  page?: number;
+  offset?: number;
+  sortBy?: string; // 정렬 기준 (carNumber, startTime, endTime, brand, model, startPoint, endPoint, driveDist, status)
+  sortOrder?: 'ASC' | 'DESC'; // 정렬 방향 (기본값: ASC)
 }
 
 // 주행 기록 응답 데이터 타입
@@ -26,10 +30,31 @@ export interface DriveLog {
 }
 
 export class HistoryService {
-  // 차량 주행 기록 조회 (GET /logs)
-  static async getDriveLogs(params?: DriveLogQueryParams): Promise<DriveLog[]> {
-    const response = await mainApi.get<ApiResponse<DriveLog[]>>('/logs', {
-      params,
+  // 차량 주행 기록 조회 (GET /drivelogs)
+  static async getDriveLogs(
+    params?: DriveLogQueryParams,
+    page: number = 1,
+    offset: number = 10
+  ): Promise<PageResponse<DriveLog>> {
+    // Date 객체를 ISO 문자열로 변환
+    const formattedParams = params
+      ? {
+          ...params,
+          startTime: params.startTime
+            ? params.startTime.toISOString().split('T')[0]
+            : undefined,
+          endTime: params.endTime
+            ? params.endTime.toISOString().split('T')[0]
+            : undefined,
+          page,
+          offset,
+          sortBy: params.sortBy || 'startTime',
+          sortOrder: params.sortOrder || 'ASC',
+        }
+      : { page, offset, sortBy: 'startTime', sortOrder: 'ASC' };
+
+    const response = await mainApi.get<ApiResponse<PageResponse<DriveLog>>>('/drivelogs', {
+      params: formattedParams,
     });
     return response.data.data;
   }

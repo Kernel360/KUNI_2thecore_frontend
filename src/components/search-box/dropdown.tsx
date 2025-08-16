@@ -21,7 +21,7 @@ export function Dropdown({ value, onValueChange }: DropdownProps) {
   };
 
   // 부모에서 받은 빈 문자열을 "total"로 변환
-  const displayValue = value === '' ? '운행' : value;
+  const displayValue = value === '' ? 'total' : value;
 
   return (
     <Select value={displayValue} onValueChange={handleValueChange}>

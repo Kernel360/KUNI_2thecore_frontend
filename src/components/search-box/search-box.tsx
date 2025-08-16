@@ -1,4 +1,5 @@
 import { Car, CarSearchParams, CarService } from '@/services/car-service';
+import useObserver from '@/hooks/use-intersection-observer';
 import { useEffect, useState } from 'react';
 import CarRegisterModal, { CarFormData } from './car-register-modal';
 import BrandFilterBox from './filter-box';
@@ -14,22 +15,63 @@ const SearchBox = () => {
   // 입력창 상태들을 SearchBox에서 관리
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('운행');
 
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 무한 스크롤
+  const { page, setPage, isFetching, setIsFetching, setLastIntersecting } =
+    useObserver();
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [currentSearchParams, setCurrentSearchParams] = useState<CarSearchParams | null>(null);
 
   // 초기 차량 목록 로드
   useEffect(() => {
     loadInitialCars();
   }, []);
 
+  // 페이지 변경 시 추가 데이터 로드 (무한 스크롤)
+  useEffect(() => {
+    if (page === 1 || !hasNextPage) return; 
+    
+    const loadMoreCars = async () => {
+      try {
+        setIsFetching(true);
+        
+        let result;
+        if (currentSearchParams) {
+          result = await CarService.searchCars(currentSearchParams, page, 10);
+        } else {
+          result = await CarService.getAllCars(page, 10);
+        }
+
+        if (result.content.length > 0) {
+          setCars(prevCars => [...prevCars, ...result.content]);
+          setHasNextPage(result.content.length === 10);
+        } else {
+          setHasNextPage(false);
+        }
+      } catch (error) {
+        console.error('추가 데이터 로드 실패:', error);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    loadMoreCars();
+  }, [page, currentSearchParams, hasNextPage]);
+
   const loadInitialCars = async () => {
     try {
       setLoading(true);
       setError(null);
-      const carData = await CarService.getAllCars(1, 50);
+      const carData = await CarService.getAllCars(1, 10);
       setCars(carData.content);
+      setPage(1);
+      setHasNextPage(carData.content.length === 10);
+      setCurrentSearchParams(null);
+      setIsFetching(false);
     } catch (error) {
       console.error('차량 목록 조회 실패:', error);
       setError('차량 목록을 불러오는데 실패했습니다.');
@@ -53,11 +95,15 @@ const SearchBox = () => {
       const searchParams: CarSearchParams = {
         carNumber: carNumber.trim(),
         page: 1,
-        offset: 50,
+        offset: 10,
       };
 
-      const result = await CarService.searchCars(searchParams, 1, 50);
+      const result = await CarService.searchCars(searchParams, 1, 10);
       setCars(result.content);
+      setPage(1);
+      setHasNextPage(result.content.length === 10);
+      setCurrentSearchParams(searchParams);
+      setIsFetching(false);
     } catch (error) {
       console.error('차량 번호 검색 실패:', error);
       setError('차량 검색에 실패했습니다.');
@@ -79,7 +125,7 @@ const SearchBox = () => {
       // 백엔드 API 2.6 명세에 맞게 파라미터 구성
       const searchParams: CarSearchParams = {
         page: 1,
-        offset: 50,
+        offset: 10,
       };
 
       // 브랜드와 모델 처리
@@ -102,8 +148,12 @@ const SearchBox = () => {
         searchParams.status = status;
       }
 
-      const result = await CarService.searchCars(searchParams, 1, 50);
+      const result = await CarService.searchCars(searchParams, 1, 10);
       setCars(result.content);
+      setPage(1);
+      setHasNextPage(result.content.length === 10);
+      setCurrentSearchParams(searchParams);
+      setIsFetching(false);
     } catch (error) {
       console.error('필터 검색 실패:', error);
       setError('필터 검색에 실패했습니다.');
@@ -183,7 +233,7 @@ const SearchBox = () => {
         />
 
         {error && (
-          <div style={{ color: 'red', textAlign: 'center', padding: '10px' }}>
+          <div style={{ color: 'red', textAlign: 'center', padding: '50px' }}>
             {error}
           </div>
         )}
@@ -195,12 +245,13 @@ const SearchBox = () => {
         ) : (
           cars.map((car, idx) => (
             <ListBox
-              key={idx}
+              key={`${car.carNumber}-${idx}`}
               carNumber={car.carNumber}
               brand={car.brand}
               model={car.model}
               status={car.status}
               onDelete={handleCarDelete}
+              ref={idx === cars.length - 1 && hasNextPage ? setLastIntersecting : null}
             />
           ))
         )}

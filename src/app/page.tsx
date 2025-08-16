@@ -1,3 +1,4 @@
+import CarClustererMap from '@/components/map/car-clusterer-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import MapModal from '@/components/map/map-modal';
 import MenuBox from '@/components/menu-box/menu-box';
@@ -9,8 +10,13 @@ export default function Home() {
   const [carStatusFilter, setCarStatusFilter] = useState<
     'total' | 'driving' | 'maintenance' | 'idle'
   >('total');
-  
+
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+  localStorage.setItem('loginId', 'dev');
+  localStorage.setItem(
+    'accessToken',
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZXYiLCJsb2dpbklkIjoiZGV2IiwidG9rZW5fdHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1NTMyODg1MSwiZXhwIjoxNzU1MzI5NDUxfQ.ehnzwZvMmDzjNL399ZAI6PnbCqsnOV0nKa_CKc9a3w8'
+  );
 
   return (
     <>
@@ -29,11 +35,11 @@ export default function Home() {
             </div>
             <div className="relative flex-1 max-h-[800px] mb-9 rounded-2xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-xl">
               <KakaoMapScript />
-              {/* <CarClustererMap
+              <CarClustererMap
                 width="100%"
                 height="100%"
                 carStatusFilter={carStatusFilter}
-              /> */}
+              />
             </div>
           </div>
         </div>

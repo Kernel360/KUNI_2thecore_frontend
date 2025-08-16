@@ -10,8 +10,8 @@ interface MapModalProps {
 
 export default function MapModal({ isOpen, onClose }: MapModalProps) {
   const [carStatusFilter, setCarStatusFilter] = useState<
-    'null' | '운행' | '수리' | '대기'
-  >('null');
+    'total' | 'driving' | 'maintenance' | 'idle'
+  >('total');
 
   if (!isOpen) return null;
 
