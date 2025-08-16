@@ -12,6 +12,8 @@ export interface DriveLogQueryParams {
   // 대신 길이가 0인 경우는 true
   page?: number;
   offset?: number;
+  sortBy?: string; // 정렬 기준 (carNumber, startTime, endTime, brand, model, startPoint, endPoint, driveDist, status)
+  sortOrder?: 'ASC' | 'DESC'; // 정렬 방향 (기본값: ASC)
 }
 
 // 주행 기록 응답 데이터 타입
@@ -46,8 +48,10 @@ export class HistoryService {
             : undefined,
           page,
           offset,
+          sortBy: params.sortBy || 'startTime',
+          sortOrder: params.sortOrder || 'ASC',
         }
-      : undefined;
+      : { page, offset, sortBy: 'startTime', sortOrder: 'ASC' };
 
     const response = await mainApi.get<ApiResponse<PageResponse<DriveLog>>>('/drivelogs', {
       params: formattedParams,

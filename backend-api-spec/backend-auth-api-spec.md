@@ -127,3 +127,4 @@ Response example:
   "message": "로그아웃 처리 완료", // 처리 결과 메시지
   "data": null // 데이터
   }
+}
