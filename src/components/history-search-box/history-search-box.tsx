@@ -12,7 +12,7 @@ import { Input } from '../ui/input';
 import { RangeCalendar } from './range-calendar';
 
 interface HistorySearchBoxProps {
-  onSearchResults: (data: DriveLog[]) => void;
+  onSearchResults: (data: DriveLog[], params?: DriveLogQueryParams) => void;
   onLoadingChange: (loading: boolean) => void;
 }
 
@@ -46,7 +46,7 @@ const HistorySearchBox = ({
       
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
       console.log('loadInitialLogs result:', result);
-      onSearchResults(result.content);
+      onSearchResults(result.content, queryParams);
     } catch (error) {
       console.error('주행 기록 조회 실패:', error);
       onSearchResults([]);
@@ -77,7 +77,7 @@ const HistorySearchBox = ({
 
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
       console.log('검색 결과:', result);
-      onSearchResults(result.content);
+      onSearchResults(result.content, queryParams);
     } catch (error) {
       console.error('주행 기록 검색 실패:', error);
       alert('주행 기록 검색에 실패했습니다.');
@@ -126,7 +126,7 @@ const HistorySearchBox = ({
       }
 
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
-      onSearchResults(result.content);
+      onSearchResults(result.content, queryParams);
     } catch (error) {
       console.error('필터 검색 실패:', error);
       alert('필터 검색에 실패했습니다.');
