@@ -26,17 +26,17 @@ const HistoryListBox = ({
   onSort,
 }: HistoryListBoxProps) => {
   const [currentSortBy, setCurrentSortBy] = useState<string>('startTime');
-  const [isAscending, setIsAscending] = useState<boolean>(true);
+  const [isAscending, setIsAscending] = useState<boolean>(true); //true: 오름차순, false: 내림차순
 
   const handleSort = (sortBy: string) => {
     let newIsAscending: boolean;
-    
+
     if (currentSortBy === sortBy) {
       newIsAscending = !isAscending;
     } else {
       newIsAscending = true;
     }
-    
+
     setCurrentSortBy(sortBy);
     setIsAscending(newIsAscending);
 
@@ -56,7 +56,7 @@ const HistoryListBox = ({
               >
                 차량번호
                 <div
-                  className={`${styles.sortOrder} ${currentSortBy === 'carNumber' ? (isAscending ? styles.descend : styles.ascend) : styles.descend}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'carNumber' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('carNumber')}
                 />
               </div>
@@ -67,7 +67,7 @@ const HistoryListBox = ({
               >
                 브랜드
                 <div
-                  className={`${styles.sortOrder} ${currentSortBy === 'brand' ? (isAscending ? styles.descend : styles.ascend) : styles.descend}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'brand' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('brand')}
                 />
               </div>
@@ -78,7 +78,7 @@ const HistoryListBox = ({
               >
                 모델
                 <div
-                  className={`${styles.sortOrder} ${currentSortBy === 'model' ? (isAscending ? styles.descend : styles.ascend) : styles.descend}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'model' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('model')}
                 />
               </div>
@@ -89,7 +89,7 @@ const HistoryListBox = ({
               >
                 주행시작일
                 <div
-                  className={`${styles.sortOrder} ${currentSortBy === 'startTime' ? (isAscending ? styles.descend : styles.ascend) : styles.descend}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'startTime' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('startTime')}
                 />
               </div>
@@ -100,7 +100,7 @@ const HistoryListBox = ({
               >
                 주행종료일
                 <div
-                  className={`${styles.sortOrder} ${currentSortBy === 'endTime' ? (isAscending ? styles.descend : styles.ascend) : styles.descend}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'endTime' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('endTime')}
                 />
               </div>
@@ -111,7 +111,7 @@ const HistoryListBox = ({
               >
                 출발지
                 <div
-                  className={`${styles.sortOrder} ${currentSortBy === 'startPoint' ? (isAscending ? styles.descend : styles.ascend) : styles.descend}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'startPoint' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('startPoint')}
                 />
               </div>
@@ -122,7 +122,7 @@ const HistoryListBox = ({
               >
                 도착지
                 <div
-                  className={`${styles.sortOrder} ${currentSortBy === 'endPoint' ? (isAscending ? styles.descend : styles.ascend) : styles.descend}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'endPoint' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('endPoint')}
                 />
               </div>
@@ -133,7 +133,7 @@ const HistoryListBox = ({
               >
                 주행거리
                 <div
-                  className={`${styles.sortOrder} ${currentSortBy === 'driveDist' ? (isAscending ? styles.descend : styles.ascend) : styles.descend}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'driveDist' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('driveDist')}
                 />
               </div>
@@ -144,7 +144,7 @@ const HistoryListBox = ({
               >
                 상태
                 <div
-                  className={`${styles.sortOrder} ${currentSortBy === 'status' ? (isAscending ? styles.descend : styles.ascend) : styles.descend}`}
+                  className={`${styles.sortOrder} ${currentSortBy === 'status' ? (isAscending ? styles.ascend : styles.descend) : styles.descend}`}
                   onClick={() => handleSort('status')}
                 />
               </div>
