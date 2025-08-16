@@ -28,7 +28,10 @@ const useObserver = () => {
   useEffect(() => {
     if (!lastIntersecting) return;
     //observer 인스턴스를 생성한 후 구독
-    const observer = new IntersectionObserver(onIntersect, { threshold: 0.5 });
+    const observer = new IntersectionObserver(onIntersect, {
+      threshold: 0.5,
+      rootMargin: '100px 0px',
+    });
     //observer 생성 시 observe할 target 요소는 배열의 마지막 타켓으로 지정
     observer.observe(lastIntersecting);
 

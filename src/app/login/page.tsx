@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -13,7 +11,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import TopBar from '@/components/ui/topBar';
 import { AuthService } from '@/services/auth-service';
-import { TokenManager } from '@/lib/token-manager';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [credentials, setCredentials] = useState({
@@ -73,31 +72,29 @@ export default function Login() {
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4">
               <Label htmlFor="loginId">아이디</Label>
-              <Input 
-                id="loginId" 
+              <Input
+                id="loginId"
                 name="loginId"
-                type="text" 
+                type="text"
                 value={credentials.loginId}
                 onChange={handleChange}
-                required 
+                required
               />
               <Label htmlFor="password">비밀번호</Label>
-              <Input 
-                id="password" 
+              <Input
+                id="password"
                 name="password"
-                type="password" 
+                type="password"
                 value={credentials.password}
                 onChange={handleChange}
-                required 
+                required
               />
               {error && (
-                <div className="text-red-500 text-sm text-center">
-                  {error}
-                </div>
+                <div className="text-red-500 text-sm text-center">{error}</div>
               )}
               <Button
                 type="submit"
-                className="w-full bg-blue-500 hover:bg-blue-600"
+                className="w-full bg-gradient-to-br from-blue-500 to-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:shadow-lg hover:shadow-blue-800/40 active:scale-95"
                 disabled={loading}
               >
                 {loading ? '로그인 중...' : '로그인'}

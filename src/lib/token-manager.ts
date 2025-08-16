@@ -34,7 +34,8 @@ export class TokenManager {
 
   // Access Token 조회
   static getAccessToken(): string | null {
-    if (typeof window !== 'undefined') {
+    // if (typeof window !== 'undefined') {
+    if (localStorage) { //디렉터님
       return localStorage.getItem(this.ACCESS_TOKEN_KEY);
     }
     return null;
@@ -61,7 +62,8 @@ export class TokenManager {
 
   // 토큰 존재 여부 확인
   static hasValidTokens(): boolean {
-    return !!(this.getAccessToken() && this.getRefreshToken());
+    // return !!(this.getAccessToken() && this.getRefreshToken());
+    return !!this.getAccessToken(); //디렉터님
   }
 
   // 모든 토큰 삭제 (로그아웃)
