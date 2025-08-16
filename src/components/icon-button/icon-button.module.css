@@ -27,9 +27,9 @@
 }
 
 .sortOrder.ascend {
-  background-image: url('/arrow_drop_down_24dp_000000.svg');
+  background-image: url('/arrow_drop_up_24dp_000000.svg');
 }
 
 .sortOrder.descend {
-  background-image: url('/arrow_drop_up_24dp_000000.svg');
+  background-image: url('/arrow_drop_down_24dp_000000.svg');
 }
