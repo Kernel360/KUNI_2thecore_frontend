@@ -1,3 +1,4 @@
+import useObserver from '@/hooks/use-intersection-observer';
 import {
   DriveLog,
   DriveLogQueryParams,
@@ -6,6 +7,7 @@ import {
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import BrandFilterBox from '../search-box/filter-box';
+import HistoryListBox from './history-list-box/history-list-box';
 import styles from '../search-box/search-filter.module.css';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -25,6 +27,13 @@ const HistorySearchBox = ({
   const [status, setStatus] = useState('');
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
+  // 무한 스크롤
+  const { page, setPage, isFetching, setIsFetching, setLastIntersecting } =
+    useObserver();
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [currentSearchParams, setCurrentSearchParams] =
+    useState<DriveLogQueryParams | null>(null);
+
   // 초기 주행 기록 목록 로드 (dateRange가 설정된 후)
   useEffect(() => {
     if (dateRange?.from && dateRange?.to) {
@@ -32,9 +41,58 @@ const HistorySearchBox = ({
     }
   }, [dateRange]);
 
+  // 페이지 변경 시 추가 데이터 로드 (무한 스크롤)
+  useEffect(() => {
+    if (page === 1 || !hasNextPage) return;
+
+    const loadMoreCars = async () => {
+      try {
+        setIsFetching(true);
+
+        let result;
+        if (currentSearchParams) {
+          result = await HistoryService.searchCars(currentSearchParams, page, 10);
+        } else {
+          result = await HistoryService.getDriveLogs(page, 10);
+        }
+
+        if (result.content.length > 0) {
+          setCars(prevCars => [...prevCars, ...result.content]);
+          setHasNextPage(result.content.length === 10);
+        } else {
+          setHasNextPage(false);
+        }
+      } catch (error) {
+        console.error('추가 데이터 로드 실패:', error);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    loadMoreCars();
+  }, [page, currentSearchParams, hasNextPage]);
+
+  const loadInitialCars = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const carData = await HistoryService.getAllCars(1, 10);
+      setCars(carData.content);
+      setPage(1);
+      setHasNextPage(carData.content.length === 10);
+      setCurrentSearchParams(null);
+      setIsFetching(false);
+    } catch (error) {
+      console.error('차량 목록 조회 실패:', error);
+      setError('차량 목록을 불러오는데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const loadInitialLogs = async () => {
     if (!dateRange?.from || !dateRange?.to) return;
-    
+
     try {
       onLoadingChange(true);
       const queryParams: DriveLogQueryParams = {
@@ -43,7 +101,7 @@ const HistorySearchBox = ({
         page: 1,
         offset: 10,
       };
-      
+
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
       console.log('loadInitialLogs result:', result);
       onSearchResults(result.content, queryParams);
@@ -163,6 +221,32 @@ const HistorySearchBox = ({
           setStatus={setStatus}
           onFilterApply={handleFilterApply}
         />
+        {error && (
+          <div style={{ color: 'red', textAlign: 'center', padding: '50px' }}>
+            {error}
+          </div>
+        )}
+        {cars.length === 0 && !error ? (
+          <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
+            검색 결과가 없습니다.
+          </div>
+        ) : (
+          cars.map((car, idx) => (
+            <HistoryListBox
+              key={`${car.carNumber}-${idx}`}
+              carNumber={car.carNumber}
+              brand={car.brand}
+              model={car.model}
+              status={car.status}
+              ref={
+                idx === cars.length - 1 && hasNextPage
+                  ? setLastIntersecting
+                  : null
+              }
+            />
+          ))
+        )}
+        </div>
         <Button
           className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
           rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
