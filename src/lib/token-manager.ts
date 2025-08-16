@@ -61,7 +61,7 @@ export class TokenManager {
 
   // 토큰 존재 여부 확인
   static hasValidTokens(): boolean {
-    return !!(this.getAccessToken() && this.getRefreshToken());
+    return !!(this.getAccessToken());
   }
 
   // 모든 토큰 삭제 (로그아웃)
