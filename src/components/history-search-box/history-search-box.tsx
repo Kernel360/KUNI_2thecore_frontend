@@ -7,10 +7,10 @@ import {
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import BrandFilterBox from '../search-box/filter-box';
-import HistoryListBox from './history-list-box/history-list-box';
 import styles from '../search-box/search-filter.module.css';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import HistoryListBox from './history-list-box/history-list-box';
 import { RangeCalendar } from './range-calendar';
 
 interface HistorySearchBoxProps {
@@ -33,6 +33,9 @@ const HistorySearchBox = ({
   const [hasNextPage, setHasNextPage] = useState(true);
   const [currentSearchParams, setCurrentSearchParams] =
     useState<DriveLogQueryParams | null>(null);
+  const [cars, setCars] = useState<DriveLog[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // 초기 주행 기록 목록 로드 (dateRange가 설정된 후)
   useEffect(() => {
@@ -51,9 +54,13 @@ const HistorySearchBox = ({
 
         let result;
         if (currentSearchParams) {
-          result = await HistoryService.searchCars(currentSearchParams, page, 10);
+          result = await HistoryService.getDriveLogs(
+            currentSearchParams,
+            page,
+            10
+          );
         } else {
-          result = await HistoryService.getDriveLogs(page, 10);
+          result = await HistoryService.getDriveLogs({}, page, 10);
         }
 
         if (result.content.length > 0) {
@@ -76,7 +83,7 @@ const HistorySearchBox = ({
     try {
       setLoading(true);
       setError(null);
-      const carData = await HistoryService.getAllCars(1, 10);
+      const carData = await HistoryService.getDriveLogs({}, 1, 10);
       setCars(carData.content);
       setPage(1);
       setHasNextPage(carData.content.length === 10);
@@ -226,34 +233,20 @@ const HistorySearchBox = ({
             {error}
           </div>
         )}
-        {cars.length === 0 && !error ? (
-          <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
-            검색 결과가 없습니다.
-          </div>
-        ) : (
-          cars.map((car, idx) => (
-            <HistoryListBox
-              key={`${car.carNumber}-${idx}`}
-              carNumber={car.carNumber}
-              brand={car.brand}
-              model={car.model}
-              status={car.status}
-              ref={
-                idx === cars.length - 1 && hasNextPage
-                  ? setLastIntersecting
-                  : null
-              }
-            />
-          ))
+        <HistoryListBox
+          historyData={cars}
+          loading={loading}
+        />
+        {hasNextPage && (
+          <div ref={setLastIntersecting} style={{ height: '1px' }}></div>
         )}
-        </div>
-        <Button
-          className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
-          rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
-        >
-          엑셀 다운로드
-        </Button>
       </div>
+      <Button
+        className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
+          rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
+      >
+        엑셀 다운로드
+      </Button>
     </div>
   );
 };
