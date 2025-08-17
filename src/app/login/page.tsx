@@ -60,6 +60,10 @@ export default function Login() {
   return (
     <div className="flex flex-col justify-center items-center h-full">
       <TopBar title="로그인"></TopBar>
+      <div
+        className="w-[98%] h-px border-b-2"
+        style={{ borderBottomColor: '#3a70ff' }}
+      />
       <Card className="w-full max-w-md mt-20">
         <CardHeader>
           <CardTitle>로그인</CardTitle>
