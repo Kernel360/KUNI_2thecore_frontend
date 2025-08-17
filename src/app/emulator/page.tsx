@@ -1,102 +1,228 @@
 import MenuBox from '@/components/menu-box/menu-box';
 import NumberSearchBox from '@/components/search-box/number-search-box';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
 import TopBar from '@/components/ui/topBar';
+import { Car, CarSearchParams, CarService } from '@/services/car-service';
 import { useEffect, useState } from 'react';
 import styles from './emulator.module.css';
 
 export default function LocalEmulator() {
+  const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [carNumber, setCarNumber] = useState('');
-  const [newCarNumber, setNewCarNumber] = useState('');
+  const [switchStates, setSwitchStates] = useState<Record<string, boolean>>({});
+  const [carStatuses, setCarStatuses] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchEmulators = async () => {
       try {
-        // const emulatorData = await EmulatorService.getAllEmulators(0, 100);
-        // setEmulators(emulatorData.content);
+        setLoading(true);
+        setError(null);
+        const runningCarNumber = await CarService.getAllCars();
+        setCars(runningCarNumber.content);
+
+        // 초기 스위치 상태 및 차량 상태 설정
+        const initialStates: Record<string, boolean> = {};
+        const initialStatuses: Record<string, string> = {};
+        runningCarNumber.content.forEach(car => {
+          initialStates[car.carNumber] = car.powerStatus === 'OFF';
+          initialStatuses[car.carNumber] = car.status;
+        });
+        setSwitchStates(initialStates);
+        setCarStatuses(initialStatuses);
       } catch (error) {
         console.error('에뮬레이터 목록 조회 실패:', error);
-        // 에러 발생 시 더미 데이터 사용
       } finally {
         setLoading(false);
       }
     };
-
     fetchEmulators();
   }, []);
 
   const handleNumberSearch = async () => {
     if (!carNumber.trim()) {
-      alert('차량 번호를 입력해주세요.');
+      setError('차량 번호를 입력해주세요.');
       return;
     }
 
-    console.log('에뮬레이터 검색:', carNumber);
-    // TODO: 실제 검색 로직 구현
-  };
+    try {
+      setLoading(true);
+      setError(null);
 
-  const handleRegisterEmulator = async () => {
-    if (!newCarNumber.trim()) {
-      alert('차량 번호를 입력해주세요.');
-      return;
+      const searchParams: CarSearchParams = {
+        carNumber: carNumber.trim(),
+      };
+
+      const result = await CarService.searchCars(searchParams);
+      setCars(result.content);
+
+      // 검색 결과에 대한 스위치 상태 및 차량 상태 설정
+      const searchStates: Record<string, boolean> = {};
+      const searchStatuses: Record<string, string> = {};
+      result.content.forEach(car => {
+        searchStates[car.carNumber] = car.powerStatus === 'OFF';
+        searchStatuses[car.carNumber] = car.status;
+      });
+      setSwitchStates(searchStates);
+      setCarStatuses(searchStatuses);
+    } catch (error) {
+      console.error('차량 번호 검색 실패:', error);
+      setError('에뮬레이터 검색에 실패했습니다.');
+    } finally {
+      setLoading(false);
     }
-
-    console.log('에뮬레이터 등록:', newCarNumber);
-    // TODO: 실제 등록 로직 구현
   };
 
-  const EmulSearchBox = () => {
-    return (
-      <div className={styles.emulSearch}>
-        <NumberSearchBox
-          value={carNumber}
-          onChange={setCarNumber}
-          onSearch={handleNumberSearch}
-        />
-        <div className={styles.filterContainer}>
-          <Input
-            type="text"
-            placeholder="새 에뮬레이터를 등록하려면 차량 번호를 이곳에 입력해주세요. (예: 11가 1111)"
-            className={styles.searchContainer}
-            value={newCarNumber}
-            onChange={e => setNewCarNumber(e.target.value)}
-          />
-          <Button
-            className={styles.searchButton}
-            onClick={handleRegisterEmulator}
-          >
-            등록
-          </Button>
-        </div>
-      </div>
-    );
+  const handleSwitchChange = async (carNumber: string, checked: boolean) => {
+    setSwitchStates(prev => ({
+      ...prev,
+      [carNumber]: checked,
+    }));
+
+    // 스위치 ON시 차량 상태를 운행으로, OFF시 원래 상태로 복원
+    const originalCar = cars.find(car => car.carNumber === carNumber);
+    const newStatus = checked ? '운행' : originalCar?.status || '대기';
+
+    setCarStatuses(prev => ({
+      ...prev,
+      [carNumber]: newStatus,
+    }));
+
+    // API 호출하여 차량 상태 업데이트
+    try {
+      if (originalCar) {
+        await CarService.updateCar(carNumber, {
+          ...originalCar,
+          status: newStatus,
+          powerStatus: checked ? 'ON' : 'OFF',
+        });
+      }
+    } catch (error) {
+      console.error('차량 상태 업데이트 실패:', error);
+      // 에러 발생 시 상태 롤백
+      setSwitchStates(prev => ({
+        ...prev,
+        [carNumber]: !checked,
+      }));
+      setCarStatuses(prev => ({
+        ...prev,
+        [carNumber]: originalCar?.status || '대기',
+      }));
+    }
+  };
+
+  const handleToggleAll = async () => {
+    const allOn = Object.values(switchStates).every(state => state);
+    const newState = !allOn;
+
+    const newStates: Record<string, boolean> = {};
+    const newStatuses: Record<string, string> = {};
+
+    cars.forEach(car => {
+      newStates[car.carNumber] = newState;
+      newStatuses[car.carNumber] = newState ? '운행' : car.status;
+    });
+
+    setSwitchStates(newStates);
+    setCarStatuses(newStatuses);
+
+    // 모든 차량에 대해 API 호출
+    try {
+      const updatePromises = cars.map(car =>
+        CarService.updateCar(car.carNumber, {
+          ...car,
+          status: newState ? '운행' : car.status,
+          powerStatus: newState ? 'ON' : 'OFF',
+        })
+      );
+      await Promise.all(updatePromises);
+    } catch (error) {
+      console.error('전체 차량 상태 업데이트 실패:', error);
+      // 에러 발생 시 상태 롤백
+      const rollbackStates: Record<string, boolean> = {};
+      const rollbackStatuses: Record<string, string> = {};
+      cars.forEach(car => {
+        rollbackStates[car.carNumber] = !newState;
+        rollbackStatuses[car.carNumber] = car.status;
+      });
+      setSwitchStates(rollbackStates);
+      setCarStatuses(rollbackStatuses);
+    }
   };
 
   return (
     <div>
       <TopBar title="에뮬레이터"></TopBar>
-      <MenuBox />
-      <EmulSearchBox />
+      <div className="gap-6 p-4 h-full w-[98%] mx-auto">
+        <NumberSearchBox
+          value={carNumber}
+          onChange={setCarNumber}
+          onSearch={handleNumberSearch}
+        />
+      </div>
       <Table className={styles.emulatorTable}>
         <TableHeader className={styles.tableHeader}>
           <TableRow>
-            <TableHead className={styles.tableCellSmall}></TableHead>
             <TableHead className={styles.tableCell}>차량번호</TableHead>
-            <TableHead className={styles.tableCell}>에뮬레이터 ID</TableHead>
+            <TableHead className={styles.tableCell}>상태</TableHead>
             <TableHead className={styles.tableCell}>ON/OFF</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody></TableBody>
+        <TableBody>
+          {cars.map((car, index) => (
+            <TableRow key={`${car.carNumber}-${index}`}>
+              <TableCell className={styles.tableCell}>
+                {car.carNumber}
+              </TableCell>
+              <TableCell className={styles.tableCell}>
+                {carStatuses[car.carNumber] || car.status}
+              </TableCell>
+              <TableCell className={styles.tableCell}>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id={`powerStatus-${car.carNumber}`}
+                    checked={switchStates[car.carNumber] || false}
+                    onCheckedChange={checked =>
+                      handleSwitchChange(car.carNumber, checked)
+                    }
+                  />
+                  <Label htmlFor={`powerStatus-${car.carNumber}`}>
+                    {switchStates[car.carNumber] ? 'ON' : 'OFF'}
+                  </Label>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
+
+      {cars.length > 0 && (
+        <div className="flex justify-center items-center mt-4 space-x-3">
+          <Label htmlFor="toggleAll" className="text-lg font-medium">
+            전체 제어
+          </Label>
+          <Switch
+            id="toggleAll"
+            checked={Object.values(switchStates).every(state => state)}
+            onCheckedChange={handleToggleAll}
+          />
+          <Label htmlFor="toggleAll" className="text-sm text-gray-600">
+            {Object.values(switchStates).every(state => state)
+              ? '전체 ON'
+              : '전체 OFF'}
+          </Label>
+        </div>
+      )}
     </div>
   );
 }
