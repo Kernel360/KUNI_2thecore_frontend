@@ -100,7 +100,7 @@ export default function LocalEmulator() {
     // API 호출하여 차량 상태 업데이트
     try {
       if (originalCar) {
-        await CarService.updateCar({
+        await CarService.updateCar(carNumber, {
           ...originalCar,
           status: newStatus,
           powerStatus: checked ? 'ON' : 'OFF'
@@ -138,7 +138,7 @@ export default function LocalEmulator() {
     // 모든 차량에 대해 API 호출
     try {
       const updatePromises = cars.map(car => 
-        CarService.updateCar({
+        CarService.updateCar(car.carNumber, {
           ...car,
           status: newState ? '운행' : car.status,
           powerStatus: newState ? 'ON' : 'OFF'
