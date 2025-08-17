@@ -17,6 +17,7 @@ export default function CarLocationMap({
 }) {
   const [carLocation, setCarLocation] = useState<Car | null>(null);
   const [address, setAddress] = useState<string>('');
+  const [map, setMap] = useState<any>(null);
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
   const infowindowRef = useRef<any>(null);
@@ -117,9 +118,9 @@ export default function CarLocationMap({
   return (
     <div style={{ width, height }}>
       <Map
-        width="100%"
-        height="100%"
-        onLoad={handleMapLoad}
+        width={width}
+        height={height}
+        onLoad={setMap}
         onOpenMapModal={close}
       />
     </div>

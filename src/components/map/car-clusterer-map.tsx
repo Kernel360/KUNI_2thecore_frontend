@@ -117,11 +117,6 @@ export default function CarClustererMap({
     clustererRef.current.addMarkers(markers);
   }, [cars, carStatusFilter]);
   return (
-    <Map
-      width="100%"
-      height="100%"
-      onLoad={handleMapLoad}
-      onOpenMapModal={close}
-    />
+    <Map width={width} height={height} onLoad={setMap} onOpenMapModal={close} />
   );
 }

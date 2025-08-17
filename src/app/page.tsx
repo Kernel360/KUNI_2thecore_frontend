@@ -11,12 +11,14 @@ export default function Home() {
     'total' | 'driving' | 'maintenance' | 'idle'
   >('total');
 
+
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   return (
     <>
       <div className="flex flex-col h-screen">
-        <TopBar title="차량 관제 시스템"></TopBar>
-        <div className="flex flex-col gap-6 p-4 h-full w-[98%] mx-auto">
+        <TopBar showLogo={true}></TopBar>
+        <MenuBox />
+        <div className="flex flex-row gap-6 p-4 h-full w-[98%] mx-auto">
           <div>
             <StatusContainer
               carStatusFilter={carStatusFilter}
@@ -45,3 +47,4 @@ export default function Home() {
     </>
   );
 }
+
