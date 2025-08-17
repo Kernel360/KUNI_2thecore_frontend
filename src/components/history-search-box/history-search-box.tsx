@@ -233,10 +233,7 @@ const HistorySearchBox = ({
             {error}
           </div>
         )}
-        <HistoryListBox
-          historyData={cars}
-          loading={loading}
-        />
+        <HistoryListBox historyData={cars} loading={loading} />
         {hasNextPage && (
           <div ref={setLastIntersecting} style={{ height: '1px' }}></div>
         )}

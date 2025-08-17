@@ -56,11 +56,6 @@ const DetailPage = () => {
     checkMap();
   }, [detailChange]);
 
-  useEffect(() => {
-    const checkMap = () => {};
-    checkMap();
-  }, [detailChange]);
-
   const handleChange = (
     field: 'brandModel' | keyof CarDetail,
     value: string

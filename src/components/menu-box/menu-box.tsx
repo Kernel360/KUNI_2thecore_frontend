@@ -17,18 +17,18 @@ const MenuBox = () => {
               asChild
               className={`${navigationMenuTriggerStyle()} text-white hover:text-white focus:text-white`}
               style={{
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
               }}
-              onMouseEnter={(e) => {
+              onMouseEnter={e => {
                 e.currentTarget.style.background = 'var(--main-gradient-hover)';
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={e => {
                 e.currentTarget.style.background = 'transparent';
               }}
-              onFocus={(e) => {
+              onFocus={e => {
                 e.currentTarget.style.background = 'var(--main-gradient-hover)';
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 e.currentTarget.style.background = 'transparent';
               }}
             >
@@ -40,18 +40,18 @@ const MenuBox = () => {
               asChild
               className={`${navigationMenuTriggerStyle()} text-white hover:text-white focus:text-white`}
               style={{
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
               }}
-              onMouseEnter={(e) => {
+              onMouseEnter={e => {
                 e.currentTarget.style.background = 'var(--main-gradient-hover)';
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={e => {
                 e.currentTarget.style.background = 'transparent';
               }}
-              onFocus={(e) => {
+              onFocus={e => {
                 e.currentTarget.style.background = 'var(--main-gradient-hover)';
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 e.currentTarget.style.background = 'transparent';
               }}
             >
@@ -63,18 +63,18 @@ const MenuBox = () => {
               asChild
               className={`${navigationMenuTriggerStyle()} text-white hover:text-white focus:text-white`}
               style={{
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
               }}
-              onMouseEnter={(e) => {
+              onMouseEnter={e => {
                 e.currentTarget.style.background = 'var(--main-gradient-hover)';
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={e => {
                 e.currentTarget.style.background = 'transparent';
               }}
-              onFocus={(e) => {
+              onFocus={e => {
                 e.currentTarget.style.background = 'var(--main-gradient-hover)';
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 e.currentTarget.style.background = 'transparent';
               }}
             >
@@ -86,18 +86,18 @@ const MenuBox = () => {
               asChild
               className={`${navigationMenuTriggerStyle()} text-white hover:text-white focus:text-white`}
               style={{
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
               }}
-              onMouseEnter={(e) => {
+              onMouseEnter={e => {
                 e.currentTarget.style.background = 'var(--main-gradient-hover)';
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={e => {
                 e.currentTarget.style.background = 'transparent';
               }}
-              onFocus={(e) => {
+              onFocus={e => {
                 e.currentTarget.style.background = 'var(--main-gradient-hover)';
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 e.currentTarget.style.background = 'transparent';
               }}
             >
@@ -109,18 +109,18 @@ const MenuBox = () => {
               asChild
               className={`${navigationMenuTriggerStyle()} text-white hover:text-white focus:text-white`}
               style={{
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
               }}
-              onMouseEnter={(e) => {
+              onMouseEnter={e => {
                 e.currentTarget.style.background = 'var(--main-gradient-hover)';
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={e => {
                 e.currentTarget.style.background = 'transparent';
               }}
-              onFocus={(e) => {
+              onFocus={e => {
                 e.currentTarget.style.background = 'var(--main-gradient-hover)';
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 e.currentTarget.style.background = 'transparent';
               }}
             >

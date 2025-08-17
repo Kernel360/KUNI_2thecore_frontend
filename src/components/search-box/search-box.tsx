@@ -1,5 +1,5 @@
-import { Car, CarSearchParams, CarService } from '@/services/car-service';
 import useObserver from '@/hooks/use-intersection-observer';
+import { Car, CarSearchParams, CarService } from '@/services/car-service';
 import { useEffect, useState } from 'react';
 import CarRegisterModal, { CarFormData } from './car-register-modal';
 import BrandFilterBox from './filter-box';
@@ -24,7 +24,8 @@ const SearchBox = () => {
   const { page, setPage, isFetching, setIsFetching, setLastIntersecting } =
     useObserver();
   const [hasNextPage, setHasNextPage] = useState(true);
-  const [currentSearchParams, setCurrentSearchParams] = useState<CarSearchParams | null>(null);
+  const [currentSearchParams, setCurrentSearchParams] =
+    useState<CarSearchParams | null>(null);
 
   // 초기 차량 목록 로드
   useEffect(() => {
@@ -33,12 +34,12 @@ const SearchBox = () => {
 
   // 페이지 변경 시 추가 데이터 로드 (무한 스크롤)
   useEffect(() => {
-    if (page === 1 || !hasNextPage) return; 
-    
+    if (page === 1 || !hasNextPage) return;
+
     const loadMoreCars = async () => {
       try {
         setIsFetching(true);
-        
+
         let result;
         if (currentSearchParams) {
           result = await CarService.searchCars(currentSearchParams, page, 10);
@@ -251,7 +252,11 @@ const SearchBox = () => {
               model={car.model}
               status={car.status}
               onDelete={handleCarDelete}
-              ref={idx === cars.length - 1 && hasNextPage ? setLastIntersecting : null}
+              ref={
+                idx === cars.length - 1 && hasNextPage
+                  ? setLastIntersecting
+                  : null
+              }
             />
           ))
         )}

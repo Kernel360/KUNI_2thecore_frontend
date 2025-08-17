@@ -1,3 +1,4 @@
+import KakaoMapScript from '@/components/map/kakao-map-script';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,8 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useState, useEffect, useRef } from 'react';
-import KakaoMapScript from '@/components/map/kakao-map-script';
+import { useEffect, useRef, useState } from 'react';
 import styles from './place-search.module.css';
 
 interface CarRegisterModalProps {
@@ -143,9 +143,9 @@ const CarRegisterModal = ({
     setIsSearching(true);
     psRef.current.keywordSearch(keyword, (data: any[], status: any) => {
       setIsSearching(false);
-      
+
       if (status === window.kakao.maps.services.Status.OK) {
-        const results: AddressSearchResult[] = data.map((place) => ({
+        const results: AddressSearchResult[] = data.map(place => ({
           id: place.id,
           placeName: place.place_name,
           roadAddress: place.road_address_name || place.address_name,
@@ -166,7 +166,7 @@ const CarRegisterModal = ({
   // 검색 키워드 변경 핸들러 (debounce 적용)
   const handleSearchKeywordChange = (keyword: string) => {
     setSearchKeyword(keyword);
-    
+
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
@@ -186,18 +186,21 @@ const CarRegisterModal = ({
     if (!geocoderRef.current) return;
 
     // 주소를 좌표로 변환
-    geocoderRef.current.addressSearch(result.roadAddress, (coords: any[], status: any) => {
-      if (status === window.kakao.maps.services.Status.OK) {
-        setFormData(prev => ({
-          ...prev,
-          lastLatitude: coords[0].y,
-          lastLongitude: coords[0].x,
-          selectedAddress: result.roadAddress,
-        }));
-        setSearchKeyword(result.roadAddress);
-        setShowResults(false);
+    geocoderRef.current.addressSearch(
+      result.roadAddress,
+      (coords: any[], status: any) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          setFormData(prev => ({
+            ...prev,
+            lastLatitude: coords[0].y,
+            lastLongitude: coords[0].x,
+            selectedAddress: result.roadAddress,
+          }));
+          setSearchKeyword(result.roadAddress);
+          setShowResults(false);
+        }
       }
-    });
+    );
   };
 
   if (!isOpen) return null;
@@ -302,14 +305,14 @@ const CarRegisterModal = ({
                       onChange={e => handleSearchKeywordChange(e.target.value)}
                       required
                     />
-                    
+
                     {showResults && (
                       <div className={styles.placeSearchContainer}>
                         <div className={styles.resultsList}>
                           {isSearching ? (
                             <div className={styles.loading}>검색 중...</div>
                           ) : searchResults.length > 0 ? (
-                            searchResults.map((result) => (
+                            searchResults.map(result => (
                               <div
                                 key={result.id}
                                 className={styles.resultItem}
@@ -322,7 +325,8 @@ const CarRegisterModal = ({
                                   <div className={styles.roadAddress}>
                                     {result.roadAddress}
                                   </div>
-                                  {result.jibunAddress !== result.roadAddress && (
+                                  {result.jibunAddress !==
+                                    result.roadAddress && (
                                     <div className={styles.jibunAddress}>
                                       {result.jibunAddress}
                                     </div>
@@ -339,7 +343,7 @@ const CarRegisterModal = ({
                       </div>
                     )}
                   </div>
-                  
+
                   {formData.selectedAddress && (
                     <div className="mt-2 text-sm text-gray-600">
                       {formData.selectedAddress}
@@ -361,12 +365,13 @@ const CarRegisterModal = ({
                     className="flex-1 text-white"
                     style={{
                       background: 'var(--main-gradient)',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s ease',
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'var(--main-gradient-hover)';
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background =
+                        'var(--main-gradient-hover)';
                     }}
-                    onMouseLeave={(e) => {
+                    onMouseLeave={e => {
                       e.currentTarget.style.background = 'var(--main-gradient)';
                     }}
                   >
