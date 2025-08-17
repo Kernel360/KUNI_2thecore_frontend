@@ -21,16 +21,16 @@ export default function CarLocationMap({
   const markerRef = useRef<any>(null);
   const infowindowRef = useRef<any>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   const { carNumber } = useDetailStore();
 
   const loadCarLocation = async () => {
     if (!carNumber) return;
-    
+
     try {
       const locations = await CarService.getCarLocations();
       const selectedCar = locations.find(loc => loc.carNumber === carNumber);
-      
+
       if (selectedCar) {
         setCarLocation({
           lastLatitude: selectedCar.lastLatitude,
@@ -45,7 +45,7 @@ export default function CarLocationMap({
   useEffect(() => {
     if (carNumber) {
       loadCarLocation();
-      
+
       intervalRef.current = setInterval(() => {
         loadCarLocation();
       }, 5000);
@@ -116,7 +116,12 @@ export default function CarLocationMap({
 
   return (
     <div style={{ width, height }}>
-      <Map width="100%" height="100%" onLoad={handleMapLoad} />
+      <Map
+        width="100%"
+        height="100%"
+        onLoad={handleMapLoad}
+        onOpenMapModal={close}
+      />
     </div>
   );
 }

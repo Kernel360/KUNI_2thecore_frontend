@@ -21,6 +21,8 @@ const statusToImage: { [key in Car['status']]?: string } = {
   idle: '/car_yellow.png',
 };
 
+const mapRef = useRef<any>(null);
+
 export default function CarClustererMap({
   width,
   height,
@@ -30,6 +32,9 @@ export default function CarClustererMap({
   const [cars, setCars] = useState<Car[]>([]);
   const clustererRef = useRef<any>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const handleMapLoad = (mapInstance: any) => {
+    mapRef.current = mapInstance;
+  };
 
   const loadCarLocations = async () => {
     try {
@@ -112,5 +117,12 @@ export default function CarClustererMap({
 
     clustererRef.current.addMarkers(markers);
   }, [cars, carStatusFilter]);
-  return <Map width={width} height={height} onLoad={setMap} />;
+  return (
+    <Map
+      width="100%"
+      height="100%"
+      onLoad={handleMapLoad}
+      onOpenMapModal={close}
+    />
+  );
 }
