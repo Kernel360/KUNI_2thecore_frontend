@@ -51,7 +51,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "carYear": Integer, // 차량 연식
   "carType": string, // 차량 종류
   "carNumber": string, // 차량 번호
-  "sumDist": Double // 총 주행 거리(km)
+  "sumDist": Double, // 총 주행 거리(km)
+  "lastLatitude": String,
+  "lastLongitude": String
   }
 - **request example**: {
   "brand": "현대",  
@@ -59,7 +61,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
    "carYear": 2025,  
    "carType": "중형",  
    "carNumber": "12가3456",
-  "sumDist": 12345.67  
+  "sumDist": 12345.67,
+  "lastLatitude": "12.54",
+  "lastLongitude": "12.54"  
   }
 - **response**:{
   "result": boolean,
@@ -71,7 +75,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "status": string,
   "car_type": string,
   "car_number": string,
-  "sum_dist": double
+  "sum_dist": double,
+  "lastLatitude": string,
+  "lastLongitude": string
   }
   }
 - **response example**:{
@@ -84,7 +90,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "status": "대기", // 차량 상태 (초기값: "대기", 선택값: "운행", "대기", "수리")
   "car_type": "중형", // 차량 종류
   "car_number": "12가1598", // 차량 번호
-  "sum_dist": 12345.67 // 총 주행 거리 (km)
+  "sum_dist": 12345.67, // 총 주행 거리 (km)
+  "lastLatitude": "12.54",
+  "lastLongitude": "12.54"
   }
   }
 
@@ -282,20 +290,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **상태**: 완료
 - **request**://필요없음
 - **response**:{
-    "result": boolean,
-    "message": string,
-    "data": {
-        "brand": string,
-        "model": string,
-        "car_year": Integer,
-        "status": string, 
-        "car_type": string,
-        "car_number": string,
-        "lastLatitude": string,
-		    "lastLongitude": string,
-        "sum_dist": double
-    }
-}
+  "result": boolean,
+  "message": string,
+  "data": {
+  "brand": string,
+  "model": string,
+  "car_year": Integer,
+  "status": string,
+  "car_type": string,
+  "car_number": string,
+  "lastLatitude": string,
+  "lastLongitude": string,
+  "sum_dist": double
+  }
+  }
   }
 - **Response example**:{
   "result": true,
