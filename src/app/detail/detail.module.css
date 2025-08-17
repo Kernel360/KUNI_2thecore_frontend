@@ -84,7 +84,7 @@
 }
 
 .confirmButton {
-  background: linear-gradient(135deg, #3a70ff 0%, #2860ff 100%);
+  background: var(--main-gradient);
   color: white;
   border: none;
   padding: 12px 32px;
@@ -97,13 +97,13 @@
 }
 
 .confirmButton:hover {
-  background: linear-gradient(135deg, #2860ff 0%, #1e56ff 100%);
+  background: var(--main-gradient-hover);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(58, 112, 255, 0.4);
 }
 
 .cancelButton {
-  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  background: var(--main-gradient-disabled);
   color: white;
   border: none;
   padding: 12px 32px;
@@ -116,7 +116,7 @@
 }
 
 .cancelButton:hover {
-  background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+  background: var(--main-gradient-active);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(107, 114, 128, 0.4);
 }

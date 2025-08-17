@@ -59,9 +59,9 @@ const StatusContainer = ({
   }
 
   return (
-    <div className="flex justify-between w-full gap-6 mt-6 px-4 flex-wrap">
+    <div className="grid grid-col-2 gap-2 mt-6">
       {error && (
-        <div className="w-full mb-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded">
+        <div className="col-span-2 w-full bg-red-100 border border-red-400 text-red-700 rounded">
           {error}
         </div>
       )}

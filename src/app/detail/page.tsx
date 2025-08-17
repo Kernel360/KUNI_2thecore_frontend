@@ -1,5 +1,6 @@
 import CarLocationMap from '@/components/map/car-location-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
+import MenuBox from '@/components/menu-box/menu-box';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -127,6 +128,7 @@ const DetailPage = () => {
   return (
     <>
       <TopBar title={`차량 상세 정보 - ${carNumber}`} />
+      <MenuBox />
       <KakaoMapScript />
       <div className={styles.contentGrid}>
         {/* 상세 정보 */}

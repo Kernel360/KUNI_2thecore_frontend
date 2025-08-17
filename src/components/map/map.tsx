@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './map.module.css';
+import iconStyles from '@/components/icon-button/icon-button.module.css';
 
 interface MapProps {
   width: string;
   height: string;
   onLoad?: (map: any) => void;
+  onOpenMapModal: () => void;
 }
 
-export default function Map({ width, height, onLoad }: MapProps) {
+export default function Map({ width, height, onLoad, onOpenMapModal }: MapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<any>(null);
   const [mapType, setMapType] = useState<'roadmap' | 'skyview'>('roadmap');
@@ -70,6 +72,9 @@ export default function Map({ width, height, onLoad }: MapProps) {
         ref={mapRef}
         className="w-full h-full relative overflow-hidden"
       ></div>
+
+      {/* 전체화면 모달창 */}
+      <button className={iconStyles.fullScreen} onClick={onOpenMapModal}></button>
 
       {/* 지도타입 컨트롤 */}
       <div
