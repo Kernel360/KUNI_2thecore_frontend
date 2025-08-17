@@ -11,13 +11,8 @@ export default function Home() {
     'total' | 'driving' | 'maintenance' | 'idle'
   >('total');
 
-  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
-  localStorage.setItem('loginId', 'dev');
-  localStorage.setItem(
-    'accessToken',
-    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZXYiLCJsb2dpbklkIjoiZGV2IiwidG9rZW5fdHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1NTMyODg1MSwiZXhwIjoxNzU1MzI5NDUxfQ.ehnzwZvMmDzjNL399ZAI6PnbCqsnOV0nKa_CKc9a3w8'
-  );
 
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   return (
     <>
       <div className="flex flex-col h-screen">
@@ -30,13 +25,18 @@ export default function Home() {
               setCarStatusFilter={setCarStatusFilter}
             />
           </div>
-          <div className="relative flex-1 max-h-[1000px] mb-9 rounded-2xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-xl">
-            <KakaoMapScript />
-            <CarClustererMap
-              width="100%"
-              height="100%"
-              carStatusFilter={carStatusFilter}
-            />
+          <div className="flex flex-row gap-4 flex-1 px-4">
+            <div className="flex-shrink-0">
+              <MenuBox />
+            </div>
+            <div className="relative flex-1 max-h-[800px] mb-9 rounded-2xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-xl">
+              <KakaoMapScript />
+              <CarClustererMap
+                width="100%"
+                height="100%"
+                carStatusFilter={carStatusFilter}
+              />
+            </div>
           </div>
         </div>
         <MapModal

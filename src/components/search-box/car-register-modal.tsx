@@ -10,7 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import KakaoMapScript from '@/components/map/kakao-map-script';
 import styles from './place-search.module.css';
 
 interface CarRegisterModalProps {
@@ -166,7 +167,6 @@ const CarRegisterModal = ({
   // 검색 키워드 변경 핸들러 (debounce 적용)
   const handleSearchKeywordChange = (keyword: string) => {
     setSearchKeyword(keyword);
-
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
@@ -305,7 +305,6 @@ const CarRegisterModal = ({
                       onChange={e => handleSearchKeywordChange(e.target.value)}
                       required
                     />
-
                     {showResults && (
                       <div className={styles.placeSearchContainer}>
                         <div className={styles.resultsList}>
@@ -343,7 +342,6 @@ const CarRegisterModal = ({
                       </div>
                     )}
                   </div>
-
                   {formData.selectedAddress && (
                     <div className="mt-2 text-sm text-gray-600">
                       {formData.selectedAddress}
