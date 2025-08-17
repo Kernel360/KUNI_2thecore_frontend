@@ -7,6 +7,7 @@ export interface Car {
   model: string;
   brandModel: string;
   status: '운행' | '대기' | '수리';
+  powerStatus: string; // "ON" or "OFF"
 }
 
 // 차량 상세 정보 타입

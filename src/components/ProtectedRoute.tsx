@@ -1,7 +1,6 @@
+import { TokenManager } from '@/lib/token-manager';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TokenManager } from '@/lib/token-manager';
-import { AuthService } from '@/services/auth-service';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -21,7 +20,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
       // 2. 토큰이 있으면 백엔드에 검증 요청
       try {
-        const isValid = await AuthService.verifyToken();
+        const isValid = await TokenManager.hasValidTokens();
         if (isValid) {
           // 토큰 유효하면 로딩 완료
           setLoading(false);

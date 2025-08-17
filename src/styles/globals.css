@@ -35,6 +35,74 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* KUNI 2thecore 메인 테마 그라데이션 */
+:root {
+  --main-gradient: linear-gradient(135deg, #3a70ff 0%, #1f56ee 100%);
+  --main-gradient-hover: linear-gradient(135deg, #2860ff 0%, #1e56ff 100%);
+  --main-gradient-active: linear-gradient(135deg, #1e4eee 0%, #1a4add 100%);
+  --main-gradient-disabled: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  
+  /* 메인 블루 컬러 팔레트 */
+  --primary-blue: #3a70ff;
+  --primary-blue-dark: #1f56ee;
+  --secondary-blue: #2860ff;
+  --secondary-blue-dark: #1e56ff;
+  --accent-blue: #1e4eee;
+  --accent-blue-dark: #1a4add;
+  
+  /* Tailwind CSS 호환 클래스 */
+  --tw-gradient-from: var(--primary-blue);
+  --tw-gradient-to: var(--primary-blue-dark);
+}
+
+/* 유틸리티 클래스 */
+.main-gradient {
+  background: var(--main-gradient);
+}
+
+.main-gradient-hover {
+  background: var(--main-gradient-hover);
+}
+
+.main-gradient-active {
+  background: var(--main-gradient-active);
+}
+
+.main-gradient-disabled {
+  background: var(--main-gradient-disabled);
+}
+
+/* 버튼 공통 스타일 */
+.btn-primary {
+  background: var(--main-gradient);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(58, 112, 255, 0.3);
+}
+
+.btn-primary:hover {
+  background: var(--main-gradient-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(58, 112, 255, 0.4);
+}
+
+.btn-primary:active {
+  background: var(--main-gradient-active);
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  background: var(--main-gradient-disabled);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
