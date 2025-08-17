@@ -60,6 +60,10 @@ export default function Login() {
   return (
     <div className="flex flex-col justify-center items-center h-full">
       <TopBar title="로그인"></TopBar>
+      <div
+        className="w-[98%] h-px border-b-2"
+        style={{ borderBottomColor: '#3a70ff' }}
+      />
       <Card className="w-full max-w-md mt-20">
         <CardHeader>
           <CardTitle>로그인</CardTitle>
@@ -91,17 +95,7 @@ export default function Login() {
               )}
               <Button
                 type="submit"
-                className="w-full text-white cursor-pointer hover:shadow-lg active:scale-95"
-                style={{
-                  background: 'var(--main-gradient)',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'var(--main-gradient-hover)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'var(--main-gradient)';
-                }}
+                className="w-full bg-gradient-to-br from-blue-500 to-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:shadow-lg hover:shadow-blue-800/40 active:scale-95"
                 disabled={loading}
               >
                 {loading ? '로그인 중...' : '로그인'}

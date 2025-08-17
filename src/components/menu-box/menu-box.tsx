@@ -13,7 +13,7 @@ interface MenuBoxProps {
 
 const MenuBox = ({ onOpenMapModal }: MenuBoxProps) => {
   return (
-    <div className="shadow-md">
+    <div className="shadow-md" style={{ borderBottom: '2px solid #3a70ff' }}>
       <NavigationMenu className="max-w-full justify-start px-4 py-2">
         <NavigationMenuList className="gap-6">
           <NavigationMenuItem>
