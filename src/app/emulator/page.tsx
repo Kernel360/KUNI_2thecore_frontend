@@ -1,3 +1,4 @@
+import MenuBox from '@/components/menu-box/menu-box';
 import NumberSearchBox from '@/components/search-box/number-search-box';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,7 +39,7 @@ export default function LocalEmulator() {
       alert('차량 번호를 입력해주세요.');
       return;
     }
-    
+
     console.log('에뮬레이터 검색:', carNumber);
     // TODO: 실제 검색 로직 구현
   };
@@ -48,7 +49,7 @@ export default function LocalEmulator() {
       alert('차량 번호를 입력해주세요.');
       return;
     }
-    
+
     console.log('에뮬레이터 등록:', newCarNumber);
     // TODO: 실제 등록 로직 구현
   };
@@ -67,9 +68,12 @@ export default function LocalEmulator() {
             placeholder="새 에뮬레이터를 등록하려면 차량 번호를 이곳에 입력해주세요. (예: 11가 1111)"
             className={styles.searchContainer}
             value={newCarNumber}
-            onChange={(e) => setNewCarNumber(e.target.value)}
+            onChange={e => setNewCarNumber(e.target.value)}
           />
-          <Button className={styles.searchButton} onClick={handleRegisterEmulator}>
+          <Button
+            className={styles.searchButton}
+            onClick={handleRegisterEmulator}
+          >
             등록
           </Button>
         </div>
@@ -80,6 +84,7 @@ export default function LocalEmulator() {
   return (
     <div>
       <TopBar title="에뮬레이터"></TopBar>
+      <MenuBox />
       <EmulSearchBox />
       <Table className={styles.emulatorTable}>
         <TableHeader className={styles.tableHeader}>

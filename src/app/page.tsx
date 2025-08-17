@@ -22,7 +22,7 @@ export default function Home() {
     <>
       <div className="flex flex-col h-screen">
         <TopBar showLogo={true}></TopBar>
-        <MenuBox onOpenMapModal={() => setIsMapModalOpen(true)} />
+        <MenuBox />
         <div className="flex flex-row gap-6 p-4 h-full w-[98%] mx-auto">
           <div>
             <StatusContainer
