@@ -3,7 +3,7 @@
 .filterButton {
   width: 80px;
   height: 44px;
-  background: linear-gradient(135deg, #3a70ff 0%, #1f56ee 100%);
+  background: var(--main-gradient);
   color: white;
   font-size: 14px;
   font-weight: 600;
@@ -20,7 +20,7 @@
 
 .searchButton:hover,
 .filterButton:hover {
-  background: linear-gradient(135deg, #2860ff 0%, #1e56ff 100%);
+  background: var(--main-gradient-hover);
   box-shadow: 0 4px 8px rgba(58, 112, 255, 0.4);
   transform: translateY(-2px);
 }

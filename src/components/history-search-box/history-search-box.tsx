@@ -1,3 +1,4 @@
+import useObserver from '@/hooks/use-intersection-observer';
 import {
   DriveLog,
   DriveLogQueryParams,
@@ -9,6 +10,7 @@ import BrandFilterBox from '../search-box/filter-box';
 import styles from '../search-box/search-filter.module.css';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import HistoryListBox from './history-list-box/history-list-box';
 import { RangeCalendar } from './range-calendar';
 
 interface HistorySearchBoxProps {
@@ -25,6 +27,16 @@ const HistorySearchBox = ({
   const [status, setStatus] = useState('');
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
+  // 무한 스크롤
+  const { page, setPage, isFetching, setIsFetching, setLastIntersecting } =
+    useObserver();
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [currentSearchParams, setCurrentSearchParams] =
+    useState<DriveLogQueryParams | null>(null);
+  const [cars, setCars] = useState<DriveLog[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   // 초기 주행 기록 목록 로드 (dateRange가 설정된 후)
   useEffect(() => {
     if (dateRange?.from && dateRange?.to) {
@@ -32,9 +44,62 @@ const HistorySearchBox = ({
     }
   }, [dateRange]);
 
+  // 페이지 변경 시 추가 데이터 로드 (무한 스크롤)
+  useEffect(() => {
+    if (page === 1 || !hasNextPage) return;
+
+    const loadMoreCars = async () => {
+      try {
+        setIsFetching(true);
+
+        let result;
+        if (currentSearchParams) {
+          result = await HistoryService.getDriveLogs(
+            currentSearchParams,
+            page,
+            10
+          );
+        } else {
+          result = await HistoryService.getDriveLogs({}, page, 10);
+        }
+
+        if (result.content.length > 0) {
+          setCars(prevCars => [...prevCars, ...result.content]);
+          setHasNextPage(result.content.length === 10);
+        } else {
+          setHasNextPage(false);
+        }
+      } catch (error) {
+        console.error('추가 데이터 로드 실패:', error);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    loadMoreCars();
+  }, [page, currentSearchParams, hasNextPage]);
+
+  const loadInitialCars = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const carData = await HistoryService.getDriveLogs({}, 1, 10);
+      setCars(carData.content);
+      setPage(1);
+      setHasNextPage(carData.content.length === 10);
+      setCurrentSearchParams(null);
+      setIsFetching(false);
+    } catch (error) {
+      console.error('차량 목록 조회 실패:', error);
+      setError('차량 목록을 불러오는데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const loadInitialLogs = async () => {
     if (!dateRange?.from || !dateRange?.to) return;
-    
+
     try {
       onLoadingChange(true);
       const queryParams: DriveLogQueryParams = {
@@ -43,7 +108,7 @@ const HistorySearchBox = ({
         page: 1,
         offset: 10,
       };
-      
+
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
       console.log('loadInitialLogs result:', result);
       onSearchResults(result.content, queryParams);
@@ -163,13 +228,25 @@ const HistorySearchBox = ({
           setStatus={setStatus}
           onFilterApply={handleFilterApply}
         />
-        <Button
-          className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
-          rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
-        >
-          엑셀 다운로드
-        </Button>
+        {error && (
+          <div style={{ color: 'red', textAlign: 'center', padding: '50px' }}>
+            {error}
+          </div>
+        )}
+        <HistoryListBox
+          historyData={cars}
+          loading={loading}
+        />
+        {hasNextPage && (
+          <div ref={setLastIntersecting} style={{ height: '1px' }}></div>
+        )}
       </div>
+      <Button
+        className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
+          rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
+      >
+        엑셀 다운로드
+      </Button>
     </div>
   );
 };

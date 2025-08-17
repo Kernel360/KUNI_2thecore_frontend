@@ -11,56 +11,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.numberSearchInput:focus {
-  border-color: #3a70ff;
-  box-shadow: 0 4px 12px rgba(58, 112, 255, 0.15);
-}
-
-.searchButton {
-  width: 80px;
-  height: 44px;
-  background: linear-gradient(135deg, #3a70ff 0%, #1f56ee 100%);
-  color: white;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(58, 112, 255, 0.3);
-  transition: all 0.3s ease;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.searchButton:hover {
-  background: linear-gradient(135deg, #2860ff 0%, #1e56ff 100%);
-  box-shadow: 0 4px 8px rgba(58, 112, 255, 0.4);
-  transform: translateY(-2px);
-}
-
-.filterContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 98%;
-  margin: 12px auto;
-  padding: 0 16px;
-  gap: 16px;
-}
-
-.emulSearch {
-  display: 'grid';
-  grid-template-columns: '1fr';
-  gap: '4px';
-  justify-content: 'center';
-  align-items: 'center';
-  width: '95%';
-  position: 'relative';
-}
-
 .emulatorTable {
   margin: 0 auto;
   max-width: 1000px;
@@ -77,11 +27,4 @@
 .tableCellSmall {
   width: 100px;
   border-bottom: 1px solid #e2e2e2;
-}
-
-.deleteContainer {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
 }
