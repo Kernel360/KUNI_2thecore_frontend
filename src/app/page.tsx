@@ -3,7 +3,16 @@ import KakaoMapScript from '@/components/map/kakao-map-script';
 import MapModal from '@/components/map/map-modal';
 import MenuBox from '@/components/menu-box/menu-box';
 import StatusContainer from '@/components/status-box/status-container';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from '@/components/ui/navigation-menu';
 import TopBar from '@/components/ui/topBar';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 export default function Home() {
@@ -22,6 +31,52 @@ export default function Home() {
     <>
       <div className="flex flex-col h-screen">
         <TopBar title="차량 관제 시스템"></TopBar>
+        <div className="bg-blue-600 shadow-md">
+          <NavigationMenu className="max-w-full justify-start px-4 py-2">
+            <NavigationMenuList className="gap-6">
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:bg-blue-700 hover:text-white focus:bg-blue-700 focus:text-white data-[state=open]:bg-blue-700`}
+                >
+                  <Link to="/">🏠 홈</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:bg-blue-700 hover:text-white focus:bg-blue-700 focus:text-white data-[state=open]:bg-blue-700`}
+                >
+                  <Link to="/search">🚗 차량 검색</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:bg-blue-700 hover:text-white focus:bg-blue-700 focus:text-white data-[state=open]:bg-blue-700`}
+                >
+                  <Link to="/history">📊 주행 기록</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:bg-blue-700 hover:text-white focus:bg-blue-700 focus:text-white data-[state=open]:bg-blue-700`}
+                >
+                  <Link to="/emulator">⚒️ 에뮬레이터</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:bg-blue-700 hover:text-white focus:bg-blue-700 focus:text-white data-[state=open]:bg-blue-700`}
+                >
+                  <Link to="/detail">🔧 에뮬레이터</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
         <div className="flex flex-col gap-6 p-4 h-full w-[98%] mx-auto">
           <div>
             <StatusContainer
@@ -51,3 +106,4 @@ export default function Home() {
     </>
   );
 }
+
