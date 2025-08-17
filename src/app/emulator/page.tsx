@@ -1,3 +1,4 @@
+import MenuBox from '@/components/menu-box/menu-box';
 import NumberSearchBox from '@/components/search-box/number-search-box';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';

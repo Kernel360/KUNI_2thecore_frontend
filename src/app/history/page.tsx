@@ -1,6 +1,7 @@
 import HistoryListBox from '@/components/history-search-box/history-list-box/history-list-box';
 import HistorySearchBox from '@/components/history-search-box/history-search-box';
 import TopBar from '@/components/ui/topBar';
+import MenuBox from '@/components/menu-box/menu-box';
 import { DriveLog, DriveLogQueryParams, HistoryService } from '@/services/history-service';
 import { useState } from 'react';
 
@@ -31,6 +32,7 @@ export default function History() {
   return (
     <div className="flex flex-col h-screen">
       <TopBar title="주행 기록"></TopBar>
+      <MenuBox />
       <div className="gap-6 p-4 h-full w-[98%] mx-auto">
         <HistorySearchBox
           onSearchResults={(data, params) => {

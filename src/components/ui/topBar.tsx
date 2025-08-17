@@ -1,8 +1,9 @@
 interface TopBarProps {
-  title: string;
+  title?: string;
+  showLogo?: boolean;
 }
 
-export default function TopBar({ title }: TopBarProps) {
+export default function TopBar({ title, showLogo = false }: TopBarProps) {
   return (
     <header
       style={{
@@ -16,23 +17,35 @@ export default function TopBar({ title }: TopBarProps) {
       <div
         style={{
           width: '100%',
-          borderBottom: '2px solid #3a70ff',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
         }}
       >
-        <h2
-          style={{
-            textAlign: 'center',
-            fontWeight: '600',
-            fontSize: '20px',
-            width: '100%',
-            paddingBottom: '8px',
-          }}
-        >
-          {title}
-        </h2>
+        {showLogo ? (
+          <img
+            src="/2theCore.png"
+            alt="2theCore Logo"
+            style={{
+              height: '80px',
+              width: 'auto',
+              paddingBottom: '8px',
+              objectFit: 'contain',
+            }}
+          />
+        ) : (
+          <h2
+            style={{
+              textAlign: 'center',
+              fontWeight: '600',
+              fontSize: '20px',
+              width: '100%',
+              paddingBottom: '8px',
+            }}
+          >
+            {title}
+          </h2>
+        )}
       </div>
     </header>
   );
