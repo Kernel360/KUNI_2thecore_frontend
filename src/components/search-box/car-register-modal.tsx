@@ -174,7 +174,17 @@ const CarRegisterModal = ({
                   </Button>
                   <Button
                     type="submit"
-                    className="flex-1 bg-blue-500 hover:bg-blue-600"
+                    className="flex-1 text-white"
+                    style={{
+                      background: 'var(--main-gradient)',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'var(--main-gradient-hover)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'var(--main-gradient)';
+                    }}
                   >
                     등록
                   </Button>

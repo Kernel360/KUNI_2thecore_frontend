@@ -91,7 +91,17 @@ export default function Login() {
               )}
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-br from-blue-500 to-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:shadow-lg hover:shadow-blue-800/40 active:scale-95"
+                className="w-full text-white cursor-pointer hover:shadow-lg active:scale-95"
+                style={{
+                  background: 'var(--main-gradient)',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--main-gradient-hover)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'var(--main-gradient)';
+                }}
                 disabled={loading}
               >
                 {loading ? '로그인 중...' : '로그인'}
