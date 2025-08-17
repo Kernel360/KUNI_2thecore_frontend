@@ -21,16 +21,16 @@ export default function Home() {
   return (
     <>
       <div className="flex flex-col h-screen">
-        <TopBar title="차량 관제 시스템"></TopBar>
+        <TopBar showLogo={true}></TopBar>
         <MenuBox onOpenMapModal={() => setIsMapModalOpen(true)} />
-        <div className="flex flex-col gap-6 p-4 h-full w-[98%] mx-auto">
+        <div className="flex flex-row gap-6 p-4 h-full w-[98%] mx-auto">
           <div>
             <StatusContainer
               carStatusFilter={carStatusFilter}
               setCarStatusFilter={setCarStatusFilter}
             />
           </div>
-          <div className="relative flex-1 max-h-[800px] mb-9 rounded-2xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-xl">
+          <div className="relative flex-1 max-h-[1000px] mb-9 rounded-2xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-xl">
             <KakaoMapScript />
             <CarClustererMap
               width="100%"

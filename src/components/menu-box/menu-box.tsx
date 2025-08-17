@@ -13,13 +13,13 @@ interface MenuBoxProps {
 
 const MenuBox = ({ onOpenMapModal }: MenuBoxProps) => {
   return (
-    <div className="shadow-md" style={{ background: 'var(--main-gradient)' }}>
+    <div className="shadow-md">
       <NavigationMenu className="max-w-full justify-start px-4 py-2">
         <NavigationMenuList className="gap-6">
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:text-white focus:text-white`}
+              className={`${navigationMenuTriggerStyle()} text-white hover:text-white focus:text-white`}
               style={{
                 transition: 'all 0.3s ease'
               }}
@@ -42,7 +42,7 @@ const MenuBox = ({ onOpenMapModal }: MenuBoxProps) => {
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:text-white focus:text-white`}
+              className={`${navigationMenuTriggerStyle()} text-white hover:text-white focus:text-white`}
               style={{
                 transition: 'all 0.3s ease'
               }}
@@ -65,7 +65,7 @@ const MenuBox = ({ onOpenMapModal }: MenuBoxProps) => {
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:text-white focus:text-white`}
+              className={`${navigationMenuTriggerStyle()} text-white hover:text-white focus:text-white`}
               style={{
                 transition: 'all 0.3s ease'
               }}
@@ -88,7 +88,7 @@ const MenuBox = ({ onOpenMapModal }: MenuBoxProps) => {
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:text-white focus:text-white`}
+              className={`${navigationMenuTriggerStyle()} text-white hover:text-white focus:text-white`}
               style={{
                 transition: 'all 0.3s ease'
               }}
@@ -111,7 +111,7 @@ const MenuBox = ({ onOpenMapModal }: MenuBoxProps) => {
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:text-white focus:text-white`}
+              className={`${navigationMenuTriggerStyle()} text-white hover:text-white focus:text-white`}
               style={{
                 transition: 'all 0.3s ease'
               }}
