@@ -1,4 +1,6 @@
 import NumberSearchBox from '@/components/search-box/number-search-box';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
@@ -11,8 +13,6 @@ import TopBar from '@/components/ui/topBar';
 import { Car, CarSearchParams, CarService } from '@/services/car-service';
 import { useEffect, useState } from 'react';
 import styles from './emulator.module.css';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 
 export default function LocalEmulator() {
   const [cars, setCars] = useState<Car[]>([]);
@@ -29,11 +29,11 @@ export default function LocalEmulator() {
         setError(null);
         const runningCarNumber = await CarService.getAllCars();
         setCars(runningCarNumber.content);
-        
+
         // 초기 스위치 상태 및 차량 상태 설정
         const initialStates: Record<string, boolean> = {};
         const initialStatuses: Record<string, string> = {};
-        runningCarNumber.content.forEach((car) => {
+        runningCarNumber.content.forEach(car => {
           initialStates[car.carNumber] = car.powerStatus === 'OFF';
           initialStatuses[car.carNumber] = car.status;
         });
@@ -64,11 +64,11 @@ export default function LocalEmulator() {
 
       const result = await CarService.searchCars(searchParams);
       setCars(result.content);
-      
+
       // 검색 결과에 대한 스위치 상태 및 차량 상태 설정
       const searchStates: Record<string, boolean> = {};
       const searchStatuses: Record<string, string> = {};
-      result.content.forEach((car) => {
+      result.content.forEach(car => {
         searchStates[car.carNumber] = car.powerStatus === 'OFF';
         searchStatuses[car.carNumber] = car.status;
       });
@@ -85,16 +85,16 @@ export default function LocalEmulator() {
   const handleSwitchChange = async (carNumber: string, checked: boolean) => {
     setSwitchStates(prev => ({
       ...prev,
-      [carNumber]: checked
+      [carNumber]: checked,
     }));
 
     // 스위치 ON시 차량 상태를 운행으로, OFF시 원래 상태로 복원
     const originalCar = cars.find(car => car.carNumber === carNumber);
-    const newStatus = checked ? '운행' : (originalCar?.status || '대기');
-    
+    const newStatus = checked ? '운행' : originalCar?.status || '대기';
+
     setCarStatuses(prev => ({
       ...prev,
-      [carNumber]: newStatus
+      [carNumber]: newStatus,
     }));
 
     // API 호출하여 차량 상태 업데이트
@@ -103,7 +103,7 @@ export default function LocalEmulator() {
         await CarService.updateCar(carNumber, {
           ...originalCar,
           status: newStatus,
-          powerStatus: checked ? 'ON' : 'OFF'
+          powerStatus: checked ? 'ON' : 'OFF',
         });
       }
     } catch (error) {
@@ -111,11 +111,11 @@ export default function LocalEmulator() {
       // 에러 발생 시 상태 롤백
       setSwitchStates(prev => ({
         ...prev,
-        [carNumber]: !checked
+        [carNumber]: !checked,
       }));
       setCarStatuses(prev => ({
         ...prev,
-        [carNumber]: originalCar?.status || '대기'
+        [carNumber]: originalCar?.status || '대기',
       }));
     }
   };
@@ -123,25 +123,25 @@ export default function LocalEmulator() {
   const handleToggleAll = async () => {
     const allOn = Object.values(switchStates).every(state => state);
     const newState = !allOn;
-    
+
     const newStates: Record<string, boolean> = {};
     const newStatuses: Record<string, string> = {};
-    
+
     cars.forEach(car => {
       newStates[car.carNumber] = newState;
       newStatuses[car.carNumber] = newState ? '운행' : car.status;
     });
-    
+
     setSwitchStates(newStates);
     setCarStatuses(newStatuses);
 
     // 모든 차량에 대해 API 호출
     try {
-      const updatePromises = cars.map(car => 
+      const updatePromises = cars.map(car =>
         CarService.updateCar(car.carNumber, {
           ...car,
           status: newState ? '운행' : car.status,
-          powerStatus: newState ? 'ON' : 'OFF'
+          powerStatus: newState ? 'ON' : 'OFF',
         })
       );
       await Promise.all(updatePromises);
@@ -159,20 +159,16 @@ export default function LocalEmulator() {
     }
   };
 
-  const EmulSearchBox = () => {
-    return (
-      <NumberSearchBox
-        value={carNumber}
-        onChange={setCarNumber}
-        onSearch={handleNumberSearch}
-      />
-    );
-  };
-
   return (
     <div>
       <TopBar title="에뮬레이터"></TopBar>
-      <EmulSearchBox />
+      <div className="gap-6 p-4 h-full w-[98%] mx-auto">
+        <NumberSearchBox
+          value={carNumber}
+          onChange={setCarNumber}
+          onSearch={handleNumberSearch}
+        />
+      </div>
       <Table className={styles.emulatorTable}>
         <TableHeader className={styles.tableHeader}>
           <TableRow>
@@ -220,7 +216,9 @@ export default function LocalEmulator() {
             onCheckedChange={handleToggleAll}
           />
           <Label htmlFor="toggleAll" className="text-sm text-gray-600">
-            {Object.values(switchStates).every(state => state) ? '전체 ON' : '전체 OFF'}
+            {Object.values(switchStates).every(state => state)
+              ? '전체 ON'
+              : '전체 OFF'}
           </Label>
         </div>
       )}
