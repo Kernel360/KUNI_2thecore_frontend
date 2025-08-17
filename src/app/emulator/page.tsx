@@ -1,79 +1,72 @@
 import NumberSearchBox from '@/components/search-box/number-search-box';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
 import TopBar from '@/components/ui/topBar';
+import { Car, CarSearchParams, CarService } from '@/services/car-service';
 import { useEffect, useState } from 'react';
 import styles from './emulator.module.css';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 export default function LocalEmulator() {
+  const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [carNumber, setCarNumber] = useState('');
-  const [newCarNumber, setNewCarNumber] = useState('');
 
   useEffect(() => {
     const fetchEmulators = async () => {
       try {
-        // const emulatorData = await EmulatorService.getAllEmulators(0, 100);
-        // setEmulators(emulatorData.content);
+        setLoading(true);
+        setError(null);
+        const runningCarNumber = await CarService.getAllCars();
+        setCars(runningCarNumber.content);
       } catch (error) {
         console.error('에뮬레이터 목록 조회 실패:', error);
-        // 에러 발생 시 더미 데이터 사용
       } finally {
         setLoading(false);
       }
     };
-
     fetchEmulators();
   }, []);
 
   const handleNumberSearch = async () => {
     if (!carNumber.trim()) {
-      alert('차량 번호를 입력해주세요.');
+      setError('차량 번호를 입력해주세요.');
       return;
     }
-    
-    console.log('에뮬레이터 검색:', carNumber);
-    // TODO: 실제 검색 로직 구현
-  };
 
-  const handleRegisterEmulator = async () => {
-    if (!newCarNumber.trim()) {
-      alert('차량 번호를 입력해주세요.');
-      return;
+    try {
+      setLoading(true);
+      setError(null);
+
+      const searchParams: CarSearchParams = {
+        carNumber: carNumber.trim(),
+      };
+
+      const result = await CarService.searchCars(searchParams);
+      setCars(result.content);
+    } catch (error) {
+      console.error('차량 번호 검색 실패:', error);
+      setError('차량 검색에 실패했습니다.');
+    } finally {
+      setLoading(false);
     }
-    
-    console.log('에뮬레이터 등록:', newCarNumber);
-    // TODO: 실제 등록 로직 구현
   };
 
   const EmulSearchBox = () => {
     return (
-      <div className={styles.emulSearch}>
-        <NumberSearchBox
-          value={carNumber}
-          onChange={setCarNumber}
-          onSearch={handleNumberSearch}
-        />
-        <div className={styles.filterContainer}>
-          <Input
-            type="text"
-            placeholder="새 에뮬레이터를 등록하려면 차량 번호를 이곳에 입력해주세요. (예: 11가 1111)"
-            className={styles.searchContainer}
-            value={newCarNumber}
-            onChange={(e) => setNewCarNumber(e.target.value)}
-          />
-          <Button className={styles.searchButton} onClick={handleRegisterEmulator}>
-            등록
-          </Button>
-        </div>
-      </div>
+      <NumberSearchBox
+        value={carNumber}
+        onChange={setCarNumber}
+        onSearch={handleNumberSearch}
+      />
     );
   };
 
@@ -84,13 +77,26 @@ export default function LocalEmulator() {
       <Table className={styles.emulatorTable}>
         <TableHeader className={styles.tableHeader}>
           <TableRow>
-            <TableHead className={styles.tableCellSmall}></TableHead>
             <TableHead className={styles.tableCell}>차량번호</TableHead>
-            <TableHead className={styles.tableCell}>에뮬레이터 ID</TableHead>
             <TableHead className={styles.tableCell}>ON/OFF</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody></TableBody>
+        <TableBody>
+          {cars.map((car, index) => (
+            <TableRow key={`${car.carNumber}-${index}`}>
+              <TableCell className={styles.tableCell}>
+                {car.carNumber}
+              </TableCell>
+              <TableCell className={styles.tableCell}>
+                {car.powerStatus === 'OFF' ? 'ON' : 'OFF'}
+                <div className="flex items-center space-x-2">
+                  <Switch id="powerStatus" />
+                  <Label htmlFor="powerStatus"></Label>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
     </div>
   );
