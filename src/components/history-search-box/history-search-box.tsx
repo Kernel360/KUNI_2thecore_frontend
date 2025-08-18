@@ -1,3 +1,4 @@
+import useObserver from '@/hooks/use-intersection-observer';
 import {
   DriveLog,
   DriveLogQueryParams,
@@ -22,8 +23,17 @@ const HistorySearchBox = ({
 }: HistorySearchBoxProps) => {
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('운행');
+  const [logs, setLogs] = useState<DriveLog[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+
+  // 무한 스크롤
+  const { page, setPage, isFetching, setIsFetching, setLastIntersecting } =
+    useObserver();
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [currentSearchParams, setCurrentSearchParams] =
+    useState<DriveLogQueryParams | null>(null);
 
   // 초기 주행 기록 목록 로드 (dateRange가 설정된 후)
   useEffect(() => {
@@ -32,11 +42,47 @@ const HistorySearchBox = ({
     }
   }, [dateRange]);
 
+  // 페이지 변경 시 추가 데이터 로드 (무한 스크롤)
+  useEffect(() => {
+    if (page === 1 || !hasNextPage) return;
+
+    const loadMoreCars = async () => {
+      try {
+        setIsFetching(true);
+
+        let result;
+        if (currentSearchParams) {
+          result = await HistoryService.getDriveLogs(
+            currentSearchParams,
+            page,
+            10
+          );
+        } else {
+          result = await HistoryService.getDriveLogs({}, page, 10);
+        }
+
+        if (result.content.length > 0) {
+          setLogs(prevLogs => [...prevLogs, ...result.content]);
+          setHasNextPage(result.content.length === 10);
+        } else {
+          setHasNextPage(false);
+        }
+      } catch (error) {
+        console.error('추가 데이터 로드 실패:', error);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    loadMoreCars();
+  }, [page, currentSearchParams, hasNextPage]);
+
   const loadInitialLogs = async () => {
     if (!dateRange?.from || !dateRange?.to) return;
 
     try {
       onLoadingChange(true);
+      setError(null);
       const queryParams: DriveLogQueryParams = {
         startTime: dateRange.from,
         endTime: dateRange.to,
@@ -45,11 +91,15 @@ const HistorySearchBox = ({
       };
 
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
+      setLogs(result.content);
+      setPage(1);
+      setHasNextPage(result.content.length === 10);
+      setCurrentSearchParams(queryParams);
       console.log('loadInitialLogs result:', result);
       onSearchResults(result.content, queryParams);
     } catch (error) {
       console.error('주행 기록 조회 실패:', error);
-      onSearchResults([]);
+      setError('주행 기록을 불러오는데 실패했습니다.');
     } finally {
       onLoadingChange(false);
     }
@@ -63,6 +113,8 @@ const HistorySearchBox = ({
 
     try {
       onLoadingChange(true);
+      setError(null);
+
       const queryParams: DriveLogQueryParams = {
         startTime: dateRange.from,
         endTime: dateRange.to,
@@ -77,6 +129,10 @@ const HistorySearchBox = ({
 
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
       console.log('검색 결과:', result);
+      setLogs(result.content);
+      setPage(1);
+      setHasNextPage(result.content.length === 10);
+      setCurrentSearchParams(queryParams);
       onSearchResults(result.content, queryParams);
     } catch (error) {
       console.error('주행 기록 검색 실패:', error);
@@ -113,9 +169,11 @@ const HistorySearchBox = ({
         queryParams.model = model.trim();
         queryParams.twoParam = true;
       } else if (brand) {
+        // 브랜드만 입력된 경우
         queryParams.brand = brand.trim();
         queryParams.twoParam = false;
       } else if (model) {
+        // 모델만 입력된 경우
         queryParams.brand = model.trim();
         queryParams.twoParam = false;
       }
@@ -126,6 +184,10 @@ const HistorySearchBox = ({
       }
 
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
+      setLogs(result.content);
+      setPage(1);
+      setHasNextPage(result.content.length === 10);
+      setCurrentSearchParams(queryParams);
       onSearchResults(result.content, queryParams);
     } catch (error) {
       console.error('필터 검색 실패:', error);
