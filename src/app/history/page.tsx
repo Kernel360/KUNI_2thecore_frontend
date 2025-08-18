@@ -1,11 +1,5 @@
+import HistoryListBox from '@/components/history-search-box/history-list-box/history-list-box';
 import HistorySearchBox from '@/components/history-search-box/history-search-box';
-<<<<<<< Updated upstream
-
-export default function History() {
-  return (
-    <div className="gap-6 p-4 h-full w-[98%] mx-auto">
-      <HistorySearchBox />
-=======
 import TopBar from '@/components/ui/topBar';
 import {
   DriveLog,
@@ -55,7 +49,6 @@ export default function History() {
           onSort={handleSort}
         />
       </div>
->>>>>>> Stashed changes
     </div>
   );
 }
