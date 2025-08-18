@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import TopBar from '@/components/ui/topBar';
 import { Car, CarSearchParams, CarService } from '@/services/car-service';
 import { useEffect, useState } from 'react';
 import styles from './emulator.module.css';
@@ -158,7 +157,6 @@ export default function LocalEmulator() {
 
   return (
     <div>
-      <TopBar title="에뮬레이터"></TopBar>
       <div className="gap-6 p-4 h-full w-[98%] mx-auto">
         <NumberSearchBox
           value={carNumber}
