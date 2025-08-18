@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './map.module.css';
-import iconStyles from '@/components/icon-button/icon-button.module.css';
 
 interface MapProps {
   width: string;
   height: string;
   onLoad?: (map: any) => void;
-  onOpenMapModal: () => void;
 }
 
-export default function Map({ width, height, onLoad, onOpenMapModal }: MapProps) {
+export default function Map({ width, height, onLoad }: MapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<any>(null);
   const [mapType, setMapType] = useState<'roadmap' | 'skyview'>('roadmap');
@@ -22,8 +20,8 @@ export default function Map({ width, height, onLoad, onOpenMapModal }: MapProps)
       if (typeof window !== 'undefined' && window.kakao && window.kakao.maps) {
         window.kakao.maps.load(() => {
           const options = {
-            center: new window.kakao.maps.LatLng(36.5, 127.8),
-            level: 12,
+            center: new window.kakao.maps.LatLng(37.6102,127.0036),
+            level: 10,
           };
 
           const map = new window.kakao.maps.Map(mapRef.current, options);
@@ -72,9 +70,6 @@ export default function Map({ width, height, onLoad, onOpenMapModal }: MapProps)
         ref={mapRef}
         className="w-full h-full relative overflow-hidden"
       ></div>
-
-      {/* 전체화면 모달창 */}
-      <button className={iconStyles.fullScreen} onClick={onOpenMapModal}></button>
 
       {/* 지도타입 컨트롤 */}
       <div
