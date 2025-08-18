@@ -13,58 +13,39 @@ import { Input } from '../ui/input';
 import HistoryListBox from './history-list-box/history-list-box';
 import { RangeCalendar } from './range-calendar';
 
-interface HistorySearchBoxProps {
-  onSearchResults: (data: DriveLog[], params?: DriveLogQueryParams) => void;
-  onLoadingChange: (loading: boolean) => void;
-}
-
-const HistorySearchBox = ({
-  onSearchResults,
-  onLoadingChange,
-}: HistorySearchBoxProps) => {
+const HistorySearchBox = () => {
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
   const [status, setStatus] = useState('');
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
-  // 무한 스크롤
-  const { page, setPage, isFetching, setIsFetching, setLastIntersecting } =
-    useObserver();
-  const [hasNextPage, setHasNextPage] = useState(true);
-  const [currentSearchParams, setCurrentSearchParams] =
-    useState<DriveLogQueryParams | null>(null);
-  const [cars, setCars] = useState<DriveLog[]>([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // 초기 주행 기록 목록 로드 (dateRange가 설정된 후)
-  useEffect(() => {
-    if (dateRange?.from && dateRange?.to) {
-      loadInitialLogs();
-    }
-  }, [dateRange]);
+  const [historyData, setHistoryData] = useState<DriveLog[]>([]);
+  const [loading, setLoading] = useState(false);
+  
+  // 무한 스크롤
+  const { page, setPage, isFetching, setIsFetching, setLastIntersecting } = useObserver();
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [currentSearchParams, setCurrentSearchParams] = useState<DriveLogQueryParams | null>(null);
 
   // 페이지 변경 시 추가 데이터 로드 (무한 스크롤)
   useEffect(() => {
     if (page === 1 || !hasNextPage) return;
 
-    const loadMoreCars = async () => {
+    const loadMoreLogs = async () => {
       try {
         setIsFetching(true);
-
+        
         let result;
         if (currentSearchParams) {
-          result = await HistoryService.getDriveLogs(
-            currentSearchParams,
-            page,
-            10
-          );
+          result = await HistoryService.getDriveLogs(currentSearchParams, page, 10);
         } else {
           result = await HistoryService.getDriveLogs({}, page, 10);
         }
 
         if (result.content.length > 0) {
-          setCars(prevCars => [...prevCars, ...result.content]);
+          const newData = [...historyData, ...result.content];
+          setHistoryData(newData);
           setHasNextPage(result.content.length === 10);
         } else {
           setHasNextPage(false);
@@ -76,49 +57,8 @@ const HistorySearchBox = ({
       }
     };
 
-    loadMoreCars();
+    loadMoreLogs();
   }, [page, currentSearchParams, hasNextPage]);
-
-  const loadInitialCars = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const carData = await HistoryService.getDriveLogs({}, 1, 10);
-      setCars(carData.content);
-      setPage(1);
-      setHasNextPage(carData.content.length === 10);
-      setCurrentSearchParams(null);
-      setIsFetching(false);
-    } catch (error) {
-      console.error('차량 목록 조회 실패:', error);
-      setError('차량 목록을 불러오는데 실패했습니다.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadInitialLogs = async () => {
-    if (!dateRange?.from || !dateRange?.to) return;
-
-    try {
-      onLoadingChange(true);
-      const queryParams: DriveLogQueryParams = {
-        startTime: dateRange.from,
-        endTime: dateRange.to,
-        page: 1,
-        offset: 10,
-      };
-
-      const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
-      console.log('loadInitialLogs result:', result);
-      onSearchResults(result.content, queryParams);
-    } catch (error) {
-      console.error('주행 기록 조회 실패:', error);
-      onSearchResults([]);
-    } finally {
-      onLoadingChange(false);
-    }
-  };
 
   const handleSearch = async () => {
     if (!dateRange?.from || !dateRange?.to) {
@@ -127,7 +67,7 @@ const HistorySearchBox = ({
     }
 
     try {
-      onLoadingChange(true);
+      setLoading(true);
       const queryParams: DriveLogQueryParams = {
         startTime: dateRange.from,
         endTime: dateRange.to,
@@ -142,13 +82,17 @@ const HistorySearchBox = ({
 
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
       console.log('검색 결과:', result);
-      onSearchResults(result.content, queryParams);
+      setHistoryData(result.content);
+      setPage(1);
+      setHasNextPage(result.content.length === 10);
+      setCurrentSearchParams(queryParams);
+      setIsFetching(false);
     } catch (error) {
       console.error('주행 기록 검색 실패:', error);
       alert('주행 기록 검색에 실패했습니다.');
-      onSearchResults([]);
+      setHistoryData([]);
     } finally {
-      onLoadingChange(false);
+      setLoading(false);
     }
   };
 
@@ -160,7 +104,7 @@ const HistorySearchBox = ({
     }
 
     try {
-      onLoadingChange(true);
+      setLoading(true);
       const parts = brandModel.trim().split(/\s+/);
       const brand = parts[0] || '';
       const model = parts.slice(1).join(' ') || '';
@@ -191,63 +135,72 @@ const HistorySearchBox = ({
       }
 
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
-      onSearchResults(result.content, queryParams);
+      setHistoryData(result.content);
+      setPage(1);
+      setHasNextPage(result.content.length === 10);
+      setCurrentSearchParams(queryParams);
+      setIsFetching(false);
     } catch (error) {
       console.error('필터 검색 실패:', error);
       alert('필터 검색에 실패했습니다.');
-      onSearchResults([]);
+      setHistoryData([]);
     } finally {
-      onLoadingChange(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col">
-      <div className={styles.numberSearchContainer}>
-        <Input
-          type="text"
-          placeholder="차량 번호"
-          className={styles.numberSearchInput}
-          value={carNumber}
-          onChange={e => setCarNumber(e.target.value)}
-        />
-        <RangeCalendar dateRange={dateRange} onDateRangeChange={setDateRange} />
-        <Button
-          className={styles.searchButton}
-          onClick={handleSearch}
-          disabled={false}
-        >
-          검색
-        </Button>
+    <>
+      <div className="flex flex-col">
+        <div className={styles.numberSearchContainer}>
+          <Input
+            type="text"
+            placeholder="차량 번호"
+            className={styles.numberSearchInput}
+            value={carNumber}
+            onChange={e => setCarNumber(e.target.value)}
+          />
+          <RangeCalendar dateRange={dateRange} onDateRangeChange={setDateRange} />
+          <Button
+            className={styles.searchButton}
+            onClick={handleSearch}
+            disabled={false}
+          >
+            검색
+          </Button>
+        </div>
+        <div className="flex flex-row p-3">
+          <BrandFilterBox
+            brandModel={brandModel}
+            setBrandModel={setBrandModel}
+            status={status}
+            setStatus={setStatus}
+            onFilterApply={handleFilterApply}
+          />
+          {error && (
+            <div style={{ color: 'red', textAlign: 'center', padding: '50px' }}>
+              {error}
+            </div>
+          )}
+          <Button
+            className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
+            rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
+          >
+            엑셀 다운로드
+          </Button>
+        </div>
       </div>
-      <div className="flex flex-row p-3">
-        <BrandFilterBox
-          brandModel={brandModel}
-          setBrandModel={setBrandModel}
-          status={status}
-          setStatus={setStatus}
-          onFilterApply={handleFilterApply}
-        />
-        {error && (
-          <div style={{ color: 'red', textAlign: 'center', padding: '50px' }}>
-            {error}
-          </div>
-        )}
-        <HistoryListBox
-          historyData={cars}
-          loading={loading}
-        />
-        {hasNextPage && (
-          <div ref={setLastIntersecting} style={{ height: '1px' }}></div>
-        )}
-      </div>
-      <Button
-        className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
-          rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
-      >
-        엑셀 다운로드
-      </Button>
-    </div>
+      
+      <HistoryListBox 
+        historyData={historyData} 
+        loading={loading}
+        setLastIntersecting={hasNextPage ? (node) => {
+          if (node instanceof HTMLDivElement) {
+            setLastIntersecting(node);
+          }
+        } : null}
+      />
+    </>
   );
 };
 
