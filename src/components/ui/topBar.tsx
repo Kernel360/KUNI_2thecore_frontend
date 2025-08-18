@@ -27,10 +27,8 @@ export default function TopBar({ title, showLogo = false }: TopBarProps) {
             src="/2theCore.png"
             alt="2theCore Logo"
             style={{
-              height: '80px',
+              height: '60px',
               width: 'auto',
-              paddingBottom: '8px',
-              objectFit: 'contain',
             }}
           />
         ) : (
