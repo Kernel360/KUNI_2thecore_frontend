@@ -11,7 +11,6 @@ export default function Home() {
     'total' | 'driving' | 'maintenance' | 'idle'
   >('total');
 
-
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   return (
     <>
@@ -47,4 +46,3 @@ export default function Home() {
     </>
   );
 }
-
