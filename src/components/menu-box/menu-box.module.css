@@ -1,23 +1,44 @@
+.menuAccountFlex {
+  border-bottom: 2px solid #3a70ff;
+  display: flex;
+}
+
 .Button {
-  width: 220px;
-  height: 60px;
+  width: auto;
+  height: auto;
   font-size: 16px;
   font-weight: 500;
   color: #1a1a1a;
-  background-color: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #f1f3f4;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   cursor: pointer;
-  text-align: left !important;
-  padding-left: 16px !important;
-  justify-content: flex-start !important;
+  border-bottom: 2px;
+  justify-content: flex-end !important;
   transition: all 0.3s ease;
 }
 
 .Button:hover {
-  background-color: #f8f9fa;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
-  border-color: #e3e8ef;
+  border-color: #3a70ff;
+}
+
+.AccountDropdown {
+  z-index: 9999 !important;
+  background: white !important;
+  border: 1.5px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  width: 100px !important;
+  padding: 4px !important;
+  transition: all 0.3s ease;
+}
+
+.logout {
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout:hover {
+  background-color: #f3f4f6;
+  border-color: #3a70ff;
 }
