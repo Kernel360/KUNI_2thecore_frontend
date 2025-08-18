@@ -1,4 +1,3 @@
-import useObserver from '@/hooks/use-intersection-observer';
 import {
   DriveLog,
   DriveLogQueryParams,
@@ -10,7 +9,6 @@ import BrandFilterBox from '../search-box/filter-box';
 import styles from '../search-box/search-filter.module.css';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import HistoryListBox from './history-list-box/history-list-box';
 import { RangeCalendar } from './range-calendar';
 
 const HistorySearchBox = () => {
@@ -19,6 +17,7 @@ const HistorySearchBox = () => {
   const [status, setStatus] = useState('');
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
+<<<<<<< Updated upstream
   const [error, setError] = useState<string | null>(null);
   const [historyData, setHistoryData] = useState<DriveLog[]>([]);
   const [loading, setLoading] = useState(false);
@@ -59,6 +58,37 @@ const HistorySearchBox = () => {
 
     loadMoreLogs();
   }, [page, currentSearchParams, hasNextPage]);
+=======
+  // 초기 주행 기록 목록 로드 (dateRange가 설정된 후)
+  useEffect(() => {
+    if (dateRange?.from && dateRange?.to) {
+      loadInitialLogs();
+    }
+  }, [dateRange]);
+
+  const loadInitialLogs = async () => {
+    if (!dateRange?.from || !dateRange?.to) return;
+
+    try {
+      onLoadingChange(true);
+      const queryParams: DriveLogQueryParams = {
+        startTime: dateRange.from,
+        endTime: dateRange.to,
+        page: 1,
+        offset: 10,
+      };
+
+      const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
+      console.log('loadInitialLogs result:', result);
+      onSearchResults(result.content, queryParams);
+    } catch (error) {
+      console.error('주행 기록 조회 실패:', error);
+      onSearchResults([]);
+    } finally {
+      onLoadingChange(false);
+    }
+  };
+>>>>>>> Stashed changes
 
   const handleSearch = async () => {
     if (!dateRange?.from || !dateRange?.to) {
@@ -190,6 +220,7 @@ const HistorySearchBox = () => {
           </Button>
         </div>
       </div>
+<<<<<<< Updated upstream
       
       <HistoryListBox 
         historyData={historyData} 
@@ -201,6 +232,24 @@ const HistorySearchBox = () => {
         } : null}
       />
     </>
+=======
+      <div className="flex flex-row p-3">
+        <BrandFilterBox
+          brandModel={brandModel}
+          setBrandModel={setBrandModel}
+          status={status}
+          setStatus={setStatus}
+          onFilterApply={handleFilterApply}
+        />
+        <Button
+          className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
+          rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
+        >
+          엑셀 다운로드
+        </Button>
+      </div>
+    </div>
+>>>>>>> Stashed changes
   );
 };
 
