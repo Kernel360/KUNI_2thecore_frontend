@@ -10,8 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useState, useEffect, useRef } from 'react';
-import KakaoMapScript from '@/components/map/kakao-map-script';
+import { useEffect, useRef, useState } from 'react';
 import styles from './place-search.module.css';
 
 interface CarRegisterModalProps {

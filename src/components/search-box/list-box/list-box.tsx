@@ -29,63 +29,66 @@ interface ListBoxProps {
 const allowedStatus = ['운행', '대기', '수리'] as const;
 type StatusType = (typeof allowedStatus)[number];
 
-const ListBox = forwardRef<HTMLDivElement, ListBoxProps>(({
-  carNumber,
-  model,
-  brand,
-  status,
-  onDelete,
-}, ref) => {
-  const setDetail = useDetailStore(state => state.setDetail);
-  const navigate = useNavigate();
-  const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
-  
-  // 삭제 관련 상태
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
+const ListBox = forwardRef<HTMLDivElement, ListBoxProps>(
+  ({ carNumber, model, brand, status, onDelete }, ref) => {
+    const setDetail = useDetailStore(state => state.setDetail);
+    const navigate = useNavigate();
+    const setDetailChange = setDetailChangeStore(
+      state => state.setDetailChange
+    );
 
-  const safeStatus: StatusType = allowedStatus.includes(status as StatusType)
-    ? (status as StatusType)
-    : '대기';
+    // 삭제 관련 상태
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const handleClick = () => {
-    setDetail({
-      carNumber: carNumber,
-      brand,
-      model,
-      brandModel: `${brand} ${model}`,
-      status: safeStatus,
-    });
-    setDetailChange(false);
-    navigate(`/detail?carNumber=${encodeURIComponent(carNumber)}`);
-  };
+    const safeStatus: StatusType = allowedStatus.includes(status as StatusType)
+      ? (status as StatusType)
+      : '대기';
 
-  const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setDetail({
-      carNumber: carNumber,
-      brand,
-      model,
-      brandModel: `${brand} ${model}`,
-      status: safeStatus,
-    });
-    setDetailChange(true);
-    navigate(`/detail?carNumber=${encodeURIComponent(carNumber)}`);
-  };
+    const handleClick = () => {
+      setDetail({
+        carNumber: carNumber,
+        brand,
+        model,
+        brandModel: `${brand} ${model}`,
+        status: safeStatus,
+      });
+      setDetailChange(false);
+      navigate(`/detail?carNumber=${encodeURIComponent(carNumber)}`);
+    };
 
-  const handleDelete = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    
-    try {
-      setIsDeleting(true);
-      setDeleteError(null);
-      
-      // 백엔드 API 호출 - CarService의 deleteCar 메서드 사용
-      await CarService.deleteCar(carNumber);
-      
-      // 삭제 성공 시 부모 컴포넌트에 알림
-      if (onDelete) {
-        onDelete(carNumber);
+    const handleEdit = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setDetail({
+        carNumber: carNumber,
+        brand,
+        model,
+        brandModel: `${brand} ${model}`,
+        status: safeStatus,
+      });
+      setDetailChange(true);
+      navigate(`/detail?carNumber=${encodeURIComponent(carNumber)}`);
+    };
+
+    const handleDelete = async (e: React.MouseEvent) => {
+      e.stopPropagation();
+
+      try {
+        setIsDeleting(true);
+        setDeleteError(null);
+
+        // 백엔드 API 호출 - CarService의 deleteCar 메서드 사용
+        await CarService.deleteCar(carNumber);
+
+        // 삭제 성공 시 부모 컴포넌트에 알림
+        if (onDelete) {
+          onDelete(carNumber);
+        }
+      } catch (error) {
+        console.error('차량 삭제 실패:', error);
+        setDeleteError('차량 삭제에 실패했습니다.');
+      } finally {
+        setIsDeleting(false);
       }
     };
 
