@@ -1,10 +1,8 @@
 import CarLocationMap from '@/components/map/car-location-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
-import MenuBox from '@/components/menu-box/menu-box';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import TopBar from '@/components/ui/topBar';
 import { CarDetail, CarService } from '@/services/car-service';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { useDetailStore } from '@/store/detail-store';
@@ -33,7 +31,6 @@ const DetailPage = () => {
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
   // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리
   const safeStatus = status ?? '대기';
-
   // URL에서 carNumber가 있으면 API 호출해서 데이터 가져오기
   useEffect(() => {
     if (urlCarNumber) {
@@ -51,10 +48,22 @@ const DetailPage = () => {
     }
   }, [urlCarNumber, carNumber, setDetail, navigate]);
 
+  // URL에서 carNumber가 있으면 API 호출해서 데이터 가져오기
   useEffect(() => {
-    const checkMap = () => {};
-    checkMap();
-  }, [detailChange]);
+    if (urlCarNumber) {
+      const fetchCarDetail = async () => {
+        try {
+          const carDetail = await CarService.getCar(urlCarNumber);
+          setDetail(carDetail);
+        } catch (error) {
+          console.error('차량 정보 로드 실패:', error);
+          alert('차량 정보를 불러오는데 실패했습니다.');
+          navigate('/search');
+        }
+      };
+      fetchCarDetail();
+    }
+  }, [urlCarNumber, carNumber, setDetail, navigate]);
 
   useEffect(() => {
     const checkMap = () => {};
@@ -127,8 +136,6 @@ const DetailPage = () => {
 
   return (
     <>
-      <TopBar title={`차량 상세 정보 - ${carNumber}`} />
-      <MenuBox />
       <KakaoMapScript />
       <div className={styles.contentGrid}>
         {/* 상세 정보 */}

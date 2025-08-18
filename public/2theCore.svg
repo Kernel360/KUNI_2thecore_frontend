@@ -1,0 +1,20 @@
+<svg width="400" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="coreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main circle with gradient -->
+  <circle cx="57" cy="60" r="30" fill="url(#coreGradient)"/>
+  
+  <!-- White "2" inside the circle -->
+  <text x="57" y="70" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="600" fill="white" text-anchor="middle">2</text>
+
+  <!-- "theCore" text -->
+  <text x="100" y="70" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="600" fill="#1F2937">the</text>
+  <text x="135" y="70" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="600" fill="#1F2937">Core</text>
+  <!-- Registered trademark symbol -->
+  <text x="220" y="55" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="500" fill="#1F2937">®</text>
+</svg>

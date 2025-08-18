@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import styles from './search-filter.module.css';
@@ -9,8 +8,11 @@ interface NumberSearchBoxProps {
   onSearch: () => void;
 }
 
-const NumberSearchBox = ({ value, onChange, onSearch }: NumberSearchBoxProps) => {
-
+const NumberSearchBox = ({
+  value,
+  onChange,
+  onSearch,
+}: NumberSearchBoxProps) => {
   const handleSearch = () => {
     onSearch();
   };

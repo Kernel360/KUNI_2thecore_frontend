@@ -24,9 +24,7 @@ export class TokenManager {
    * @param accessToken 새로운 JWT 액세스 토큰
    */
   static updateAccessToken(accessToken: string): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(this.ACCESS_TOKEN_KEY, accessToken);
-    }
+    localStorage.setItem('accessToken', accessToken);
   }
 
   /**
