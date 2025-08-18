@@ -1,7 +1,8 @@
 import iconStyles from '@/components/icon-button/icon-button.module.css';
 import { CarService } from '@/services/car-service';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Map from './map';
+import iconStyles from '@/components/icon-button/icon-button.module.css';
 
 export interface Car {
   carNumber: string;
@@ -15,7 +16,6 @@ interface CarClustererMapProps {
   height: string;
   carStatusFilter: 'total' | 'driving' | 'maintenance' | 'idle';
   onOpenModal?: () => void;
-  isMapModalOpen?: boolean;
 }
 
 const statusToImage: { [key in Car['status']]?: string } = {
@@ -29,18 +29,18 @@ export default function CarClustererMap({
   height,
   carStatusFilter,
   onOpenModal,
-  isMapModalOpen,
 }: CarClustererMapProps) {
   const [map, setMap] = useState<any>(null);
   const [cars, setCars] = useState<Car[]>([]);
   const mapRef = useRef<any>(null);
   const clustererRef = useRef<any>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  
   const handleMapLoad = (mapInstance: any) => {
     mapRef.current = mapInstance;
+    setMap(mapInstance);
   };
 
-  const loadCarLocations = async () => {
+  const loadCarLocations = useCallback(async () => {
     try {
       const locations = await CarService.getCarLocations();
       const carData: Car[] = locations.map(loc => ({
@@ -58,7 +58,7 @@ export default function CarClustererMap({
     } catch (error) {
       console.error('차량 위치 데이터 조회 실패:', error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (!map) return;
@@ -72,19 +72,6 @@ export default function CarClustererMap({
 
     // 초기 로딩
     loadCarLocations();
-
-    // 5초마다 차량 위치 업데이트
-    intervalRef.current = setInterval(() => {
-      loadCarLocations();
-    }, 5000);
-
-    // cleanup 함수
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
   }, [map]);
 
   useEffect(() => {
@@ -124,12 +111,15 @@ export default function CarClustererMap({
 
   return (
     <div style={{ position: 'relative', width, height }}>
-      <Map width={width} height={height} onLoad={setMap} />
-      {onOpenModal && !isMapModalOpen && (
-        <button
-          className={iconStyles.fullScreen}
-          onClick={onOpenModal}
-        ></button>
+      <Map 
+        width={width} 
+        height={height} 
+        onLoad={handleMapLoad}
+        onRefresh={loadCarLocations}
+        enableAutoRefresh={true}
+      />
+      {onOpenModal && (
+        <button className={iconStyles.fullScreen} onClick={onOpenModal}></button>
       )}
     </div>
   );
