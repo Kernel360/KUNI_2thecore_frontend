@@ -28,12 +28,12 @@ export function RangeCalendar({
       const today = new Date();
       const weekAgo = new Date();
       weekAgo.setDate(today.getDate() - 7);
-      
+
       const defaultRange = {
         from: weekAgo,
-        to: today
+        to: today,
       };
-      
+
       if (onDateRangeChange) {
         onDateRangeChange(defaultRange);
       } else {
