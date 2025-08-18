@@ -131,8 +131,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
         ),
         error.response?.status || 500,
         error.response?.data?.code,
-        error.response?.data,
-        new Date().toISOString()
+        error.response?.data
       );
 
       return Promise.reject(apiError);
