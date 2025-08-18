@@ -35,13 +35,16 @@
 }
 
 .fullScreen {
-  /* background-image: url('/zoom_out_map_24dp_000000.svg'); */
+  background-color: #424242;
   background-image: url('/zoom_out_map_24dp_FFFFFF.svg');
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat: no-repeat; /* 반복 안함 */
   position: absolute;
   top: 16px;
   left: 16px;
   z-index: 10000;
-  background-color: #424242;
+  opacity: 0.5;
   border: none;
   border-radius: 50%;
   width: 40px;

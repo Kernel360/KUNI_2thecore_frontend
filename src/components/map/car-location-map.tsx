@@ -52,7 +52,13 @@ export default function CarLocationMap({
   };
 
   useEffect(() => {
-    if (!mapRef.current || !carLocation || !carLocation.lastLatitude || !carLocation.lastLongitude) return;
+    if (
+      !mapRef.current ||
+      !carLocation ||
+      !carLocation.lastLatitude ||
+      !carLocation.lastLongitude
+    )
+      return;
 
     if (markerRef.current) {
       markerRef.current.setMap(null);
@@ -105,12 +111,7 @@ export default function CarLocationMap({
 
   return (
     <div style={{ width, height }}>
-      <Map
-        width={width}
-        height={height}
-        onLoad={setMap}
-        onOpenMapModal={close}
-      />
+      <Map width={width} height={height} onLoad={setMap} />
     </div>
   );
 }

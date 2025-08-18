@@ -25,6 +25,7 @@ export default function Home() {
             width="100%"
             height="100%"
             carStatusFilter={carStatusFilter}
+            onOpenModal={() => setIsMapModalOpen(true)}
           />
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { CarService } from '@/services/car-service';
 import { useEffect, useRef, useState } from 'react';
 import Map from './map';
+import iconStyles from '@/components/icon-button/icon-button.module.css';
 
 export interface Car {
   carNumber: string;
@@ -13,6 +14,7 @@ interface CarClustererMapProps {
   width: string;
   height: string;
   carStatusFilter: 'total' | 'driving' | 'maintenance' | 'idle';
+  onOpenModal?: () => void;
 }
 
 const statusToImage: { [key in Car['status']]?: string } = {
@@ -25,6 +27,7 @@ export default function CarClustererMap({
   width,
   height,
   carStatusFilter,
+  onOpenModal,
 }: CarClustererMapProps) {
   const [map, setMap] = useState<any>(null);
   const [cars, setCars] = useState<Car[]>([]);
@@ -117,6 +120,11 @@ export default function CarClustererMap({
     clustererRef.current.addMarkers(markers);
   }, [cars, carStatusFilter]);
   return (
-    <Map width={width} height={height} onLoad={setMap} onOpenMapModal={close} />
+    <div style={{ position: 'relative', width, height }}>
+      <Map width={width} height={height} onLoad={setMap} />
+      {onOpenModal && (
+        <button className={iconStyles.fullScreen} onClick={onOpenModal}></button>
+      )}
+    </div>
   );
 }
