@@ -194,8 +194,8 @@ const HistoryListBox = ({
                   {log.endPoint}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
-                  {log.driveDist
-                    ? `${(log.driveDist / 1000).toFixed(1)}km`
+                  {typeof log.driveDist === 'number'
+                    ? `${Number(log.driveDist).toFixed(1)}km`
                     : '-'}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
