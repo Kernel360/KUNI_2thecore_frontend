@@ -1,3 +1,4 @@
+import iconStyles from '@/components/icon-button/icon-button.module.css';
 import { CarService } from '@/services/car-service';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Map from './map';
@@ -107,6 +108,7 @@ export default function CarClustererMap({
 
     clustererRef.current.addMarkers(markers);
   }, [cars, carStatusFilter]);
+
   return (
     <div style={{ position: 'relative', width, height }}>
       <Map 

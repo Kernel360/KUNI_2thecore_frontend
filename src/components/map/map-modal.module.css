@@ -22,25 +22,3 @@
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
-
-.closeButton {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 10000;
-  background-color: #424242;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.closeButton:hover {
-  background-color: #242424;
-}

@@ -12,7 +12,7 @@ export default function Home() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   return (
     <>
-      <div className="flex flex-row gap-6 p-4 h-full w-[98%] mx-auto">
+      <div className="flex flex-row gap-6 p-4 w-[98%] mx-auto">
         <div>
           <StatusContainer
             carStatusFilter={carStatusFilter}

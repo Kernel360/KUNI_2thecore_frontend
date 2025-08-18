@@ -95,7 +95,7 @@ export default function LocalEmulator() {
       // 성공시 cars 배열도 업데이트
       setCars(prev =>
         prev.map(car =>
-          car.carNumber === carNumber 
+          car.carNumber === carNumber
             ? { ...car, status: newStatus, powerStatus: checked ? 'ON' : 'OFF' }
             : car
         )
@@ -136,11 +136,13 @@ export default function LocalEmulator() {
       await Promise.all(updatePromises);
 
       // 성공시 cars 배열도 업데이트
-      setCars(prev => prev.map(car => ({
-        ...car,
-        status: newState ? '운행' : '대기',
-        powerStatus: newState ? 'ON' : 'OFF'
-      })));
+      setCars(prev =>
+        prev.map(car => ({
+          ...car,
+          status: newState ? '운행' : '대기',
+          powerStatus: newState ? 'ON' : 'OFF',
+        }))
+      );
     } catch (error) {
       console.error('전체 차량 상태 업데이트 실패:', error);
       // 에러 발생 시 상태 롤백
@@ -157,7 +159,7 @@ export default function LocalEmulator() {
 
   return (
     <div>
-      <div className="gap-6 p-4 h-full w-[98%] mx-auto">
+      <div className="gap-6 p-4 w-[98%] mx-auto">
         <NumberSearchBox
           value={carNumber}
           onChange={setCarNumber}
@@ -195,9 +197,7 @@ export default function LocalEmulator() {
               <TableCell className={styles.tableCell}>
                 {car.carNumber}
               </TableCell>
-              <TableCell className={styles.tableCell}>
-                {car.status}
-              </TableCell>
+              <TableCell className={styles.tableCell}>{car.status}</TableCell>
               <TableCell className={styles.tableCell}>
                 <div className="flex items-center space-x-2">
                   <Switch
