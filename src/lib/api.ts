@@ -105,10 +105,10 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
           );
         }
 
-        // newAccessToken이 있으면 자동 업데이트
-        if (response.data.newAccessToken) {
+        // newAccessToken이 응답 헤더에 있으면 자동 업데이트
+        if (response.headers['new-access-token']) {
           console.log('새로운 액세스 토큰 수신 - 자동 업데이트');
-          TokenManager.updateAccessToken(response.data.newAccessToken);
+          TokenManager.updateAccessToken(response.headers['new-access-token']);
         }
       }
       return response;
