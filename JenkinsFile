@@ -19,6 +19,34 @@ pipeline {
       steps { checkout scm }
     }
 
+    // 추가: env 주입 및 검증 (Vite 규칙)
+    stage('Prepare .env (from 2thecore-fe-env)') {
+      steps {
+        sh '''
+          # 원본 env 파일 확인
+          test -f 2thecore-fe-env || { echo "[FAIL] 2thecore-fe-env 파일이 없습니다."; exit 1; }
+
+          # Vite가 자동 인식하도록 .env로 복사
+          cp 2thecore-fe-env .env
+
+          # 필수 키 존재/값 검증
+          required_keys="VITE_KAKAO_MAP_API_KEY VITE_CAR_BASE_URL"
+          for k in $required_keys; do
+            if ! grep -q "^${k}=" .env; then
+              echo "[FAIL] .env에 ${k}가 없습니다."; exit 1
+            fi
+            val=$(grep "^${k}=" .env | head -n1 | cut -d= -f2-)
+            if [ -z "$val" ]; then
+              echo "[FAIL] ${k} 값이 비어 있습니다."; exit 1
+            fi
+          done
+
+          echo "[OK] .env 준비 및 유효성 검사 완료"
+          grep -E "^(VITE_KAKAO_MAP_API_KEY|VITE_CAR_BASE_URL)=" .env | sed 's/=.*/=********/'
+        '''
+      }
+    }
+
     stage('Install & Build') {
       steps {
         sh '''
@@ -43,7 +71,10 @@ pipeline {
 
           # 정적 에셋은 1년 캐시
           aws s3 cp dist s3://${S3_BUCKET}/ --recursive \
-            --exclude "*" --include "assets/*.js" --include "assets/*.css" --include "assets/*.png" --include "assets/*.jpg" --include "assets/*.svg" --include "assets/*.webp" \
+            --exclude "*" \
+            --include "assets/*.js" --include "assets/*.css" \
+            --include "assets/*.png" --include "assets/*.jpg" \
+            --include "assets/*.svg" --include "assets/*.webp" \
             --cache-control "public, max-age=31536000, immutable"
         '''
       }
@@ -51,7 +82,8 @@ pipeline {
   }
 
   post {
-    success { echo 'React 빌드 & S3 배포 완료' }
+    always  { sh 'rm -f .env || true' }   // 빌드 후 .env 정리
+    success { echo 'React(Vite) 빌드 & S3 배포 완료' }
     failure { echo '배포 실패' }
   }
 }
