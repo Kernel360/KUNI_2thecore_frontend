@@ -114,7 +114,7 @@ export class CarService {
   // 차량 정보 수정
   static async updateCar(
     carNumber: string,
-    carData: Partial<CarDetail>
+    carData?: Partial<CarDetail>
   ): Promise<CarDetail> {
     const response = await mainApi.patch('/cars', carData, {
       params: { carNumber },

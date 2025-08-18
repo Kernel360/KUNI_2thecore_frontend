@@ -62,3 +62,4 @@ export class HistoryService {
     return response.data.data;
   }
 }
+
