@@ -1,6 +1,10 @@
 import HistoryListBox from '@/components/history-search-box/history-list-box/history-list-box';
 import HistorySearchBox from '@/components/history-search-box/history-search-box';
-import { DriveLog, DriveLogQueryParams, HistoryService } from '@/services/history-service';
+import {
+  DriveLog,
+  DriveLogQueryParams,
+  HistoryService,
+} from '@/services/history-service';
 import { useState } from 'react';
 
 export default function History() {
@@ -17,7 +21,7 @@ export default function History() {
         sortOrder: order,
       };
       setSearchParams(updatedParams);
-      
+
       const response = await HistoryService.getDriveLogs(updatedParams);
       setHistoryData(response.content);
     } catch (error) {
@@ -28,19 +32,19 @@ export default function History() {
   };
 
   return (
-    <div className="gap-6 p-4 h-full w-[98%] mx-auto">
-        <HistorySearchBox
-          onSearchResults={(data, params) => {
-            setHistoryData(data);
-            if (params) setSearchParams(params);
-          }}
-          onLoadingChange={setLoading}
-        />
-        <HistoryListBox
-          historyData={historyData}
-          loading={loading}
-          onSort={handleSort}
-        />
+    <div className="gap-6 p-4 w-[98%] mx-auto">
+      <HistorySearchBox
+        onSearchResults={(data, params) => {
+          setHistoryData(data);
+          if (params) setSearchParams(params);
+        }}
+        onLoadingChange={setLoading}
+      />
+      <HistoryListBox
+        historyData={historyData}
+        loading={loading}
+        onSort={handleSort}
+      />
     </div>
   );
 }
