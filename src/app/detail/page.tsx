@@ -1,6 +1,5 @@
 import CarLocationMap from '@/components/map/car-location-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
-import MapModal from '@/components/map/map-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,7 +13,6 @@ import styles from './detail.module.css';
 const DetailPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const urlCarNumber = searchParams.get('carNumber');
   const {
     carNumber,
@@ -230,10 +228,6 @@ const DetailPage = () => {
           </CardContent>
         </Card>
       </div>
-      <MapModal
-        isOpen={isMapModalOpen}
-        onClose={() => setIsMapModalOpen(false)}
-      />
     </>
   );
 };
