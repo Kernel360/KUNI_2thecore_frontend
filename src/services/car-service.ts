@@ -130,25 +130,18 @@ export class CarService {
     return response.data.data;
   }
 
-  // 차량 위치 데이터 배치 전송
-  static async sendCarLocationsBatch(
-    locationData: Array<{
-      carNumber: string;
-      coordinates: Array<{ lastLatitude: string; lastLongitude: string }>;
-    }>
-  ): Promise<void> {
-    const requestData = locationData.map(car => ({
-      carNumber: car.carNumber,
-      coordinates: car.coordinates.map(coord => ({
-        lastLatitude: coord.lastLatitude,
-        lastLongitude: coord.lastLongitude,
-      })),
-    }));
-
-    await mainApi.post('/cars/locations/batch', requestData);
+  // 특정 차량 위치 데이터 조회
+  static async getCarLocation(carNumber: string): Promise<CarDetail> {
+    const response = await mainApi.get<ApiResponse<CarDetail>>(
+      '/cars/locations',
+      {
+        params: { carNumber },
+      }
+    );
+    return response.data.data;
   }
 
-  // 실시간 차량 위치 데이터 조회
+  // 실시간 전체 차량 위치 데이터 조회
   static async getCarLocations(): Promise<
     Array<{
       carNumber: string;

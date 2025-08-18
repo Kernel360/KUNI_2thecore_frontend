@@ -1,12 +1,7 @@
-import { CarService } from '@/services/car-service';
+import { CarDetail, CarService } from '@/services/car-service';
 import { useDetailStore } from '@/store/detail-store';
 import { useEffect, useRef, useState } from 'react';
 import Map from './map';
-
-export interface Car {
-  lastLatitude: string;
-  lastLongitude: string;
-}
 
 export default function CarLocationMap({
   width,
@@ -15,7 +10,7 @@ export default function CarLocationMap({
   width: string;
   height: string;
 }) {
-  const [carLocation, setCarLocation] = useState<Car | null>(null);
+  const [carLocation, setCarLocation] = useState<CarDetail | null>(null);
   const [address, setAddress] = useState<string>('');
   const [map, setMap] = useState<any>(null);
   const mapRef = useRef<any>(null);
@@ -29,15 +24,8 @@ export default function CarLocationMap({
     if (!carNumber) return;
 
     try {
-      const locations = await CarService.getCarLocations();
-      const selectedCar = locations.find(loc => loc.carNumber === carNumber);
-
-      if (selectedCar) {
-        setCarLocation({
-          lastLatitude: selectedCar.lastLatitude,
-          lastLongitude: selectedCar.lastLongitude,
-        });
-      }
+      const carDetail = await CarService.getCarLocation(carNumber);
+      setCarLocation(carDetail);
     } catch (error) {
       console.error('차량 위치 데이터 조회 실패:', error);
     }
@@ -64,7 +52,7 @@ export default function CarLocationMap({
   };
 
   useEffect(() => {
-    if (!mapRef.current || !carLocation) return;
+    if (!mapRef.current || !carLocation || !carLocation.lastLatitude || !carLocation.lastLongitude) return;
 
     if (markerRef.current) {
       markerRef.current.setMap(null);
