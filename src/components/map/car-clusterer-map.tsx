@@ -2,7 +2,6 @@ import iconStyles from '@/components/icon-button/icon-button.module.css';
 import { CarService } from '@/services/car-service';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Map from './map';
-import iconStyles from '@/components/icon-button/icon-button.module.css';
 
 export interface Car {
   carNumber: string;
@@ -34,7 +33,7 @@ export default function CarClustererMap({
   const [cars, setCars] = useState<Car[]>([]);
   const mapRef = useRef<any>(null);
   const clustererRef = useRef<any>(null);
-  
+
   const handleMapLoad = (mapInstance: any) => {
     mapRef.current = mapInstance;
     setMap(mapInstance);
@@ -111,15 +110,18 @@ export default function CarClustererMap({
 
   return (
     <div style={{ position: 'relative', width, height }}>
-      <Map 
-        width={width} 
-        height={height} 
+      <Map
+        width={width}
+        height={height}
         onLoad={handleMapLoad}
         onRefresh={loadCarLocations}
         enableAutoRefresh={true}
       />
       {onOpenModal && (
-        <button className={iconStyles.fullScreen} onClick={onOpenModal}></button>
+        <button
+          className={iconStyles.fullScreen}
+          onClick={onOpenModal}
+        ></button>
       )}
     </div>
   );

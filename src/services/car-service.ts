@@ -148,7 +148,6 @@ export class CarService {
       status: '운행' | '대기' | '수리';
       lastLatitude: string;
       lastLongitude: string;
-      timestamp?: string;
     }>
   > {
     const response = await mainApi.get<
@@ -158,7 +157,6 @@ export class CarService {
           status: '운행' | '대기' | '수리';
           lastLatitude: string;
           lastLongitude: string;
-          timestamp?: string;
         }>
       >
     >('/cars/locations');
