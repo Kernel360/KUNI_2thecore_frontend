@@ -16,7 +16,7 @@ export interface AuthTokenData {
 // 로그인 응답 타입 - 백엔드 명세에 맞게
 export interface LoginResponse extends ApiResponse<AuthTokenData> {}
 
-// 로그아웃 응답 타입 - 백엔드 명세에 맞게  
+// 로그아웃 응답 타입 - 백엔드 명세에 맞게
 export interface LogoutResponse extends ApiResponse<null> {}
 
 // 토큰 검증 응답 데이터 타입
@@ -26,11 +26,11 @@ export interface TokenValidationData {
 }
 
 // 토큰 검증 응답 타입
-export interface TokenValidationResponse extends ApiResponse<TokenValidationData> {}
+export interface TokenValidationResponse
+  extends ApiResponse<TokenValidationData> {}
 
 // 인증 서비스
 export class AuthService {
-
   // 로그인
   static async login(credentials: LoginRequest): Promise<AuthTokenData> {
     const response = await mainApi.post<LoginResponse>(
@@ -66,7 +66,7 @@ export class AuthService {
   }
 
   // 인증 상태 확인 (로컬 토큰 존재 여부만 체크)
-  static isAuthenticated(): boolean {
-    return TokenManager.isAuthenticated();
+  static hasValidTokens(): boolean {
+    return TokenManager.hasValidTokens();
   }
 }

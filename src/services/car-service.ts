@@ -7,7 +7,7 @@ export interface Car {
   model: string;
   brandModel: string;
   status: '운행' | '대기' | '수리';
-  powerStatus: string; // "ON" or "OFF"
+  powerStatus?: string; // "ON" or "OFF"
 }
 
 // 차량 상세 정보 타입
@@ -114,7 +114,7 @@ export class CarService {
   // 차량 정보 수정
   static async updateCar(
     carNumber: string,
-    carData: Partial<CarDetail>
+    carData?: Partial<CarDetail>
   ): Promise<CarDetail> {
     const response = await mainApi.patch('/cars', carData, {
       params: { carNumber },

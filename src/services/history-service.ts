@@ -53,9 +53,12 @@ export class HistoryService {
         }
       : { page, offset, sortBy: 'startTime', sortOrder: 'ASC' };
 
-    const response = await mainApi.get<ApiResponse<PageResponse<DriveLog>>>('/drivelogs', {
-      params: formattedParams,
-    });
+    const response = await mainApi.get<ApiResponse<PageResponse<DriveLog>>>(
+      '/drivelogs',
+      {
+        params: formattedParams,
+      }
+    );
     return response.data.data;
   }
 }
