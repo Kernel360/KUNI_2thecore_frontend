@@ -1,6 +1,6 @@
 import { CarDetail, CarService } from '@/services/car-service';
 import { useDetailStore } from '@/store/detail-store';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Map from './map';
 
 export default function CarLocationMap({
@@ -19,7 +19,7 @@ export default function CarLocationMap({
 
   const { carNumber } = useDetailStore();
 
-  const loadCarLocation = async () => {
+  const loadCarLocation = useCallback(async () => {
     if (!carNumber) return;
 
     try {
@@ -36,12 +36,20 @@ export default function CarLocationMap({
     }
   }, [carNumber]);
 
+
   const handleMapLoad = (mapInstance: any) => {
     mapRef.current = mapInstance;
     setMap(mapInstance);
   };
 
   useEffect(() => {
+    if (
+      !mapRef.current ||
+      !carLocation ||
+      !carLocation.lastLatitude ||
+      !carLocation.lastLongitude
+    )
+      return;
     if (
       !mapRef.current ||
       !carLocation ||

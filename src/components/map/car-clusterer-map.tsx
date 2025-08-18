@@ -1,5 +1,5 @@
 import { CarService } from '@/services/car-service';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Map from './map';
 import iconStyles from '@/components/icon-button/icon-button.module.css';
 
@@ -31,7 +31,6 @@ export default function CarClustererMap({
 }: CarClustererMapProps) {
   const [map, setMap] = useState<any>(null);
   const [cars, setCars] = useState<Car[]>([]);
-  const mapRef = useRef<any>(null);
   const clustererRef = useRef<any>(null);
   
   const handleMapLoad = (mapInstance: any) => {
@@ -39,7 +38,7 @@ export default function CarClustererMap({
     setMap(mapInstance);
   };
 
-  const loadCarLocations = async () => {
+  const loadCarLocations = useCallback(async () => {
     try {
       const locations = await CarService.getCarLocations();
       const carData: Car[] = locations.map(loc => ({
@@ -57,7 +56,7 @@ export default function CarClustererMap({
     } catch (error) {
       console.error('차량 위치 데이터 조회 실패:', error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (!map) return;
