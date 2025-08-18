@@ -20,7 +20,7 @@ export default function Map({ width, height, onLoad }: MapProps) {
       if (typeof window !== 'undefined' && window.kakao && window.kakao.maps) {
         window.kakao.maps.load(() => {
           const options = {
-            center: new window.kakao.maps.LatLng(37.6102,127.0036),
+            center: new window.kakao.maps.LatLng(37.6102, 127.0036),
             level: 10,
           };
 
