@@ -10,7 +10,7 @@ import { TokenManager } from './token-manager';
 const API_BASE_URL =
   process.env.CAR_BASE_URL || 'http://52.78.122.150:8080/api';
 const EMULATOR_API_BASE_URL =
-  process.env.EMULATOR_BASE_URL || 'http://52.78.122.150:8081/api';
+  process.env.EMULATOR_BASE_URL || 'http://15.165.171.174:8081/api';
 
 // 페이징 응답 타입 (차량 목록 등에서 사용)
 export interface PageResponse<T> {
