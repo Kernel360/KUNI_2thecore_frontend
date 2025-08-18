@@ -4,10 +4,10 @@
 
 // 기본 API 응답 타입 - 백엔드 JWT 시스템에 맞게
 export interface ApiResponse<T = any> {
-  result: boolean;          // 요청 성공 여부 (false면 refresh token도 만료)
-  message: string;          // 응답 메시지
-  data: T;                  // 실제 응답 데이터
-  newAccessToken?: string;  // 토큰 갱신 시 새 액세스 토큰
+  result: boolean; // 요청 성공 여부 (false면 refresh token도 만료)
+  message: string; // 응답 메시지
+  data: T; // 실제 응답 데이터
+  newAccessToken?: string; // 토큰 갱신 시 새 액세스 토큰
 }
 
 // API 에러 클래스

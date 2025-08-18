@@ -26,12 +26,12 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
           setLoading(false);
         } else {
           // 토큰 무효하면 로그인 페이지로
-          TokenManager.clearTokens();
+          //TokenManager.clearTokens();
           navigate('/login');
         }
       } catch (error) {
         // 검증 실패하면 로그인 페이지로
-        TokenManager.clearTokens();
+        //TokenManager.clearTokens();
         navigate('/login');
       }
     };

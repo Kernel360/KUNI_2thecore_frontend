@@ -11,9 +11,7 @@ interface StatusBoxProps {
 
 const StatusBox: React.FC<StatusBoxProps> = ({ num, text, active }) => {
   return (
-    <Button
-      className={`${styles.Button} ${active ? styles.active : ''}`}
-    >
+    <Button className={`${styles.Button} ${active ? styles.active : ''}`}>
       <StatusText num={num} text={text} />
     </Button>
   );

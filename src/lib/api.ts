@@ -1,14 +1,16 @@
+import { ApiError, ApiResponse } from '@/types/api';
 import axios, {
   AxiosInstance,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
 import { TokenManager } from './token-manager';
-import { ApiError, ApiResponse } from '@/types/api';
 
 // 환경변수 기반 API 설정
-const API_BASE_URL = process.env.CAR_BASE_URL || 'http://52.78.122.150:8080/api';
-const EMULATOR_API_BASE_URL = process.env.EMULATOR_BASE_URL || 'http://52.78.122.150:8082/api';
+const API_BASE_URL =
+  process.env.CAR_BASE_URL || 'http://52.78.122.150:8080/api';
+const EMULATOR_API_BASE_URL =
+  process.env.EMULATOR_BASE_URL || 'http://52.78.122.150:8082/api';
 
 // 페이징 응답 타입 (차량 목록 등에서 사용)
 export interface PageResponse<T> {
@@ -94,7 +96,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
         // result: false면 refresh token도 만료 - 즉시 로그아웃
         if (response.data.result === false) {
           console.warn('리프레시 토큰 만료 - 자동 로그아웃 처리');
-          TokenManager.clearTokens();
+          //TokenManager.clearTokens();
           if (typeof window !== 'undefined') {
             window.location.href = '/login';
           }
@@ -115,7 +117,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
       // 401 에러 시 즉시 로그아웃 (JWT 필터에서 이미 처리됨)
       if (error.response?.status === 401) {
         console.warn('401 인증 오류 - 자동 로그아웃 처리');
-        TokenManager.clearTokens();
+        //TokenManager.clearTokens();
         if (typeof window !== 'undefined') {
           window.location.href = '/login';
         }
@@ -145,5 +147,5 @@ export const mainApi = createApiInstance(API_BASE_URL);
 export const emulatorApi = createApiInstance(EMULATOR_API_BASE_URL);
 
 // 타입과 유틸리티 export
-export type { ApiResponse };
 export { TokenManager };
+export type { ApiResponse };
