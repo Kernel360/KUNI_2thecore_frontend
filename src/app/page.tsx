@@ -19,7 +19,7 @@ export default function Home() {
             setCarStatusFilter={setCarStatusFilter}
           />
         </div>
-        <div className="relative flex-1 max-h-[800px] mb-9 rounded-2xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-xl">
+        <div className="relative flex-1 max-h-[900px] rounded-2xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-xl">
           <KakaoMapScript />
           <CarClustererMap
             width="100%"

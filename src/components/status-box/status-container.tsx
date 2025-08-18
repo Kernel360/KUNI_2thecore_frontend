@@ -59,7 +59,7 @@ const StatusContainer = ({
   }
 
   return (
-    <div className="grid grid-col-2 gap-2 mt-6">
+    <div className="grid grid-col-2 gap-4">
       {error && (
         <div className="col-span-2 w-full bg-red-100 border border-red-400 text-red-700 rounded">
           {error}
