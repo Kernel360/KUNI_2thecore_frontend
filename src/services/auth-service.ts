@@ -30,7 +30,6 @@ export interface TokenValidationResponse extends ApiResponse<TokenValidationData
 
 // 인증 서비스
 export class AuthService {
-
   // 로그인
   static async login(credentials: LoginRequest): Promise<AuthTokenData> {
     const response = await mainApi.post<LoginResponse>(
@@ -66,7 +65,7 @@ export class AuthService {
   }
 
   // 인증 상태 확인 (로컬 토큰 존재 여부만 체크)
-  static isAuthenticated(): boolean {
-    return TokenManager.isAuthenticated();
+  static hasValidTokens(): boolean {
+    return TokenManager.hasValidTokens();
   }
 }
