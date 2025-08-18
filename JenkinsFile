@@ -1,0 +1,57 @@
+pipeline {
+  agent any
+  tools { nodejs 'Node20' }
+
+  environment {
+    AWS_REGION = 'ap-northeast-2'
+    S3_BUCKET  = '2thecore-fe'   // 변경된 버킷명
+  }
+
+  options {
+    timestamps()
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+    timeout(time: 20, unit: 'MINUTES')
+  }
+
+  stages {
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+
+    stage('Install & Build') {
+      steps {
+        sh '''
+          npm ci
+          npm run build
+        '''
+      }
+    }
+
+    stage('Upload to S3') {
+      steps {
+        sh '''
+          export AWS_DEFAULT_REGION=${AWS_REGION}
+
+          # 전체 동기화
+          aws s3 sync ./build s3://${S3_BUCKET}/ --delete
+
+          # index.html 캐시 방지
+          aws s3 cp build/index.html s3://${S3_BUCKET}/index.html \
+            --cache-control "no-store" \
+            --content-type "text/html; charset=utf-8"
+
+          # 정적 에셋 장기 캐시
+          aws s3 cp build s3://${S3_BUCKET}/ --recursive \
+            --exclude "*" --include "*.js" --include "*.css" --include "*.png" --include "*.jpg" --include "*.svg" --include "*.webp" \
+            --cache-control "public, max-age=31536000, immutable"
+        '''
+      }
+    }
+  }
+
+  post {
+    success { echo 'React 빌드 & S3 배포 완료' }
+    failure { echo '배포 실패' }
+  }
+}
