@@ -10,6 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Car, CarSearchParams, CarService } from '@/services/car-service';
+import { EmulService } from '@/services/emul-service';
 import { useEffect, useState } from 'react';
 import styles from './emulator.module.css';
 
@@ -87,7 +88,8 @@ export default function LocalEmulator() {
 
     // API 호출하여 차량 상태 업데이트
     try {
-      await CarService.updateCar(carNumber, {
+      await EmulService.powerCar({
+        carNumber: carNumber,
         status: newStatus,
         powerStatus: checked ? 'ON' : 'OFF',
       });
