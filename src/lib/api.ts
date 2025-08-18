@@ -5,7 +5,6 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 import { TokenManager } from './token-manager';
-import { ApiError, ApiResponse } from '@/types/api';
 
 // 환경변수 기반 API 설정
 const API_BASE_URL =
