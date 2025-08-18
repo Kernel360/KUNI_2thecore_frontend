@@ -1,0 +1,82 @@
+pipeline {
+  agent any
+  tools { nodejs 'Node20' }
+
+  environment {
+    AWS_REGION = 'ap-northeast-2'
+    S3_BUCKET  = '2thecore-fe'
+  }
+
+  options {
+    timestamps()
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+    timeout(time: 20, unit: 'MINUTES')
+  }
+
+  stages {
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+
+    // Credentials에 등록한 env 파일 주입(Secret file, ID: 2thecore-fe-env)
+    stage('Inject .env from Credentials') {
+      steps {
+        withCredentials([file(credentialsId: '2thecore-fe-env', variable: 'ENVFILE')]) {
+          sh '''
+            cp "$ENVFILE" .env
+
+            # Vite 필수 키 검증
+            required_keys="VITE_KAKAO_MAP_API_KEY VITE_CAR_BASE_URL"
+            for k in $required_keys; do
+              grep -q "^${k}=" .env || { echo "[FAIL] ${k} 없음"; exit 1; }
+              val=$(grep "^${k}=" .env | cut -d= -f2-)
+              [ -n "$val" ] || { echo "[FAIL] ${k} 값 비어있음"; exit 1; }
+            done
+
+            echo "[OK] .env 주입 완료"
+            grep -E "^(VITE_KAKAO_MAP_API_KEY|VITE_CAR_BASE_URL)=" .env | sed 's/=.*/=********/'
+          '''
+        }
+      }
+    }
+
+    stage('Install & Build') {
+      steps {
+        sh '''
+          npm ci
+          npm run build
+        '''
+      }
+    }
+
+    stage('Upload to S3') {
+      steps {
+        sh '''
+          export AWS_DEFAULT_REGION=${AWS_REGION}
+
+          # 전체 동기화(삭제 포함)
+          aws s3 sync ./dist s3://${S3_BUCKET}/ --delete
+
+          # index.html은 캐시 금지
+          aws s3 cp dist/index.html s3://${S3_BUCKET}/index.html \
+            --cache-control "no-store" \
+            --content-type "text/html; charset=utf-8"
+
+          # 정적 에셋은 1년 캐시
+          aws s3 cp dist s3://${S3_BUCKET}/ --recursive \
+            --exclude "*" --include "assets/*.js" --include "assets/*.css" \
+            --include "assets/*.png" --include "assets/*.jpg" \
+            --include "assets/*.svg" --include "assets/*.webp" \
+            --cache-control "public, max-age=31536000, immutable"
+        '''
+      }
+    }
+  }
+
+  post {
+    always  { sh 'rm -f .env || true' }   // 빌드 후 .env 정리
+    success { echo 'React(Vite) 빌드 & S3 배포 완료' }
+    failure { echo '배포 실패' }
+  }
+}

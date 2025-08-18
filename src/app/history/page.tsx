@@ -1,5 +1,6 @@
 import HistoryListBox from '@/components/history-search-box/history-list-box/history-list-box';
 import HistorySearchBox from '@/components/history-search-box/history-search-box';
+import TopBar from '@/components/ui/topBar';
 import {
   DriveLog,
   DriveLogQueryParams,
@@ -32,19 +33,22 @@ export default function History() {
   };
 
   return (
-    <div className="gap-6 p-4 w-[98%] mx-auto">
-      <HistorySearchBox
-        onSearchResults={(data, params) => {
-          setHistoryData(data);
-          if (params) setSearchParams(params);
-        }}
-        onLoadingChange={setLoading}
-      />
-      <HistoryListBox
-        historyData={historyData}
-        loading={loading}
-        onSort={handleSort}
-      />
+    <div className="flex flex-col h-screen">
+      <TopBar title="주행 기록"></TopBar>
+      <div className="gap-6 p-4 h-full w-[98%] mx-auto">
+        <HistorySearchBox
+          onSearchResults={(data, params) => {
+            setHistoryData(data);
+            if (params) setSearchParams(params);
+          }}
+          onLoadingChange={setLoading}
+        />
+        <HistoryListBox
+          historyData={historyData}
+          loading={loading}
+          onSort={handleSort}
+        />
+      </div>
     </div>
   );
 }

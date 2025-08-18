@@ -15,6 +15,7 @@ interface HistoryListBoxProps {
   historyData: DriveLog[];
   loading?: boolean;
   onSort?: (sortBy: string, order: 'ASC' | 'DESC') => void;
+  setLastIntersecting?: ((node?: Element | null) => void) | null;
 }
 
 const allowedStatus = ['운행', '대기', '수리'] as const;
@@ -24,6 +25,7 @@ const HistoryListBox = ({
   historyData,
   loading = false,
   onSort,
+  setLastIntersecting,
 }: HistoryListBoxProps) => {
   const [currentSortBy, setCurrentSortBy] = useState<string>('startTime');
   const [isAscending, setIsAscending] = useState<boolean>(true); //true: 오름차순, false: 내림차순
@@ -166,7 +168,10 @@ const HistoryListBox = ({
             </TableRow>
           ) : (
             historyData.map((log, index) => (
-              <TableRow key={`${log.carNumber}-${log.startTime}-${index}`}>
+              <TableRow 
+                key={`${log.carNumber}-${log.startTime}-${index}`}
+                ref={index === historyData.length - 1 && setLastIntersecting ? setLastIntersecting : null}
+              >
                 <TableCell className={historyStyles.tableCell}>
                   {log.carNumber}
                 </TableCell>
