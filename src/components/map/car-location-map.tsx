@@ -16,7 +16,6 @@ export default function CarLocationMap({
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
   const infowindowRef = useRef<any>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const { carNumber } = useDetailStore();
 
@@ -34,21 +33,12 @@ export default function CarLocationMap({
   useEffect(() => {
     if (carNumber) {
       loadCarLocation();
-
-      intervalRef.current = setInterval(() => {
-        loadCarLocation();
-      }, 5000);
-
-      return () => {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-        }
-      };
     }
   }, [carNumber]);
+
   const handleMapLoad = (mapInstance: any) => {
     mapRef.current = mapInstance;
+    setMap(mapInstance);
   };
 
   useEffect(() => {
@@ -111,7 +101,13 @@ export default function CarLocationMap({
 
   return (
     <div style={{ width, height }}>
-      <Map width={width} height={height} onLoad={setMap} />
+      <Map 
+        width={width} 
+        height={height} 
+        onLoad={handleMapLoad}
+        onRefresh={loadCarLocation}
+        enableAutoRefresh={true}
+      />
     </div>
   );
 }

@@ -33,9 +33,10 @@ export default function CarClustererMap({
   const [cars, setCars] = useState<Car[]>([]);
   const mapRef = useRef<any>(null);
   const clustererRef = useRef<any>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  
   const handleMapLoad = (mapInstance: any) => {
     mapRef.current = mapInstance;
+    setMap(mapInstance);
   };
 
   const loadCarLocations = async () => {
@@ -70,19 +71,6 @@ export default function CarClustererMap({
 
     // 초기 로딩
     loadCarLocations();
-
-    // 5초마다 차량 위치 업데이트
-    intervalRef.current = setInterval(() => {
-      loadCarLocations();
-    }, 5000);
-
-    // cleanup 함수
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
   }, [map]);
 
   useEffect(() => {
@@ -121,7 +109,13 @@ export default function CarClustererMap({
   }, [cars, carStatusFilter]);
   return (
     <div style={{ position: 'relative', width, height }}>
-      <Map width={width} height={height} onLoad={setMap} />
+      <Map 
+        width={width} 
+        height={height} 
+        onLoad={handleMapLoad}
+        onRefresh={loadCarLocations}
+        enableAutoRefresh={true}
+      />
       {onOpenModal && (
         <button className={iconStyles.fullScreen} onClick={onOpenModal}></button>
       )}
