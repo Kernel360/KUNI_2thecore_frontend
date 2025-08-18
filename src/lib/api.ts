@@ -96,7 +96,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
         // result: false면 refresh token도 만료 - 즉시 로그아웃
         if (response.data.result === false) {
           console.warn('리프레시 토큰 만료 - 자동 로그아웃 처리');
-          TokenManager.clearTokens();
+          //TokenManager.clearTokens();
           if (typeof window !== 'undefined') {
             window.location.href = '/login';
           }
@@ -117,7 +117,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
       // 401 에러 시 즉시 로그아웃 (JWT 필터에서 이미 처리됨)
       if (error.response?.status === 401) {
         console.warn('401 인증 오류 - 자동 로그아웃 처리');
-        TokenManager.clearTokens();
+        //TokenManager.clearTokens();
         if (typeof window !== 'undefined') {
           window.location.href = '/login';
         }

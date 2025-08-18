@@ -84,17 +84,9 @@ const ListBox = forwardRef<HTMLDivElement, ListBoxProps>(
         if (onDelete) {
           onDelete(carNumber);
         }
-
-        // 성공 메시지 (선택적으로 표시)
-        console.log(`차량 ${carNumber} 삭제가 완료되었습니다.`);
-      } catch (error: any) {
-        // 에러 처리 - API에서 반환된 한국어 메시지 사용
-        const errorMessage = error.message || '차량 삭제에 실패했습니다.';
-        setDeleteError(errorMessage);
+      } catch (error) {
         console.error('차량 삭제 실패:', error);
-
-        // 에러 메시지를 사용자에게 표시 (alert 사용)
-        alert(errorMessage);
+        setDeleteError('차량 삭제에 실패했습니다.');
       } finally {
         setIsDeleting(false);
       }
