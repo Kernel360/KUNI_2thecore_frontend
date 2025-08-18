@@ -16,7 +16,7 @@ export interface AuthTokenData {
 // 로그인 응답 타입 - 백엔드 명세에 맞게
 export interface LoginResponse extends ApiResponse<AuthTokenData> {}
 
-// 로그아웃 응답 타입 - 백엔드 명세에 맞게  
+// 로그아웃 응답 타입 - 백엔드 명세에 맞게
 export interface LogoutResponse extends ApiResponse<null> {}
 
 // 토큰 검증 응답 데이터 타입
@@ -26,7 +26,8 @@ export interface TokenValidationData {
 }
 
 // 토큰 검증 응답 타입
-export interface TokenValidationResponse extends ApiResponse<TokenValidationData> {}
+export interface TokenValidationResponse
+  extends ApiResponse<TokenValidationData> {}
 
 // 인증 서비스
 export class AuthService {
