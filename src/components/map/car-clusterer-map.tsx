@@ -31,6 +31,7 @@ export default function CarClustererMap({
 }: CarClustererMapProps) {
   const [map, setMap] = useState<any>(null);
   const [cars, setCars] = useState<Car[]>([]);
+  const mapRef = useRef<any>(null);
   const clustererRef = useRef<any>(null);
   
   const handleMapLoad = (mapInstance: any) => {
