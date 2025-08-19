@@ -176,6 +176,8 @@ const SearchBox = () => {
         carType: formData.carType,
         carNumber: formData.carNumber,
         sumDist: parseFloat(formData.sumDist),
+        lastLatitude: formData.lastLatitude,
+        lastLongitude: formData.lastLongitude,
       };
 
       await CarService.createCar(carData);
