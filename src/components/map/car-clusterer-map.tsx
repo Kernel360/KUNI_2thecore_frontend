@@ -15,6 +15,7 @@ interface CarClustererMapProps {
   height: string;
   carStatusFilter: 'total' | 'driving' | 'maintenance' | 'idle';
   onOpenModal?: () => void;
+  isMapModalOpen?: boolean;
 }
 
 const statusToImage: { [key in Car['status']]?: string } = {
@@ -28,6 +29,7 @@ export default function CarClustererMap({
   height,
   carStatusFilter,
   onOpenModal,
+  isMapModalOpen,
 }: CarClustererMapProps) {
   const [map, setMap] = useState<any>(null);
   const [cars, setCars] = useState<Car[]>([]);
@@ -117,7 +119,7 @@ export default function CarClustererMap({
         onRefresh={loadCarLocations}
         enableAutoRefresh={true}
       />
-      {onOpenModal && (
+      {onOpenModal && !isMapModalOpen && (
         <button
           className={iconStyles.fullScreen}
           onClick={onOpenModal}
