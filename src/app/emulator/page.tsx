@@ -90,8 +90,8 @@ export default function LocalEmulator() {
     try {
       await EmulService.powerCar({
         carNumber: carNumber,
-        status: newStatus,
         powerStatus: checked ? 'ON' : 'OFF',
+        loginId: localStorage.getItem('loginId') || '',
       });
 
       // 성공시 cars 배열도 업데이트

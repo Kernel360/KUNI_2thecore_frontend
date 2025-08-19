@@ -5,6 +5,8 @@
   border-radius: 50%;
   cursor: pointer;
   margin-right: 12px;
+  width: 35px;
+  height: 35px;
 }
 
 .iconButton:hover {
@@ -57,5 +59,31 @@
 }
 
 .fullScreen:hover {
+  background-color: #242424;
+}
+
+.closeScreen {
+  background-color: #424242;
+  background-image: url('/zoom_in_map_24dp_FFFFFF.svg');
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat: no-repeat; /* 반복 안함 */
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10000;
+  opacity: 0.5;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.closeScreen:hover {
   background-color: #242424;
 }

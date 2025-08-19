@@ -19,7 +19,7 @@ const MenuBox = () => {
     return {
       transition: 'all 0.3s ease',
       background: isCurrentPage ? '#3a70ff' : 'transparent',
-      color: isCurrentPage ? 'white' : '#1e40af',
+      color: isCurrentPage ? 'white' : '#1e293b',
     };
   };
   
@@ -33,7 +33,7 @@ const MenuBox = () => {
   const handleMouseLeave = (e: React.MouseEvent<HTMLElement>, path: string) => {
     const isCurrentPage = isActive(path);
     e.currentTarget.style.background = isCurrentPage ? '#3a70ff' : 'transparent';
-    e.currentTarget.style.color = isCurrentPage ? 'white' : '#1e40af';
+    e.currentTarget.style.color = isCurrentPage ? 'white' : '#1e293b';
   };
 
   return (

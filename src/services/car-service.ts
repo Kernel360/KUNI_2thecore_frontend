@@ -122,6 +122,12 @@ export class CarService {
     return response.data.data;
   }
 
+  // 에뮬레이터에서 차량 시동 on/off
+  static async powerCar(carData?: Partial<CarDetail>): Promise<CarDetail> {
+    const response = await mainApi.patch('/logs/power', carData);
+    return response.data.data;
+  }
+
   // 차량 삭제
   static async deleteCar(carNumber: string): Promise<{ carNumber: string }> {
     const response = await mainApi.delete<ApiResponse<{ carNumber: string }>>(
@@ -148,7 +154,6 @@ export class CarService {
       status: '운행' | '대기' | '수리';
       lastLatitude: string;
       lastLongitude: string;
-      timestamp?: string;
     }>
   > {
     const response = await mainApi.get<
@@ -158,7 +163,6 @@ export class CarService {
           status: '운행' | '대기' | '수리';
           lastLatitude: string;
           lastLongitude: string;
-          timestamp?: string;
         }>
       >
     >('/cars/locations');
