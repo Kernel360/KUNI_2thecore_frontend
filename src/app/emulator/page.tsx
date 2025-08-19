@@ -10,6 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Car, CarSearchParams, CarService } from '@/services/car-service';
+import { EmulService } from '@/services/emul-service';
 import { useEffect, useState } from 'react';
 import styles from './emulator.module.css';
 
@@ -87,9 +88,10 @@ export default function LocalEmulator() {
 
     // API 호출하여 차량 상태 업데이트
     try {
-      await CarService.updateCar(carNumber, {
-        status: newStatus,
+      await EmulService.powerCar({
+        carNumber: carNumber,
         powerStatus: checked ? 'ON' : 'OFF',
+        loginId: localStorage.getItem('loginId') || '',
       });
 
       // 성공시 cars 배열도 업데이트
@@ -128,19 +130,22 @@ export default function LocalEmulator() {
     // 모든 차량에 대해 API 호출
     try {
       const updatePromises = cars.map(car =>
-        CarService.updateCar(car.carNumber, {
-          status: newState ? '운행' : '대기',
+        EmulService.powerCar({
+          carNumber: car.carNumber,
           powerStatus: newState ? 'ON' : 'OFF',
+          loginId: localStorage.getItem('loginId') || '',
         })
       );
       await Promise.all(updatePromises);
 
       // 성공시 cars 배열도 업데이트
-      setCars(prev => prev.map(car => ({
-        ...car,
-        status: newState ? '운행' : '대기',
-        powerStatus: newState ? 'ON' : 'OFF'
-      })));
+      setCars(prev =>
+        prev.map(car => ({
+          ...car,
+          status: newState ? '운행' : '대기',
+          powerStatus: newState ? 'ON' : 'OFF',
+        }))
+      );
     } catch (error) {
       console.error('전체 차량 상태 업데이트 실패:', error);
       // 에러 발생 시 상태 롤백
@@ -157,7 +162,7 @@ export default function LocalEmulator() {
 
   return (
     <div>
-      <div className="gap-6 p-4 h-full w-[98%] mx-auto">
+      <div className="gap-6 p-4 w-[98%] mx-auto">
         <NumberSearchBox
           value={carNumber}
           onChange={setCarNumber}
@@ -195,9 +200,7 @@ export default function LocalEmulator() {
               <TableCell className={styles.tableCell}>
                 {car.carNumber}
               </TableCell>
-              <TableCell className={styles.tableCell}>
-                {car.status}
-              </TableCell>
+              <TableCell className={styles.tableCell}>{car.status}</TableCell>
               <TableCell className={styles.tableCell}>
                 <div className="flex items-center space-x-2">
                   <Switch

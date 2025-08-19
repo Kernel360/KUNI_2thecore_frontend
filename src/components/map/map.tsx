@@ -1,18 +1,20 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import styles from './map.module.css';
-import iconStyles from '@/components/icon-button/icon-button.module.css';
 
 interface MapProps {
   width: string;
   height: string;
   onLoad?: (map: any) => void;
-  onOpenMapModal: () => void;
+  onRefresh?: () => void;
+  enableAutoRefresh?: boolean;
 }
 
-export default function Map({ width, height, onLoad, onOpenMapModal }: MapProps) {
+export default function Map({ width, height, onLoad, onRefresh, enableAutoRefresh = false }: MapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<any>(null);
   const [mapType, setMapType] = useState<'roadmap' | 'skyview'>('roadmap');
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [currentZoomLevel, setCurrentZoomLevel] = useState<number>(8);
 
   useEffect(() => {
     if (mapInstance || !mapRef.current) return;
@@ -22,13 +24,19 @@ export default function Map({ width, height, onLoad, onOpenMapModal }: MapProps)
       if (typeof window !== 'undefined' && window.kakao && window.kakao.maps) {
         window.kakao.maps.load(() => {
           const options = {
-            center: new window.kakao.maps.LatLng(36.5, 127.8),
-            level: 12,
+            center: new window.kakao.maps.LatLng(37.6102,127.0036),
+            level:8,
           };
 
           const map = new window.kakao.maps.Map(mapRef.current, options);
 
           map.setMaxLevel(13);
+
+          // 줌 레벨 변경 이벤트 리스너 추가
+          window.kakao.maps.event.addListener(map, 'zoom_changed', () => {
+            const level = map.getLevel();
+            setCurrentZoomLevel(level);
+          });
 
           setMapInstance(map);
 
@@ -44,6 +52,34 @@ export default function Map({ width, height, onLoad, onOpenMapModal }: MapProps)
 
     checkKakaoMaps();
   }, []);
+
+  // 자동 갱신 로직
+  const setupAutoRefresh = useCallback(() => {
+    if (!enableAutoRefresh || !onRefresh) return;
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    // 줌 레벨에 따른 갱신 간격 결정
+    // 레벨 8 이하(확대)면 5초, 9 초과(축소)면 1분
+    const refreshInterval = currentZoomLevel <= 8 ? 5000 : 60000;
+
+    intervalRef.current = setInterval(() => {
+      onRefresh();
+    }, refreshInterval);
+  }, [enableAutoRefresh, onRefresh, currentZoomLevel]);
+
+  useEffect(() => {
+    setupAutoRefresh();
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [setupAutoRefresh]);
 
   const setMapTypeHandler = (type: 'roadmap' | 'skyview') => {
     if (!mapInstance) return;
@@ -72,9 +108,6 @@ export default function Map({ width, height, onLoad, onOpenMapModal }: MapProps)
         ref={mapRef}
         className="w-full h-full relative overflow-hidden"
       ></div>
-
-      {/* 전체화면 모달창 */}
-      <button className={iconStyles.fullScreen} onClick={onOpenMapModal}></button>
 
       {/* 지도타입 컨트롤 */}
       <div

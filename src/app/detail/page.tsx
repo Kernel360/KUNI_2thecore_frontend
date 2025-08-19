@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { CarDetail, CarService } from '@/services/car-service';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { useDetailStore } from '@/store/detail-store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './detail.module.css';
 
@@ -161,6 +161,7 @@ const DetailPage = () => {
               <Input
                 className={styles.input}
                 value={status}
+                readOnly={!detailChange}
                 onChange={
                   detailChange
                     ? e => handleChange('status', e.target.value)

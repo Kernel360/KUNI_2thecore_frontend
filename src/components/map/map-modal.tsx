@@ -1,3 +1,4 @@
+import iconStyles from '@/components/icon-button/icon-button.module.css';
 import { useState } from 'react';
 import CarClustererMap from './car-clusterer-map';
 import KakaoMapScript from './kakao-map-script';
@@ -18,9 +19,7 @@ export default function MapModal({ isOpen, onClose }: MapModalProps) {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        <button onClick={onClose} className={styles.closeButton}>
-          ✕
-        </button>
+        <button onClick={onClose} className={iconStyles.closeScreen} />
         <KakaoMapScript />
         <CarClustererMap
           width="100%"

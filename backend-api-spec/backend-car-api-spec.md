@@ -52,8 +52,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "carType": string, // 차량 종류
   "carNumber": string, // 차량 번호
   "sumDist": Double, // 총 주행 거리(km)
-  "lastLatitude": String,
-  "lastLongitude": String
   }
 - **request example**: {
   "brand": "현대",  
@@ -61,9 +59,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
    "carYear": 2025,  
    "carType": "중형",  
    "carNumber": "12가3456",
-  "sumDist": 12345.67,
-  "lastLatitude": "12.54",
-  "lastLongitude": "12.54"  
+  "sumDist": 12345.67, 
   }
 - **response**:{
   "result": boolean,
@@ -76,8 +72,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "car_type": string,
   "car_number": string,
   "sum_dist": double,
-  "lastLatitude": string,
-  "lastLongitude": string
   }
   }
 - **response example**:{
@@ -91,8 +85,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "car_type": "중형", // 차량 종류
   "car_number": "12가1598", // 차량 번호
   "sum_dist": 12345.67, // 총 주행 거리 (km)
-  "lastLatitude": "12.54",
-  "lastLongitude": "12.54"
   }
   }
 

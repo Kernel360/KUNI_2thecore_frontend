@@ -53,7 +53,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-full">
+    <div className="flex flex-col justify-center items-center">
       <TopBar title="로그인"></TopBar>
       <div
         className="w-[98%] h-px border-b-2"
