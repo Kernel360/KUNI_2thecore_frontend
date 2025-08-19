@@ -168,9 +168,13 @@ const HistoryListBox = ({
             </TableRow>
           ) : (
             historyData.map((log, index) => (
-              <TableRow 
+              <TableRow
                 key={`${log.carNumber}-${log.startTime}-${index}`}
-                ref={index === historyData.length - 1 && setLastIntersecting ? setLastIntersecting : null}
+                ref={
+                  index === historyData.length - 1 && setLastIntersecting
+                    ? setLastIntersecting
+                    : null
+                }
               >
                 <TableCell className={historyStyles.tableCell}>
                   {log.carNumber}
