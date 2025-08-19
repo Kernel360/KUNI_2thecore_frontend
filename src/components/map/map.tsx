@@ -14,7 +14,7 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
   const [mapInstance, setMapInstance] = useState<any>(null);
   const [mapType, setMapType] = useState<'roadmap' | 'skyview'>('roadmap');
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [currentZoomLevel, setCurrentZoomLevel] = useState<number>(10);
+  const [currentZoomLevel, setCurrentZoomLevel] = useState<number>(8);
 
   useEffect(() => {
     if (mapInstance || !mapRef.current) return;
@@ -25,7 +25,7 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
         window.kakao.maps.load(() => {
           const options = {
             center: new window.kakao.maps.LatLng(37.6102,127.0036),
-            level: 10,
+            level:8,
           };
 
           const map = new window.kakao.maps.Map(mapRef.current, options);
@@ -62,7 +62,7 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
     }
 
     // 줌 레벨에 따른 갱신 간격 결정
-    // 레벨 8 이하(확대)면 5초, 9 이상(축소)면 1분
+    // 레벨 8 이하(확대)면 5초, 9 초과(축소)면 1분
     const refreshInterval = currentZoomLevel <= 8 ? 5000 : 60000;
 
     intervalRef.current = setInterval(() => {
