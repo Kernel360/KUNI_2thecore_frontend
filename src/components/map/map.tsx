@@ -81,6 +81,41 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
     };
   }, [setupAutoRefresh]);
 
+  // 페이지 재진입 시 지도 리사이즈
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    const handleResize = () => {
+      if (mapInstance) {
+        mapInstance.relayout();
+      }
+    };
+
+    // 페이지 visibility 변경 감지 (페이지 재진입)
+    const handleVisibilityChange = () => {
+      if (!document.hidden && mapInstance) {
+        setTimeout(() => {
+          mapInstance.relayout();
+        }, 100);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // 컴포넌트 마운트 시에도 리사이즈 실행
+    setTimeout(() => {
+      if (mapInstance) {
+        mapInstance.relayout();
+      }
+    }, 100);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [mapInstance]);
+
   const setMapTypeHandler = (type: 'roadmap' | 'skyview') => {
     if (!mapInstance) return;
 
