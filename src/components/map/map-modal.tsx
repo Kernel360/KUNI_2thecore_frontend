@@ -19,9 +19,7 @@ export default function MapModal({ isOpen, onClose }: MapModalProps) {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        <button onClick={onClose} className={iconStyles.closeScreen}>
-          ✕
-        </button>
+        <button onClick={onClose} className={iconStyles.closeScreen} />
         <KakaoMapScript />
         <CarClustererMap
           width="100%"
