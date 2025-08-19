@@ -130,9 +130,10 @@ export default function LocalEmulator() {
     // 모든 차량에 대해 API 호출
     try {
       const updatePromises = cars.map(car =>
-        CarService.updateCar(car.carNumber, {
-          status: newState ? '운행' : '대기',
+        EmulService.powerCar({
+          carNumber: car.carNumber,
           powerStatus: newState ? 'ON' : 'OFF',
+          loginId: localStorage.getItem('loginId') || '',
         })
       );
       await Promise.all(updatePromises);
