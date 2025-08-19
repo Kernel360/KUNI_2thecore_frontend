@@ -97,7 +97,7 @@ export default function LocalEmulator() {
       // 성공시 cars 배열도 업데이트
       setCars(prev =>
         prev.map(car =>
-          car.carNumber === carNumber
+          car.carNumber === carNumber 
             ? { ...car, status: newStatus, powerStatus: checked ? 'ON' : 'OFF' }
             : car
         )

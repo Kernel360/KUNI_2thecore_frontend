@@ -1,3 +1,4 @@
+import KakaoMapScript from '@/components/map/kakao-map-script';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
