@@ -1,4 +1,3 @@
-import KakaoMapScript from '@/components/map/kakao-map-script';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,24 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useEffect, useRef, useState } from 'react';
-import styles from './place-search.module.css';
+import { AddressSearch } from '@/components/common/address-search';
+import { AddressSearchResult, Coordinates } from '@/types/address';
+import { getCoordinatesFromAddress } from '@/services/kakaoAddressService';
+import { useState } from 'react';
 
 interface CarRegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: CarFormData) => void;
-}
-
-// 주소 검색 결과 타입 정의
-interface AddressSearchResult {
-  id: string;
-  placeName: string;
-  roadAddress: string;
-  jibunAddress: string;
-  phone: string;
-  x: string;
-  y: string;
 }
 
 export interface CarFormData {
@@ -60,13 +50,8 @@ const CarRegisterModal = ({
   });
 
   // 주소 검색 관련 state
-  const [searchKeyword, setSearchKeyword] = useState('');
-  const [searchResults, setSearchResults] = useState<AddressSearchResult[]>([]);
-  const [showResults, setShowResults] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const psRef = useRef<any>(null);
-  const geocoderRef = useRef<any>(null);
+  const [isGeocodingLoading, setIsGeocodingLoading] = useState(false);
+  const [geocodingError, setGeocodingError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,9 +67,7 @@ const CarRegisterModal = ({
       lastLongitude: '',
       selectedAddress: '',
     });
-    setSearchKeyword('');
-    setSearchResults([]);
-    setShowResults(false);
+    setGeocodingError(null);
     onClose();
   };
 
@@ -107,99 +90,38 @@ const CarRegisterModal = ({
       lastLongitude: '',
       selectedAddress: '',
     });
-    setSearchKeyword('');
-    setSearchResults([]);
-    setShowResults(false);
+    setGeocodingError(null);
     onClose();
   };
 
-  // Kakao Maps 초기화
-  useEffect(() => {
-    const initKakaoServices = () => {
-      if (window.kakao && window.kakao.maps) {
-        window.kakao.maps.load(() => {
-          psRef.current = new window.kakao.maps.services.Places();
-          geocoderRef.current = new window.kakao.maps.services.Geocoder();
-        });
-      }
-    };
-
-    if (window.kakao) {
-      initKakaoServices();
-    } else {
-      const checkKakao = setInterval(() => {
-        if (window.kakao) {
-          initKakaoServices();
-          clearInterval(checkKakao);
-        }
-      }, 100);
-    }
-  }, []);
-
-  // 주소 검색 함수
-  const searchPlaces = (keyword: string) => {
-    if (!keyword.trim() || !psRef.current) return;
-
-    setIsSearching(true);
-    psRef.current.keywordSearch(keyword, (data: any[], status: any) => {
-      setIsSearching(false);
-
-      if (status === window.kakao.maps.services.Status.OK) {
-        const results: AddressSearchResult[] = data.map(place => ({
-          id: place.id,
-          placeName: place.place_name,
-          roadAddress: place.road_address_name || place.address_name,
-          jibunAddress: place.address_name,
-          phone: place.phone || '',
-          x: place.x,
-          y: place.y,
-        }));
-        setSearchResults(results);
-        setShowResults(true);
-      } else {
-        setSearchResults([]);
-        setShowResults(false);
-      }
-    });
-  };
-
-  // 검색 키워드 변경 핸들러 (debounce 적용)
-  const handleSearchKeywordChange = (keyword: string) => {
-    setSearchKeyword(keyword);
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-
-    if (keyword.trim()) {
-      searchTimeoutRef.current = setTimeout(() => {
-        searchPlaces(keyword);
-      }, 500);
-    } else {
-      setSearchResults([]);
-      setShowResults(false);
-    }
-  };
-
   // 주소 선택 핸들러
-  const handleAddressSelect = (result: AddressSearchResult) => {
-    if (!geocoderRef.current) return;
+  const handleAddressSelect = async (result: AddressSearchResult) => {
+    setIsGeocodingLoading(true);
+    setGeocodingError(null);
 
-    // 주소를 좌표로 변환
-    geocoderRef.current.addressSearch(
-      result.roadAddress,
-      (coords: any[], status: any) => {
-        if (status === window.kakao.maps.services.Status.OK) {
-          setFormData(prev => ({
-            ...prev,
-            lastLatitude: coords[0].y,
-            lastLongitude: coords[0].x,
-            selectedAddress: result.roadAddress,
-          }));
-          setSearchKeyword(result.roadAddress);
-          setShowResults(false);
-        }
+    try {
+      // 표시할 주소는 도로명 주소 우선
+      const displayAddress = result.road_address?.address_name || result.address_name;
+      
+      // 역지오코딩: 선택된 주소 문자열을 좌표로 변환
+      const coordinates = await getCoordinatesFromAddress(displayAddress);
+      
+      if (!coordinates) {
+        throw new Error('주소를 좌표로 변환할 수 없습니다.');
       }
-    );
+
+      setFormData(prev => ({
+        ...prev,
+        lastLatitude: coordinates.latitude.toString(),
+        lastLongitude: coordinates.longitude.toString(),
+        selectedAddress: displayAddress,
+      }));
+    } catch (error) {
+      setGeocodingError(error instanceof Error ? error.message : '주소 변환 중 오류가 발생했습니다.');
+      console.error('주소 변환 오류:', error);
+    } finally {
+      setIsGeocodingLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -211,7 +133,6 @@ const CarRegisterModal = ({
     >
       <div className="w-full max-w-md transform transition-all duration-300 ease-out scale-100">
         <Card className="shadow-2xl border-0 overflow-hidden bg-white/95 backdrop-blur-md max-h-[100vh]">
-          <KakaoMapScript />
           <CardHeader
             className="text-center py-3 flex items-start justify-center border-b-2"
             style={{ borderImage: 'var(--main-gradient) 1' }}
@@ -359,56 +280,25 @@ const CarRegisterModal = ({
                   >
                     위치
                   </Label>
-                  <div className="relative">
-                    <Input
-                      id="addressSearch"
-                      type="text"
-                      placeholder="도로명 주소나 장소명을 입력하세요"
-                      value={searchKeyword}
-                      onChange={e => handleSearchKeywordChange(e.target.value)}
-                      className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
-                      required
-                    />
-                    {showResults && (
-                      <div className={styles.placeSearchContainer}>
-                        <div className={styles.resultsList}>
-                          {isSearching ? (
-                            <div className={styles.loading}>검색 중...</div>
-                          ) : searchResults.length > 0 ? (
-                            searchResults.map(result => (
-                              <div
-                                key={result.id}
-                                className={styles.resultItem}
-                                onClick={() => handleAddressSelect(result)}
-                              >
-                                <div className={styles.placeName}>
-                                  {result.placeName}
-                                </div>
-                                <div className={styles.addressInfo}>
-                                  <div className={styles.roadAddress}>
-                                    {result.roadAddress}
-                                  </div>
-                                  {result.jibunAddress !==
-                                    result.roadAddress && (
-                                    <div className={styles.jibunAddress}>
-                                      {result.jibunAddress}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <div className={styles.noResults}>
-                              검색 결과가 없습니다
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  {formData.selectedAddress && (
-                    <div className="mt-2 text-sm text-gray-600">
-                      {formData.selectedAddress}
+                  <AddressSearch
+                    onAddressSelect={handleAddressSelect}
+                    placeholder="주소를 입력하세요 (예: 서울시 강남구 테헤란로)"
+                    value={formData.selectedAddress || ''}
+                    required
+                  />
+                  {isGeocodingLoading && (
+                    <div className="mt-2 text-sm text-blue-600">
+                      좌표 변환 중...
+                    </div>
+                  )}
+                  {geocodingError && (
+                    <div className="mt-2 text-sm text-red-600">
+                      {geocodingError}
+                    </div>
+                  )}
+                  {formData.selectedAddress && formData.lastLatitude && formData.lastLongitude && (
+                    <div className="mt-2 text-xs text-gray-500">
+                      위도: {formData.lastLatitude}, 경도: {formData.lastLongitude}
                     </div>
                   )}
                 </div>
