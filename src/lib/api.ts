@@ -10,7 +10,7 @@ import { TokenManager } from './token-manager';
 const API_BASE_URL =
   process.env.CAR_BASE_URL || 'http://52.78.122.150:8080/api';
 const EMULATOR_API_BASE_URL =
-  process.env.EMULATOR_BASE_URL || 'http://52.78.122.150:8082/api';
+  process.env.EMULATOR_BASE_URL || 'http://15.165.171.174:8081/api';
 
 // 페이징 응답 타입 (차량 목록 등에서 사용)
 export interface PageResponse<T> {
@@ -105,10 +105,10 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
           );
         }
 
-        // newAccessToken이 있으면 자동 업데이트
-        if (response.data.newAccessToken) {
+        // newAccessToken이 응답 헤더에 있으면 자동 업데이트
+        if (response.headers['new-access-token']) {
           console.log('새로운 액세스 토큰 수신 - 자동 업데이트');
-          TokenManager.updateAccessToken(response.data.newAccessToken);
+          TokenManager.updateAccessToken(response.headers['new-access-token']);
         }
       }
       return response;
@@ -131,8 +131,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
         ),
         error.response?.status || 500,
         error.response?.data?.code,
-        error.response?.data,
-        new Date().toISOString()
+        error.response?.data
       );
 
       return Promise.reject(apiError);

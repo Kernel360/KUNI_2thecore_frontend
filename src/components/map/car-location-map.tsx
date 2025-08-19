@@ -1,12 +1,7 @@
-import { CarService } from '@/services/car-service';
+import { CarDetail } from '@/services/car-service';
 import { useDetailStore } from '@/store/detail-store';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Map from './map';
-
-export interface Car {
-  lastLatitude: string;
-  lastLongitude: string;
-}
 
 export default function CarLocationMap({
   width,
@@ -15,57 +10,54 @@ export default function CarLocationMap({
   width: string;
   height: string;
 }) {
-  const [carLocation, setCarLocation] = useState<Car | null>(null);
-  const [address, setAddress] = useState<string>('');
-  const [map, setMap] = useState<any>(null);
+  const [carLocation, setCarLocation] = useState<CarDetail | null>(null);
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
   const infowindowRef = useRef<any>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { carNumber } = useDetailStore();
+  const { carNumber, lastLatitude, lastLongitude } = useDetailStore();
 
-  const loadCarLocation = async () => {
-    if (!carNumber) return;
+  const loadCarLocation = useCallback(async () => {
+    if (!carNumber || !lastLatitude || !lastLongitude) return;
 
-    try {
-      const locations = await CarService.getCarLocations();
-      const selectedCar = locations.find(loc => loc.carNumber === carNumber);
+    console.log('useDetailStore에서 가져온 위치 정보:', {
+      lastLatitude,
+      lastLongitude,
+    });
 
-      if (selectedCar) {
-        setCarLocation({
-          lastLatitude: selectedCar.lastLatitude,
-          lastLongitude: selectedCar.lastLongitude,
-        });
-      }
-    } catch (error) {
-      console.error('차량 위치 데이터 조회 실패:', error);
-    }
-  };
+    // useDetailStore의 위치 정보를 CarDetail 형식으로 변환
+    const carDetail: CarDetail = {
+      carNumber,
+      brand: '',
+      model: '',
+      brandModel: '',
+      status: '운행',
+      lastLatitude,
+      lastLongitude,
+    };
+    setCarLocation(carDetail);
+  }, [carNumber, lastLatitude, lastLongitude]);
 
-  useEffect(() => {
-    if (carNumber) {
+  const handleMapLoad = useCallback(
+    (mapInstance: any) => {
+      mapRef.current = mapInstance;
+      // 초기 로딩
       loadCarLocation();
+    },
+    [loadCarLocation]
+  );
 
-      intervalRef.current = setInterval(() => {
-        loadCarLocation();
-      }, 5000);
-
-      return () => {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-        }
-      };
-    }
-  }, [carNumber]);
-  const handleMapLoad = (mapInstance: any) => {
-    mapRef.current = mapInstance;
-  };
-
+  // 차량 위치 마커 업데이트
   useEffect(() => {
-    if (!mapRef.current || !carLocation) return;
+    if (
+      !mapRef.current ||
+      !carLocation ||
+      !carLocation.lastLatitude ||
+      !carLocation.lastLongitude
+    )
+      return;
 
+    // 기존 마커와 인포윈도우 제거
     if (markerRef.current) {
       markerRef.current.setMap(null);
     }
@@ -78,17 +70,20 @@ export default function CarLocationMap({
       parseFloat(carLocation.lastLongitude)
     );
 
+    // 새 마커 생성
     const marker = new window.kakao.maps.Marker({
       position: position,
     });
     marker.setMap(mapRef.current);
     markerRef.current = marker;
 
+    // 인포윈도우 생성
     const infowindow = new window.kakao.maps.InfoWindow({
       zIndex: 1,
     });
     infowindowRef.current = infowindow;
 
+    // 주소 조회 및 인포윈도우 표시
     const geocoder = new window.kakao.maps.services.Geocoder();
     geocoder.coord2Address(
       position.getLng(),
@@ -96,7 +91,6 @@ export default function CarLocationMap({
       (result: any, status: any) => {
         if (status === window.kakao.maps.services.Status.OK) {
           const roadAddress = result[0].road_address?.address_name || '';
-          setAddress(roadAddress);
 
           const content = `
             <div style="padding: 8px;">
@@ -111,8 +105,9 @@ export default function CarLocationMap({
       }
     );
 
-    mapRef.current.setLevel(3);
-    mapRef.current.setCenter(position);
+    // 지도 중심을 차량 위치로 이동하고 확대
+      mapRef.current.setLevel(3);
+      mapRef.current.setCenter(position);
   }, [carLocation, carNumber]);
 
   return (
@@ -120,8 +115,9 @@ export default function CarLocationMap({
       <Map
         width={width}
         height={height}
-        onLoad={setMap}
-        onOpenMapModal={close}
+        onLoad={handleMapLoad}
+        onRefresh={loadCarLocation}
+        enableAutoRefresh={true}
       />
     </div>
   );

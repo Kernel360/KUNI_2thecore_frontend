@@ -1,14 +1,12 @@
 import CarLocationMap from '@/components/map/car-location-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
-import MenuBox from '@/components/menu-box/menu-box';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import TopBar from '@/components/ui/topBar';
 import { CarDetail, CarService } from '@/services/car-service';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { useDetailStore } from '@/store/detail-store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './detail.module.css';
 
@@ -138,8 +136,6 @@ const DetailPage = () => {
 
   return (
     <>
-      <TopBar title={`차량 상세 정보 - ${carNumber}`} />
-      <MenuBox />
       <KakaoMapScript />
       <div className={styles.contentGrid}>
         {/* 상세 정보 */}
@@ -165,6 +161,7 @@ const DetailPage = () => {
               <Input
                 className={styles.input}
                 value={status}
+                readOnly={!detailChange}
                 onChange={
                   detailChange
                     ? e => handleChange('status', e.target.value)

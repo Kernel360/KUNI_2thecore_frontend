@@ -15,21 +15,18 @@ export class ApiError extends Error {
   public status: number;
   public code?: string;
   public data?: any;
-  public timestamp?: string;
 
   constructor(
     message: string,
     status: number = 500,
     code?: string,
-    data?: any,
-    timestamp?: string
+    data?: any
   ) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.code = code;
     this.data = data;
-    this.timestamp = timestamp;
 
     // Error 클래스 상속 시 필요한 설정
     Object.setPrototypeOf(this, ApiError.prototype);

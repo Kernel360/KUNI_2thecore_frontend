@@ -1,9 +1,16 @@
+import { useNavigate } from 'react-router-dom';
+
 interface TopBarProps {
   title?: string;
   showLogo?: boolean;
 }
 
 export default function TopBar({ title, showLogo = false }: TopBarProps) {
+  const navigate = useNavigate();
+
+  const routeMain = () => {
+    navigate('/');
+  };
   return (
     <header
       style={{
@@ -24,13 +31,13 @@ export default function TopBar({ title, showLogo = false }: TopBarProps) {
       >
         {showLogo ? (
           <img
+            onClick={routeMain}
             src="/2theCore.png"
             alt="2theCore Logo"
             style={{
-              height: '80px',
+              height: '60px',
               width: 'auto',
-              paddingBottom: '8px',
-              objectFit: 'contain',
+              cursor: 'pointer',
             }}
           />
         ) : (
