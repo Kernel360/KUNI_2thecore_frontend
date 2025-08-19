@@ -99,9 +99,11 @@ export default function CarLocationMap({
       }
     );
 
-    // 지도 중심을 차량 위치로 이동하고 확대
-    mapRef.current.setLevel(3);
-    mapRef.current.setCenter(position);
+    // 초기 로딩시에만 지도 중심을 차량 위치로 이동하고 확대
+    if (!markerRef.current) {
+      mapRef.current.setLevel(3);
+      mapRef.current.setCenter(position);
+    }
   }, [carLocation, carNumber]);
 
   return (
