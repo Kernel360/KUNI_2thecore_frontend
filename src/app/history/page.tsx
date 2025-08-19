@@ -12,21 +12,27 @@ export default function History() {
   const [historyData, setHistoryData] = useState<DriveLog[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchParams, setSearchParams] = useState<DriveLogQueryParams>({});
-  
+
   // 무한 스크롤 hook을 page level로 이동
-  const { page, setPage, isFetching, setIsFetching, setLastIntersecting } = useObserver();
+  const { page, setPage, isFetching, setIsFetching, setLastIntersecting } =
+    useObserver();
   const [hasNextPage, setHasNextPage] = useState(true);
 
   // 페이지 변경 시 추가 데이터 로드 (무한 스크롤)
   useEffect(() => {
-    if (page === 1 || !hasNextPage || !searchParams || Object.keys(searchParams).length === 0) return;
+    if (page === 1 || !hasNextPage || !searchParams.startTime || isFetching)
+      return;
 
     const loadMoreLogs = async () => {
       try {
         setIsFetching(true);
-        
-        const result = await HistoryService.getDriveLogs(searchParams, page, 10);
-        
+
+        const result = await HistoryService.getDriveLogs(
+          searchParams,
+          page,
+          10
+        );
+
         if (result.content.length > 0) {
           setHistoryData(prevLogs => [...prevLogs, ...result.content]);
           setHasNextPage(result.content.length === 10);
@@ -41,7 +47,7 @@ export default function History() {
     };
 
     loadMoreLogs();
-  }, [page, searchParams, hasNextPage]);
+  }, [page, searchParams, hasNextPage, isFetching]);
 
   const handleSort = async (sortBy: string, order: 'ASC' | 'DESC') => {
     setLoading(true);
@@ -64,12 +70,16 @@ export default function History() {
     }
   };
 
-  const handleSearchResults = (data: DriveLog[], params?: DriveLogQueryParams) => {
+  const handleSearchResults = (
+    data: DriveLog[],
+    params?: DriveLogQueryParams
+  ) => {
     setHistoryData(data);
     if (params) {
       setSearchParams(params);
       setPage(1);
       setHasNextPage(data.length === 10);
+      setIsFetching(false); // 초기 검색 완료 후 isFetching 상태 초기화
     }
   };
 
@@ -83,7 +93,9 @@ export default function History() {
         historyData={historyData}
         loading={loading}
         onSort={handleSort}
-        setLastIntersecting={setLastIntersecting}
+        setLastIntersecting={
+          setLastIntersecting as (node?: Element | null) => void
+        }
       />
     </div>
   );
