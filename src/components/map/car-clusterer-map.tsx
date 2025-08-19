@@ -33,15 +33,24 @@ export default function CarClustererMap({
 }: CarClustererMapProps) {
   const [map, setMap] = useState<any>(null);
   const [cars, setCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
   const mapRef = useRef<any>(null);
   const clustererRef = useRef<any>(null);
 
   const handleMapLoad = (mapInstance: any) => {
     mapRef.current = mapInstance;
     setMap(mapInstance);
+    setMapReady(true);
+    
+    // 지도가 준비되면 1초 후에 차량 데이터 로드 (지연 로딩)
+    setTimeout(() => {
+      loadCarLocations();
+    }, 1000);
   };
 
   const loadCarLocations = useCallback(async () => {
+    setLoading(true);
     try {
       const locations = await CarService.getCarLocations();
       const carData: Car[] = locations.map(loc => ({
@@ -58,6 +67,8 @@ export default function CarClustererMap({
       setCars(carData);
     } catch (error) {
       console.error('차량 위치 데이터 조회 실패:', error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -70,9 +81,6 @@ export default function CarClustererMap({
       minLevel: 10,
       disableClickZoom: true,
     });
-
-    // 초기 로딩
-    loadCarLocations();
   }, [map]);
 
   useEffect(() => {

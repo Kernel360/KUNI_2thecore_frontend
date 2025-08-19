@@ -14,7 +14,7 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
   const [mapInstance, setMapInstance] = useState<any>(null);
   const [mapType, setMapType] = useState<'roadmap' | 'skyview'>('roadmap');
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [currentZoomLevel, setCurrentZoomLevel] = useState<number>(8);
+  const [currentZoomLevel, setCurrentZoomLevel] = useState<number>(13);
 
   useEffect(() => {
     if (mapInstance || !mapRef.current) return;
@@ -24,8 +24,8 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
       if (typeof window !== 'undefined' && window.kakao && window.kakao.maps) {
         window.kakao.maps.load(() => {
           const options = {
-            center: new window.kakao.maps.LatLng(37.6102,127.0036),
-            level:8,
+            center: new window.kakao.maps.LatLng(36.2,128.1),
+            level:13,
           };
 
           const map = new window.kakao.maps.Map(mapRef.current, options);
