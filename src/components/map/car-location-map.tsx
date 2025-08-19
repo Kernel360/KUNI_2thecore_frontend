@@ -1,4 +1,4 @@
-import { CarDetail, CarService } from '@/services/car-service';
+import { CarDetail } from '@/services/car-service';
 import { useDetailStore } from '@/store/detail-store';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Map from './map';
@@ -20,8 +20,11 @@ export default function CarLocationMap({
   const loadCarLocation = useCallback(async () => {
     if (!carNumber || !lastLatitude || !lastLongitude) return;
 
-    console.log('useDetailStore에서 가져온 위치 정보:', { lastLatitude, lastLongitude });
-    
+    console.log('useDetailStore에서 가져온 위치 정보:', {
+      lastLatitude,
+      lastLongitude,
+    });
+
     // useDetailStore의 위치 정보를 CarDetail 형식으로 변환
     const carDetail: CarDetail = {
       carNumber,
@@ -35,11 +38,14 @@ export default function CarLocationMap({
     setCarLocation(carDetail);
   }, [carNumber, lastLatitude, lastLongitude]);
 
-  const handleMapLoad = useCallback((mapInstance: any) => {
-    mapRef.current = mapInstance;
-    // 초기 로딩
-    loadCarLocation();
-  }, [loadCarLocation]);
+  const handleMapLoad = useCallback(
+    (mapInstance: any) => {
+      mapRef.current = mapInstance;
+      // 초기 로딩
+      loadCarLocation();
+    },
+    [loadCarLocation]
+  );
 
   // 차량 위치 마커 업데이트
   useEffect(() => {
@@ -100,15 +106,15 @@ export default function CarLocationMap({
     );
 
     // 지도 중심을 차량 위치로 이동하고 확대
-    mapRef.current.setLevel(3);
-    mapRef.current.setCenter(position);
+      mapRef.current.setLevel(3);
+      mapRef.current.setCenter(position);
   }, [carLocation, carNumber]);
 
   return (
     <div style={{ width, height }}>
-      <Map 
-        width={width} 
-        height={height} 
+      <Map
+        width={width}
+        height={height}
         onLoad={handleMapLoad}
         onRefresh={loadCarLocation}
         enableAutoRefresh={true}
