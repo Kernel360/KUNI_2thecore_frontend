@@ -15,7 +15,7 @@ interface HistoryListBoxProps {
   historyData: DriveLog[];
   loading?: boolean;
   onSort?: (sortBy: string, order: 'ASC' | 'DESC') => void;
-  setLastIntersecting?: ((node?: Element | null) => void) | null;
+  setLastIntersecting?: (node: HTMLDivElement | null) => void;
 }
 
 const allowedStatus = ['운행', '대기', '수리'] as const;
@@ -168,9 +168,13 @@ const HistoryListBox = ({
             </TableRow>
           ) : (
             historyData.map((log, index) => (
-              <TableRow 
+              <TableRow
                 key={`${log.carNumber}-${log.startTime}-${index}`}
-                ref={index === historyData.length - 1 && setLastIntersecting ? setLastIntersecting : null}
+                ref={
+                  index === historyData.length - 1 && setLastIntersecting
+                    ? setLastIntersecting
+                    : null
+                }
               >
                 <TableCell className={historyStyles.tableCell}>
                   {log.carNumber}
