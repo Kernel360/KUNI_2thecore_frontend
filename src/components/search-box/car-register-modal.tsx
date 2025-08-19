@@ -27,9 +27,6 @@ export interface CarFormData {
   carType: string;
   carNumber: string;
   sumDist: string;
-  lastLatitude: string;
-  lastLongitude: string;
-  selectedAddress?: string;
 }
 
 const CarRegisterModal = ({
@@ -44,9 +41,6 @@ const CarRegisterModal = ({
     carType: '',
     carNumber: '',
     sumDist: '',
-    lastLatitude: '',
-    lastLongitude: '',
-    selectedAddress: '',
   });
 
   // 주소 검색 관련 state
@@ -63,9 +57,6 @@ const CarRegisterModal = ({
       carType: '',
       carNumber: '',
       sumDist: '',
-      lastLatitude: '',
-      lastLongitude: '',
-      selectedAddress: '',
     });
     setGeocodingError(null);
     onClose();
@@ -86,9 +77,6 @@ const CarRegisterModal = ({
       carType: '',
       carNumber: '',
       sumDist: '',
-      lastLatitude: '',
-      lastLongitude: '',
-      selectedAddress: '',
     });
     setGeocodingError(null);
     onClose();
