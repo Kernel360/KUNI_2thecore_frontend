@@ -20,7 +20,12 @@ export default function History() {
 
   // 페이지 변경 시 추가 데이터 로드 (무한 스크롤)
   useEffect(() => {
-    if (page === 1 || !hasNextPage || !searchParams.startTime || isFetching)
+    if (
+      page === 1 ||
+      !hasNextPage ||
+      !searchParams ||
+      Object.keys(searchParams).length === 0
+    )
       return;
 
     const loadMoreLogs = async () => {
@@ -47,7 +52,7 @@ export default function History() {
     };
 
     loadMoreLogs();
-  }, [page, searchParams, hasNextPage, isFetching]);
+  }, [page, searchParams, hasNextPage]);
 
   const handleSort = async (sortBy: string, order: 'ASC' | 'DESC') => {
     setLoading(true);
@@ -79,7 +84,6 @@ export default function History() {
       setSearchParams(params);
       setPage(1);
       setHasNextPage(data.length === 10);
-      setIsFetching(false); // 초기 검색 완료 후 isFetching 상태 초기화
     }
   };
 
@@ -93,9 +97,7 @@ export default function History() {
         historyData={historyData}
         loading={loading}
         onSort={handleSort}
-        setLastIntersecting={
-          setLastIntersecting as (node?: Element | null) => void
-        }
+        setLastIntersecting={setLastIntersecting}
       />
     </div>
   );
