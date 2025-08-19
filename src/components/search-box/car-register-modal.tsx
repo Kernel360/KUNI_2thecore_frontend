@@ -209,24 +209,24 @@ const CarRegisterModal = ({
       className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
     >
-      <div className="w-full max-w-lg transform transition-all duration-300 ease-out scale-100">
-        <Card className="shadow-2xl border-0 overflow-hidden bg-white/95 backdrop-blur-md">
+      <div className="w-full max-w-md transform transition-all duration-300 ease-out scale-100">
+        <Card className="shadow-2xl border-0 overflow-hidden bg-white/95 backdrop-blur-md max-h-[100vh]">
           <KakaoMapScript />
           <CardHeader
             className="text-center py-3 flex items-start justify-center border-b-2"
             style={{ borderImage: 'var(--main-gradient) 1' }}
           >
-            <CardTitle className="text-2xl font-bold tracking-wide flex items-start justify-around gap-1">
+            <CardTitle className="font-bold tracking-wide flex items-start justify-around">
               <span>🚗차량 등록</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6 pt-4">
+          <CardContent>
             <form onSubmit={handleSubmit}>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
                 <div className="space-y-1">
                   <Label
                     htmlFor="brand"
-                    className="text-base font-semibold text-gray-700 flex items-center gap-2"
+                    className="font-semibold text-gray-700 flex items-center"
                   >
                     차량 브랜드
                   </Label>
@@ -244,7 +244,7 @@ const CarRegisterModal = ({
                 <div className="space-y-1">
                   <Label
                     htmlFor="model"
-                    className="text-base font-semibold text-gray-700 flex items-center gap-2"
+                    className="font-semibold text-gray-700 flex items-center"
                   >
                     모델명
                   </Label>
@@ -262,7 +262,7 @@ const CarRegisterModal = ({
                 <div className="space-y-1">
                   <Label
                     htmlFor="carYear"
-                    className="text-base font-semibold text-gray-700 flex items-center gap-2"
+                    className="font-semibold text-gray-700 flex items-center"
                   >
                     차량 연식
                   </Label>
@@ -280,7 +280,7 @@ const CarRegisterModal = ({
                 <div className="space-y-1">
                   <Label
                     htmlFor="carType"
-                    className="text-base font-semibold text-gray-700 flex items-center gap-2"
+                    className="font-semibold text-gray-700 flex items-center"
                   >
                     차종
                   </Label>
@@ -317,7 +317,7 @@ const CarRegisterModal = ({
                 <div className="space-y-1">
                   <Label
                     htmlFor="carNumber"
-                    className="text-base font-semibold text-gray-700 flex items-center gap-2"
+                    className="font-semibold text-gray-700 flex items-center"
                   >
                     차량번호
                   </Label>
@@ -337,7 +337,7 @@ const CarRegisterModal = ({
                 <div className="space-y-1">
                   <Label
                     htmlFor="sumDist"
-                    className="text-base font-semibold text-gray-700 flex items-center gap-2"
+                    className="font-semibold text-gray-700 flex items-center"
                   >
                     총 주행거리
                   </Label>
@@ -355,7 +355,7 @@ const CarRegisterModal = ({
                 <div className="space-y-1">
                   <Label
                     htmlFor="addressSearch"
-                    className="text-base font-semibold text-gray-700 flex items-center gap-2"
+                    className="font-semibold text-gray-700 flex items-center"
                   >
                     위치
                   </Label>
@@ -413,7 +413,7 @@ const CarRegisterModal = ({
                   )}
                 </div>
 
-                <div className="flex gap-4 pt-6">
+                <div className="flex gap-4 pt-2">
                   <Button
                     type="button"
                     variant="outline"
