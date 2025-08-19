@@ -82,7 +82,6 @@ const CarRegisterModal = ({
     >
       <div className="w-full max-w-md transform transition-all duration-300 ease-out scale-100">
         <Card className="shadow-2xl border-0 overflow-hidden bg-white/95 backdrop-blur-md max-h-[100vh]">
-          <KakaoMapScript />
           <CardHeader
             className="text-center py-3 flex items-start justify-center border-b-2"
             style={{ borderImage: 'var(--main-gradient) 1' }}
@@ -221,67 +220,6 @@ const CarRegisterModal = ({
                     className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
                     required
                   />
-                </div>
-
-                <div className="space-y-1">
-                  <Label
-                    htmlFor="addressSearch"
-                    className="font-semibold text-gray-700 flex items-center"
-                  >
-                    위치
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="addressSearch"
-                      type="text"
-                      placeholder="도로명 주소나 장소명을 입력하세요"
-                      value={searchKeyword}
-                      onChange={e => handleSearchKeywordChange(e.target.value)}
-                      className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
-                      required
-                    />
-                    {showResults && (
-                      <div className={styles.placeSearchContainer}>
-                        <div className={styles.resultsList}>
-                          {isSearching ? (
-                            <div className={styles.loading}>검색 중...</div>
-                          ) : searchResults.length > 0 ? (
-                            searchResults.map(result => (
-                              <div
-                                key={result.id}
-                                className={styles.resultItem}
-                                onClick={() => handleAddressSelect(result)}
-                              >
-                                <div className={styles.placeName}>
-                                  {result.placeName}
-                                </div>
-                                <div className={styles.addressInfo}>
-                                  <div className={styles.roadAddress}>
-                                    {result.roadAddress}
-                                  </div>
-                                  {result.jibunAddress !==
-                                    result.roadAddress && (
-                                    <div className={styles.jibunAddress}>
-                                      {result.jibunAddress}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <div className={styles.noResults}>
-                              검색 결과가 없습니다
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  {formData.selectedAddress && (
-                    <div className="mt-2 text-sm text-gray-600">
-                      {formData.selectedAddress}
-                    </div>
-                  )}
                 </div>
 
                 <div className="flex gap-4 pt-2">
