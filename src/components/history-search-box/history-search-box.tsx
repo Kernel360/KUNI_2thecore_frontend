@@ -96,8 +96,8 @@ const HistorySearchBox = ({
         }
       }
 
-      // 상태 처리 (전체 상태가 아닌 경우만 추가)
-      if (status && status !== '전체 상태') {
+      // 상태 처리
+      if (status) {
         queryParams.status = status;
       }
 
