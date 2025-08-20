@@ -22,7 +22,7 @@ const HistorySearchBox = ({
 }: HistorySearchBoxProps) => {
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
-  const [status, setStatus] = useState('운행');
+  const [status, setStatus] = useState('전체 상태');
   const [error, setError] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
@@ -79,63 +79,34 @@ const HistorySearchBox = ({
         queryParams.carNumber = carNumber.trim();
       }
 
-      const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
-      console.log('검색 결과:', result);
-      onSearchResults(result.content, queryParams);
-    } catch (error) {
-      console.error('주행 기록 검색 실패:', error);
-      alert('주행 기록 검색에 실패했습니다.');
-      onSearchResults([]);
-    } finally {
-      onLoadingChange(false);
-    }
-  };
+      // 브랜드/모델 처리
+      if (brandModel.trim()) {
+        const parts = brandModel.trim().split(/\s+/);
+        const brand = parts[0] || '';
+        const model = parts.slice(1).join(' ') || '';
 
-  // 필터 적용 (브랜드/모델 + 상태)
-  const handleFilterApply = async () => {
-    if (!dateRange?.from || !dateRange?.to) {
-      alert('주행 기간을 선택해주세요.');
-      return;
-    }
-
-    try {
-      onLoadingChange(true);
-      const parts = brandModel.trim().split(/\s+/);
-      const brand = parts[0] || '';
-      const model = parts.slice(1).join(' ') || '';
-
-      const queryParams: DriveLogQueryParams = {
-        startTime: dateRange.from,
-        endTime: dateRange.to,
-        page: 1,
-        offset: 10,
-      };
-
-      // 브랜드와 모델 처리
-      if (brand && model) {
-        queryParams.brand = brand.trim();
-        queryParams.model = model.trim();
-        queryParams.twoParam = true;
-      } else if (brand) {
-        // 브랜드만 입력된 경우
-        queryParams.brand = brand.trim();
-        queryParams.twoParam = false;
-      } else if (model) {
-        // 모델만 입력된 경우
-        queryParams.brand = model.trim();
-        queryParams.twoParam = false;
+        if (brand && model) {
+          queryParams.brand = brand.trim();
+          queryParams.model = model.trim();
+          queryParams.twoParam = true;
+        } else if (brand) {
+          // 브랜드만 입력된 경우
+          queryParams.brand = brand.trim();
+          queryParams.twoParam = false;
+        }
       }
 
-      // 상태 처리
-      if (status) {
+      // 상태 처리 (전체 상태가 아닌 경우만 추가)
+      if (status && status !== '전체 상태') {
         queryParams.status = status;
       }
 
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
+      console.log('통합 검색 결과:', result);
       onSearchResults(result.content, queryParams);
     } catch (error) {
-      console.error('필터 검색 실패:', error);
-      alert('필터 검색에 실패했습니다.');
+      console.error('주행 기록 검색 실패:', error);
+      alert('주행 기록 검색에 실패했습니다.');
       onSearchResults([]);
     } finally {
       onLoadingChange(false);
@@ -167,7 +138,6 @@ const HistorySearchBox = ({
           setBrandModel={setBrandModel}
           status={status}
           setStatus={setStatus}
-          onFilterApply={handleFilterApply}
         />
         <Button
           className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0

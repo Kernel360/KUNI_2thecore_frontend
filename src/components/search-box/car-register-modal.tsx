@@ -1,3 +1,4 @@
+import { AddressSearch } from '@/components/common/address-search';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,9 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { AddressSearch } from '@/components/common/address-search';
-import { AddressSearchResult, Coordinates } from '@/types/address';
 import { getCoordinatesFromAddress } from '@/services/kakaoAddressService';
+import { AddressSearchResult } from '@/types/address';
 import { useState } from 'react';
 
 interface CarRegisterModalProps {
@@ -27,6 +27,9 @@ export interface CarFormData {
   carType: string;
   carNumber: string;
   sumDist: string;
+  lastLatitude?: string;
+  lastLongitude?: string;
+  selectedAddress?: string;
 }
 
 const CarRegisterModal = ({
@@ -41,6 +44,7 @@ const CarRegisterModal = ({
     carType: '',
     carNumber: '',
     sumDist: '',
+    selectedAddress: ''
   });
 
   // 주소 검색 관련 state
@@ -89,11 +93,12 @@ const CarRegisterModal = ({
 
     try {
       // 표시할 주소는 도로명 주소 우선
-      const displayAddress = result.road_address?.address_name || result.address_name;
-      
+      const displayAddress =
+        result.road_address?.address_name || result.address_name;
+
       // 역지오코딩: 선택된 주소 문자열을 좌표로 변환
       const coordinates = await getCoordinatesFromAddress(displayAddress);
-      
+
       if (!coordinates) {
         throw new Error('주소를 좌표로 변환할 수 없습니다.');
       }
@@ -105,7 +110,11 @@ const CarRegisterModal = ({
         selectedAddress: displayAddress,
       }));
     } catch (error) {
-      setGeocodingError(error instanceof Error ? error.message : '주소 변환 중 오류가 발생했습니다.');
+      setGeocodingError(
+        error instanceof Error
+          ? error.message
+          : '주소 변환 중 오류가 발생했습니다.'
+      );
       console.error('주소 변환 오류:', error);
     } finally {
       setIsGeocodingLoading(false);
@@ -284,11 +293,14 @@ const CarRegisterModal = ({
                       {geocodingError}
                     </div>
                   )}
-                  {formData.selectedAddress && formData.lastLatitude && formData.lastLongitude && (
-                    <div className="mt-2 text-xs text-gray-500">
-                      위도: {formData.lastLatitude}, 경도: {formData.lastLongitude}
-                    </div>
-                  )}
+                  {formData.selectedAddress &&
+                    formData.lastLatitude &&
+                    formData.lastLongitude && (
+                      <div className="mt-2 text-xs text-gray-500">
+                        위도: {formData.lastLatitude}, 경도:{' '}
+                        {formData.lastLongitude}
+                      </div>
+                    )}
                 </div>
 
                 <div className="flex gap-4 pt-2">

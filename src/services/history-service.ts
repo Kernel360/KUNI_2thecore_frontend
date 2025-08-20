@@ -36,14 +36,10 @@ export class HistoryService {
     page: number = 1,
     offset: number = 10
   ): Promise<PageResponse<DriveLog>> {
-    // carNumber는 쿼리 파라미터에서 제외
-    const { carNumber: _ignoredCarNumber, ...paramsWithoutCarNumber } =
-      params || {};
-
-    // Date 객체를 ISO 문자열로 변환
+    // Date 객체를 ISO 문자열로 변환하고 모든 파라미터 포함
     const formattedParams = params
       ? {
-          ...paramsWithoutCarNumber,
+          ...params,
           startTime: params.startTime
             ? params.startTime.toISOString().split('T')[0]
             : undefined,
