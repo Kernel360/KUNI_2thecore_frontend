@@ -24,17 +24,20 @@ const HistorySearchBox = ({
   const [brandModel, setBrandModel] = useState('');
   const [status, setStatus] = useState('운행');
   const [error, setError] = useState<string | null>(null);
+
   // 일주일 전을 기본 시작일로 설정
-  const getWeekAgo = () => {
-    const today = new Date();
-    const weekAgo = new Date();
-    weekAgo.setDate(today.getDate() - 7);
-    return weekAgo;
-  };
+  const today = new Date();
+  const weekAgo = new Date();
+  console.log('weekAgo');
+  console.log(weekAgo);
+  weekAgo.setDate(today.getDate() - 7);
+  console.log(weekAgo);
+  weekAgo.setHours(0, 0, 0, 0);
+  console.log(weekAgo);
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: getWeekAgo(),
     to: new Date(),
+    from: weekAgo,
   });
 
   // 초기 주행 기록 목록 로드 (dateRange가 설정된 후)
@@ -163,11 +166,19 @@ const HistorySearchBox = ({
           value={carNumber}
           onChange={e => setCarNumber(e.target.value)}
         />
-        <DoubleCalendar 
+        <DoubleCalendar
           startTime={dateRange?.from}
           endTime={dateRange?.to}
-          onStartTimeChange={(date) => setDateRange(prev => prev ? { ...prev, from: date } : { from: date, to: undefined })}
-          onEndTimeChange={(date) => setDateRange(prev => prev ? { ...prev, to: date } : { from: undefined, to: date })}
+          onStartTimeChange={date =>
+            setDateRange(prev =>
+              prev ? { ...prev, from: date } : { from: date, to: undefined }
+            )
+          }
+          onEndTimeChange={date =>
+            setDateRange(prev =>
+              prev ? { ...prev, to: date } : { from: undefined, to: date }
+            )
+          }
         />
         <Button
           className={styles.searchButton}
