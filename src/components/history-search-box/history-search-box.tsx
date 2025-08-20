@@ -9,7 +9,7 @@ import BrandFilterBox from '../search-box/filter-box';
 import styles from '../search-box/search-filter.module.css';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { RangeCalendar } from './range-calendar';
+import { DoubleCalendar } from './double-calendar.tsx';
 
 interface HistorySearchBoxProps {
   onSearchResults: (data: DriveLog[], params?: DriveLogQueryParams) => void;
@@ -152,7 +152,7 @@ const HistorySearchBox = ({
           value={carNumber}
           onChange={e => setCarNumber(e.target.value)}
         />
-        <RangeCalendar dateRange={dateRange} onDateRangeChange={setDateRange} />
+        <DoubleCalendar />
         <Button
           className={styles.searchButton}
           onClick={handleSearch}
