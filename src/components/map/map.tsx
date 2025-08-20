@@ -116,6 +116,18 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
     };
   }, [mapInstance]);
 
+  // 라우터 기반 페이지 재진입 감지를 위한 추가 useEffect
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    // 컴포넌트가 다시 마운트되거나 의존성이 변경될 때마다 지도 재정렬
+    const relayoutTimer = setTimeout(() => {
+      mapInstance.relayout();
+    }, 50);
+
+    return () => clearTimeout(relayoutTimer);
+  }, [mapInstance, width, height]);
+
   const setMapTypeHandler = (type: 'roadmap' | 'skyview') => {
     if (!mapInstance) return;
 
