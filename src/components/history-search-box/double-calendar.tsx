@@ -8,22 +8,21 @@ import {
 import { CalendarIcon } from 'lucide-react';
 import * as React from 'react';
 
-export function DoubleCalendar() {
+interface DoubleCalendarProps {
+  startTime?: Date;
+  endTime?: Date;
+  onStartTimeChange?: (date: Date | undefined) => void;
+  onEndTimeChange?: (date: Date | undefined) => void;
+}
+
+export function DoubleCalendar({ 
+  startTime, 
+  endTime, 
+  onStartTimeChange, 
+  onEndTimeChange 
+}: DoubleCalendarProps) {
   const [startOpen, setStartOpen] = React.useState(false);
   const [endOpen, setEndOpen] = React.useState(false);
-
-  // 일주일 전을 기본 시작일로 설정
-  const getWeekAgo = () => {
-    const today = new Date();
-    const weekAgo = new Date();
-    weekAgo.setDate(today.getDate() - 7);
-    return weekAgo;
-  };
-
-  const [startTime, setStartTime] = React.useState<Date | undefined>(
-    getWeekAgo()
-  );
-  const [endTime, setEndTime] = React.useState<Date | undefined>(new Date());
 
   return (
     <div className="flex flex-row gap-3">
@@ -44,7 +43,7 @@ export function DoubleCalendar() {
             selected={startTime}
             captionLayout="dropdown"
             onSelect={date => {
-              setStartTime(date);
+              onStartTimeChange?.(date);
               setStartOpen(false);
             }}
           />
@@ -67,7 +66,7 @@ export function DoubleCalendar() {
             selected={endTime}
             captionLayout="dropdown"
             onSelect={date => {
-              setEndTime(date);
+              onEndTimeChange?.(date);
               setEndOpen(false);
             }}
           />
