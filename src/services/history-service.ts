@@ -30,14 +30,14 @@ export interface DriveLog {
 }
 
 export class HistoryService {
-  // 차량 주행 기록 조회 (GET /drivelogs)
+  // 차량 주행 기록 조회 (POST /drivelogs) - 요청 바디로 전달
   static async getDriveLogs(
     params?: DriveLogQueryParams,
     page: number = 1,
     offset: number = 10
   ): Promise<PageResponse<DriveLog>> {
-    // Date 객체를 ISO 문자열로 변환하고 모든 파라미터 포함
-    const formattedParams = params
+    // Date 객체를 ISO 문자열(YYYY-MM-DD)로 변환하여 요청 바디에 포함
+    const requestBody = params
       ? {
           ...params,
           startTime: params.startTime
@@ -53,13 +53,10 @@ export class HistoryService {
         }
       : { page, offset, sortBy: 'startTime', sortOrder: 'ASC' };
 
-    const response = await mainApi.get<ApiResponse<PageResponse<DriveLog>>>(
+    const response = await mainApi.post<ApiResponse<PageResponse<DriveLog>>>(
       '/drivelogs',
-      {
-        params: formattedParams,
-      }
+      requestBody
     );
     return response.data.data;
   }
 }
-

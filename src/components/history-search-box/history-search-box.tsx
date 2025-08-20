@@ -22,7 +22,7 @@ const HistorySearchBox = ({
 }: HistorySearchBoxProps) => {
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
-  const [status, setStatus] = useState('전체 상태');
+  const [status, setStatus] = useState('total');
   const [error, setError] = useState<string | null>(null);
 
   // 일주일 전을 기본 시작일로 설정
@@ -40,12 +40,10 @@ const HistorySearchBox = ({
     from: weekAgo,
   });
 
-  // 초기 주행 기록 목록 로드 (dateRange가 설정된 후)
+  // 초기 1회만 주행 기록 목록 로드
   useEffect(() => {
-    if (dateRange?.from && dateRange?.to) {
-      loadInitialLogs();
-    }
-  }, [dateRange]);
+    loadInitialLogs();
+  }, []);
 
   const loadInitialLogs = async () => {
     if (!dateRange?.from || !dateRange?.to) return;
