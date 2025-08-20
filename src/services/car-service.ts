@@ -99,10 +99,10 @@ export class CarService {
 
   // 차량 등록
   static async createCar(
-    carData: Omit<
-      CarDetail,
-      'lastLatitude' | 'lastLongitude' | 'status' | 'brandModel'
-    >
+    carData: Omit<CarDetail, 'status' | 'brandModel'> & {
+      lastLatitude?: string;
+      lastLongitude?: string;
+    }
   ): Promise<CarDetail> {
     const response = await mainApi.post('/cars', {
       ...carData,

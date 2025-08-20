@@ -14,7 +14,7 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
   const [mapInstance, setMapInstance] = useState<any>(null);
   const [mapType, setMapType] = useState<'roadmap' | 'skyview'>('roadmap');
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [currentZoomLevel, setCurrentZoomLevel] = useState<number>(8);
+  const [currentZoomLevel, setCurrentZoomLevel] = useState<number>(13);
 
   useEffect(() => {
     if (mapInstance || !mapRef.current) return;
@@ -24,8 +24,8 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
       if (typeof window !== 'undefined' && window.kakao && window.kakao.maps) {
         window.kakao.maps.load(() => {
           const options = {
-            center: new window.kakao.maps.LatLng(37.6102,127.0036),
-            level:8,
+            center: new window.kakao.maps.LatLng(36.2,128.1),
+            level:13,
           };
 
           const map = new window.kakao.maps.Map(mapRef.current, options);
@@ -80,6 +80,53 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
       }
     };
   }, [setupAutoRefresh]);
+
+  // 페이지 재진입 시 지도 리사이즈
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    const handleResize = () => {
+      if (mapInstance) {
+        mapInstance.relayout();
+      }
+    };
+
+    // 페이지 visibility 변경 감지 (페이지 재진입)
+    const handleVisibilityChange = () => {
+      if (!document.hidden && mapInstance) {
+        setTimeout(() => {
+          mapInstance.relayout();
+        }, 100);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // 컴포넌트 마운트 시에도 리사이즈 실행
+    setTimeout(() => {
+      if (mapInstance) {
+        mapInstance.relayout();
+      }
+    }, 100);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [mapInstance]);
+
+  // 라우터 기반 페이지 재진입 감지를 위한 추가 useEffect
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    // 컴포넌트가 다시 마운트되거나 의존성이 변경될 때마다 지도 재정렬
+    const relayoutTimer = setTimeout(() => {
+      mapInstance.relayout();
+    }, 50);
+
+    return () => clearTimeout(relayoutTimer);
+  }, [mapInstance, width, height]);
 
   const setMapTypeHandler = (type: 'roadmap' | 'skyview') => {
     if (!mapInstance) return;

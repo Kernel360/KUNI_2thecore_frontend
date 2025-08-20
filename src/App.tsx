@@ -15,7 +15,8 @@ function App() {
         <div
           className={`bg-[#f6f6f6] pt-0 px-2.5 pb-6 mt-[3px] w-full h-fit max-w-[1290px] rounded-[10px] ${
             isFloatingPage ? 'mb-6' : ''
-          }`}        >
+          }`}
+        >
           <Outlet />
         </div>
       </div>
