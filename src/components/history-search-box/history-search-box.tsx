@@ -28,6 +28,14 @@ const HistorySearchBox = ({
   //  엑셀 다운로드 상태 추가
   const [isDownloading, setIsDownloading] = useState(false);
 
+  // 날짜를 YYYY-MM-DD 형식으로 포맷팅하는 함수 (시간대 문제 해결)
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   // 일주일 전을 기본 시작일로 설정
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
     const today = new Date();
@@ -140,10 +148,7 @@ const HistorySearchBox = ({
       if (queryParams.brand) query.set('brand', queryParams.brand);
       if (queryParams.model) query.set('model', queryParams.model);
       if (queryParams.startTime)
-        query.set(
-          'startTime',
-          queryParams.startTime.toISOString().split('T')[0]
-        );
+        query.set('startTime', formatDate(queryParams.startTime));
       if (queryParams.endTime)
         query.set('endTime', queryParams.endTime.toISOString().split('T')[0]);
       query.set(
@@ -171,7 +176,7 @@ const HistorySearchBox = ({
         response.headers.get('content-type') ||
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
       const dataBlob = await response.blob();
-      const blob = new Blob([dataBlob], { type: contentType }
+      const blob = new Blob([dataBlob], { type: contentType });
       let filename = '주행기록.xlsx';
       const disposition = response.headers.get('content-disposition');
       if (disposition) {
