@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -98,6 +99,9 @@ export default function Login() {
             </div>
           </form>
         </CardContent>
+        <CardAction className="flex-col gap-2">
+          <Button variant="link">회원가입</Button>
+        </CardAction>
         <CardFooter className="flex-col gap-2">
           <p>새 계정 등록 문의: ooo@oooo.com</p>
         </CardFooter>
@@ -105,3 +109,10 @@ export default function Login() {
     </div>
   );
 }
+// 사업자등록번호, 렌트카업체명, 대표자 이름
+	// "loginId": String
+	// "password": String
+	// "name": String
+	// "email": String
+	// "birthdate": String
+	// "phoneNumber": String
