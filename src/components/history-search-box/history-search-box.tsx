@@ -24,7 +24,6 @@ const HistorySearchBox = ({
   const [brandModel, setBrandModel] = useState('');
   const [status, setStatus] = useState('운행');
   const [error, setError] = useState<string | null>(null);
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   // 일주일 전을 기본 시작일로 설정
   const today = new Date();
