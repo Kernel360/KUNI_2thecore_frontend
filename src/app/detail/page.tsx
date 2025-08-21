@@ -131,7 +131,7 @@ const DetailPage = () => {
         <Card className={styles.detailCard}>
           <CardContent className={styles.cardContent}>
             <button onClick={goBack} className={iconStyles.goBack}>
-              <ArrowLeft size={20} color="#3A70FF" />
+              <ArrowLeft size={20} color="#535968" />
             </button>
             <div className={styles.title}>차량 정보</div>
             <div className={styles.formGrid}>
