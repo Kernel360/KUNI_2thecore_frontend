@@ -255,7 +255,7 @@ const CarRegisterModal = ({
                     onChange={e =>
                       handleInputChange('carNumber', e.target.value)
                     }
-                    className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white font-mono tracking-wider"
+                    className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white tracking-wider"
                     required
                   />
                 </div>

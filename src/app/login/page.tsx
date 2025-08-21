@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import TopBar from '@/components/ui/topBar';
-import { AuthService } from '@/services/auth-service';
+import { AuthService, SignUpRequest } from '@/services/auth-service';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -59,21 +59,21 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const signUpData = {
+      const signUpData: SignUpRequest = {
         loginId: formData.loginId,
+        password: formData.password,
         name: formData.name,
         email: formData.email,
         birthdate: formData.birthdate,
         phoneNumber: formData.phoneNumber,
-        password: formData.password,
-        brn: formData.brn,
-        companyName: formData.companyName,
       };
 
-      alert('회원 신청이 완료되었습니다. 영업일 기준 2-3일내로 처리됩니다.');
-    } catch (error) {
+      await AuthService.signUp(signUpData);
+      setIsModalOpen(false);
+      alert('가입 신청서가 제출되었습니다. 영업일 기준 2-3일내로 처리됩니다.');
+    } catch (error: any) {
       console.error('회원가입 실패:', error);
-      setError('회원가입에 실패했습니다.');
+      setError(error.message || '회원가입에 실패했습니다.');
     } finally {
       setLoading(false);
     }
@@ -127,7 +127,7 @@ export default function Login() {
         </CardContent>
         <CardFooter className="flex-col gap-2">
           <CardAction className="flex-col gap-2">
-            <Button variant="link">회원가입</Button>
+            <Button variant="link" onClick={() => setIsModalOpen(true)}>회원가입</Button>
           </CardAction>
           <p>새 계정 등록 문의: ooo@oooo.com</p>
         </CardFooter>
