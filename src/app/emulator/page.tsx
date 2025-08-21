@@ -27,7 +27,7 @@ export default function LocalEmulator() {
       try {
         setLoading(true);
         setError(null);
-        const runningCarNumber = await CarService.getAllCars();
+        const runningCarNumber = await CarService.getAllCars(1, 500);
         setCars(runningCarNumber.content);
 
         // 초기 스위치 상태 설정 (차량 상태 기반)
@@ -59,7 +59,7 @@ export default function LocalEmulator() {
         carNumber: carNumber.trim(),
       };
 
-      const result = await CarService.searchCars(searchParams);
+      const result = await CarService.searchCars(searchParams, 1, 500);
       setCars(result.content);
 
       // 검색 결과에 대한 스위치 상태 설정 (차량 상태 기반)

@@ -171,8 +171,7 @@ const HistorySearchBox = ({
         response.headers.get('content-type') ||
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
       const dataBlob = await response.blob();
-      const blob = new Blob([dataBlob], { type: contentType });
-
+      const blob = new Blob([dataBlob], { type: contentType }
       let filename = '주행기록.xlsx';
       const disposition = response.headers.get('content-disposition');
       if (disposition) {

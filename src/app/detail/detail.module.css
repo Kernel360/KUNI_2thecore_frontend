@@ -25,6 +25,7 @@
 .cardContent {
   width: 100%;
   padding: 40px 48px;
+  position: relative;
 }
 
 .title {
@@ -35,6 +36,8 @@
   border-bottom: 3px solid #3a70ff;
   padding-bottom: 16px;
   display: inline-block;
+  text-align: center;
+  width: 100%;
 }
 
 .formGrid {
