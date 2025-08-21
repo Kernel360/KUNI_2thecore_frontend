@@ -189,13 +189,13 @@ const HistoryListBox = ({
                   {new Date(log.startTime).toLocaleString('ko-KR')}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
-                  {new Date(log.endTime).toLocaleString('ko-KR')}
+                  {new Date(log.endTime).toLocaleString('ko-KR') || '-'}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
                   {log.startPoint}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
-                  {log.endPoint}
+                  {log.endPoint || '-'}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
                   {typeof log.driveDist === 'number'

@@ -30,20 +30,16 @@ export interface DriveLog {
 }
 
 export class HistoryService {
-  // 차량 주행 기록 조회 (GET /drivelogs)
+  // 차량 주행 기록 조회 (POST /drivelogs) - 요청 바디로 전달
   static async getDriveLogs(
     params?: DriveLogQueryParams,
     page: number = 1,
     offset: number = 10
   ): Promise<PageResponse<DriveLog>> {
-    // carNumber는 쿼리 파라미터에서 제외
-    const { carNumber: _ignoredCarNumber, ...paramsWithoutCarNumber } =
-      params || {};
-
-    // Date 객체를 ISO 문자열로 변환
-    const formattedParams = params
+    // Date 객체를 ISO 문자열(YYYY-MM-DD)로 변환하여 요청 바디에 포함
+    const requestBody = params
       ? {
-          ...paramsWithoutCarNumber,
+          ...params,
           startTime: params.startTime
             ? params.startTime.toISOString().split('T')[0]
             : undefined,
@@ -57,13 +53,10 @@ export class HistoryService {
         }
       : { page, offset, sortBy: 'startTime', sortOrder: 'ASC' };
 
-    const response = await mainApi.get<ApiResponse<PageResponse<DriveLog>>>(
+    const response = await mainApi.post<ApiResponse<PageResponse<DriveLog>>>(
       '/drivelogs',
-      {
-        params: formattedParams,
-      }
+      requestBody
     );
     return response.data.data;
   }
 }
-
