@@ -24,21 +24,6 @@ const HistorySearchBox = ({
   const [brandModel, setBrandModel] = useState('');
   const [status, setStatus] = useState('total');
   const [error, setError] = useState<string | null>(null);
-
-  // 일주일 전을 기본 시작일로 설정
-  const today = new Date();
-  const weekAgo = new Date();
-  console.log('weekAgo');
-  console.log(weekAgo);
-  weekAgo.setDate(today.getDate() - 7);
-  console.log(weekAgo);
-  weekAgo.setHours(0, 0, 0, 0);
-  console.log(weekAgo);
-
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    to: new Date(),
-    from: weekAgo,
-  });
   //  엑셀 다운로드 상태 추가
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -58,10 +43,7 @@ const HistorySearchBox = ({
   });
 
   // 초기 1회만 주행 기록 목록 로드
-  // 초기 1회만 주행 기록 목록 로드
   useEffect(() => {
-    loadInitialLogs();
-  }, []);
     loadInitialLogs();
   }, []);
 
@@ -133,11 +115,6 @@ const HistorySearchBox = ({
         queryParams.status = status;
       }
 
-      // 브랜드/모델 처리
-      if (brandModel.trim()) {
-        const parts = brandModel.trim().split(/\s+/);
-        const brand = parts[0] || '';
-        const model = parts.slice(1).join(' ') || '';
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
       console.log('통합 검색 결과:', result);
       onSearchResults(result.content, queryParams);
@@ -180,15 +157,6 @@ const HistorySearchBox = ({
         if (brand && model) {
           queryParams.brand = brand.trim();
           queryParams.model = model.trim();
-          queryParams.twoParam = true;
-        } else if (brand) {
-          // 브랜드만 입력된 경우
-          queryParams.brand = brand.trim();
-          queryParams.twoParam = false;
-        }
-        if (brand && model) {
-          queryParams.brand = brand.trim();
-          queryParams.model = model.trim();
           queryParams.twoParam = 'true';
         } else if (brand) {
           queryParams.brand = brand.trim();
@@ -201,9 +169,6 @@ const HistorySearchBox = ({
         queryParams.status = status;
       }
 
-      const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
-      console.log('통합 검색 결과:', result);
-      onSearchResults(result.content, queryParams);
       // URL 파라미터 생성
       const queryString = new URLSearchParams(queryParams).toString();
       const downloadUrl = `/api/drivelogs/excel?${queryString}`;
@@ -211,9 +176,6 @@ const HistorySearchBox = ({
       // 새 창에서 다운로드
       window.open(downloadUrl, '_blank');
     } catch (error) {
-      console.error('주행 기록 검색 실패:', error);
-      alert('주행 기록 검색에 실패했습니다.');
-      onSearchResults([]);
       console.error('엑셀 다운로드 실패:', error);
       alert('엑셀 다운로드에 실패했습니다.');
     } finally {
@@ -230,20 +192,6 @@ const HistorySearchBox = ({
           className={styles.numberSearchInput}
           value={carNumber}
           onChange={e => setCarNumber(e.target.value)}
-        />
-        <DoubleCalendar
-          startTime={dateRange?.from}
-          endTime={dateRange?.to}
-          onStartTimeChange={date =>
-            setDateRange(prev =>
-              prev ? { ...prev, from: date } : { from: date, to: undefined }
-            )
-          }
-          onEndTimeChange={date =>
-            setDateRange(prev =>
-              prev ? { ...prev, to: date } : { from: undefined, to: date }
-            )
-          }
         />
         <DoubleCalendar
           startTime={dateRange?.from}

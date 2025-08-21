@@ -260,6 +260,7 @@ const SearchBox = () => {
           setBrandModel={setBrandModel}
           status={status}
           setStatus={setStatus}
+          onSearch={handleNumberSearch}
         />
 
         {error && (

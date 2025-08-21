@@ -30,7 +30,7 @@ export interface DriveLog {
 }
 
 export class HistoryService {
-  // 차량 주행 기록 조회 (GET /drivelogs)
+  // 차량 주행 기록 조회 (GET /drivelogs) - 쿼리 스트링으로 전달
   static async getDriveLogs(
     params?: DriveLogQueryParams,
     page: number = 1,
