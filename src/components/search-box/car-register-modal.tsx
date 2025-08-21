@@ -45,6 +45,8 @@ const CarRegisterModal = ({
     carNumber: '',
     sumDist: '',
     selectedAddress: '',
+    lastLatitude: '',
+    lastLongitude: '',
   });
 
   // 주소 검색 관련 state
