@@ -29,18 +29,15 @@ const HistorySearchBox = ({
   const [isDownloading, setIsDownloading] = useState(false);
 
   // 일주일 전을 기본 시작일로 설정
-  const today = new Date();
-  const weekAgo = new Date();
-  console.log('weekAgo');
-  console.log(weekAgo);
-  weekAgo.setDate(today.getDate() - 7);
-  console.log(weekAgo);
-  weekAgo.setHours(0, 0, 0, 0);
-  console.log(weekAgo);
-
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    to: new Date(),
-    from: weekAgo,
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
+    const today = new Date();
+    const weekAgo = new Date();
+    weekAgo.setDate(today.getDate() - 7);
+    weekAgo.setHours(0, 0, 0, 0);
+    return {
+      to: today,
+      from: weekAgo,
+    };
   });
 
   // 초기 1회만 주행 기록 목록 로드
@@ -172,7 +169,7 @@ const HistorySearchBox = ({
 
       // URL 파라미터 생성
       const queryString = new URLSearchParams(queryParams).toString();
-      const downloadUrl = `${mainApi.defaults.baseURL}/drivelogs/excel?${queryString}`;
+      const downloadUrl = `http://52.78.122.150:8080/api/drivelogs/excel?${queryString}`;
 
       // 새 창에서 다운로드
       window.open(downloadUrl, '_blank');
