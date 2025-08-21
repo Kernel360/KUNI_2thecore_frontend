@@ -192,6 +192,25 @@ const HistorySearchBox = ({
           className={styles.numberSearchInput}
           value={carNumber}
           onChange={e => setCarNumber(e.target.value)}
+          onKeyPress={e => {
+            if (e.key === 'Enter') {
+              handleSearch();
+            }
+          }}
+        />
+        <DoubleCalendar
+          startTime={dateRange?.from}
+          endTime={dateRange?.to}
+          onStartTimeChange={date =>
+            setDateRange(prev =>
+              prev ? { ...prev, from: date } : { from: date, to: undefined }
+            )
+          }
+          onEndTimeChange={date =>
+            setDateRange(prev =>
+              prev ? { ...prev, to: date } : { from: undefined, to: date }
+            )
+          }
         />
         <DoubleCalendar
           startTime={dateRange?.from}
@@ -221,6 +240,7 @@ const HistorySearchBox = ({
           setBrandModel={setBrandModel}
           status={status}
           setStatus={setStatus}
+          onSearch={handleSearch}
         />
         <Button
           onClick={handleExcelDownload} // onClick 핸들러 추가
