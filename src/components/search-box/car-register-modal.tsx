@@ -1,4 +1,4 @@
-import { AddressSearch } from '@/components/common/address-search';
+import { AddressSearch } from '@/components/address/address-search';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -27,9 +27,9 @@ export interface CarFormData {
   carType: string;
   carNumber: string;
   sumDist: string;
+  selectedAddress?: string;
   lastLatitude?: string;
   lastLongitude?: string;
-  selectedAddress?: string;
 }
 
 const CarRegisterModal = ({
@@ -44,7 +44,9 @@ const CarRegisterModal = ({
     carType: '',
     carNumber: '',
     sumDist: '',
-    selectedAddress: ''
+    selectedAddress: '',
+    lastLatitude: '',
+    lastLongitude: '',
   });
 
   // 주소 검색 관련 state
@@ -61,6 +63,9 @@ const CarRegisterModal = ({
       carType: '',
       carNumber: '',
       sumDist: '',
+      selectedAddress: '',
+      lastLatitude: '',
+      lastLongitude: '',
     });
     setGeocodingError(null);
     onClose();
@@ -81,6 +86,9 @@ const CarRegisterModal = ({
       carType: '',
       carNumber: '',
       sumDist: '',
+      selectedAddress: '',
+      lastLatitude: '',
+      lastLongitude: '',
     });
     setGeocodingError(null);
     onClose();
@@ -247,7 +255,7 @@ const CarRegisterModal = ({
                     onChange={e =>
                       handleInputChange('carNumber', e.target.value)
                     }
-                    className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white font-mono tracking-wider"
+                    className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white tracking-wider"
                     required
                   />
                 </div>
@@ -257,7 +265,7 @@ const CarRegisterModal = ({
                     htmlFor="sumDist"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    총 주행거리
+                    총 주행거리(km)
                   </Label>
                   <Input
                     id="sumDist"

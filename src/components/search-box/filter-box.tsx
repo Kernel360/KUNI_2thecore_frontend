@@ -8,6 +8,7 @@ interface BrandFilterBoxProps {
   setBrandModel: (value: string) => void;
   status: string;
   setStatus: (value: string) => void;
+  onSearch: () => void;
 }
 
 const BrandFilterBox = ({
@@ -15,7 +16,14 @@ const BrandFilterBox = ({
   setBrandModel,
   status,
   setStatus,
+  onSearch,
 }: BrandFilterBoxProps) => {
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      onSearch();
+    }
+  };
+
   return (
     <div className={styles.filterContainer}>
       <Dropdown value={status} onValueChange={setStatus} />
@@ -25,6 +33,7 @@ const BrandFilterBox = ({
         className={styles.filterInput}
         value={brandModel}
         onChange={e => setBrandModel(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
     </div>
   );
