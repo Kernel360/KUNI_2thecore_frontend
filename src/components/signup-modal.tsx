@@ -1,77 +1,55 @@
-import { AddressSearch } from '@/components/address/address-search';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { getCoordinatesFromAddress } from '@/services/kakaoAddressService';
-import { AddressSearchResult } from '@/types/address';
 import { useState } from 'react';
 
-interface CarRegisterModalProps {
+interface SignUpProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: CarFormData) => void;
+  onSubmit: (data: SignUpData) => void;
 }
 
-export interface CarFormData {
-  brand: string;
-  model: string;
-  carYear: string;
-  carType: string;
-  carNumber: string;
-  sumDist: string;
-  selectedAddress: string;
-  lastLatitude: string;
-  lastLongitude: string;
+export interface SignUpData {
+  loginId: string;
+  password: string;
+  name: string;
+  email: string;
+  birthdate: string;
+  phoneNumber: string;
+  brn: string; // 사업자 등록 번호(Business Registration Number)
+  companyName: string;
 }
 
-const CarRegisterModal = ({
-  isOpen,
-  onClose,
-  onSubmit,
-}: CarRegisterModalProps) => {
-  const [formData, setFormData] = useState<CarFormData>({
-    brand: '',
-    model: '',
-    carYear: '',
-    carType: '',
-    carNumber: '',
-    sumDist: '',
-    selectedAddress: '',
-    lastLatitude: '',
-    lastLongitude: '',
+const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
+  const [formData, setFormData] = useState<SignUpData>({
+    loginId: '',
+    password: '',
+    name: '',
+    email: '',
+    birthdate: '',
+    phoneNumber: '',
+    brn: '',
+    companyName: '',
   });
-
-  // 주소 검색 관련 state
-  const [isGeocodingLoading, setIsGeocodingLoading] = useState(false);
-  const [geocodingError, setGeocodingError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
     setFormData({
-      brand: '',
-      model: '',
-      carYear: '',
-      carType: '',
-      carNumber: '',
-      sumDist: '',
-      selectedAddress: '',
-      lastLatitude: '',
-      lastLongitude: '',
+      loginId: '',
+      password: '',
+      name: '',
+      email: '',
+      birthdate: '',
+      phoneNumber: '',
+      brn: '',
+      companyName: '',
     });
-    setGeocodingError(null);
     onClose();
   };
 
-  const handleInputChange = (field: keyof CarFormData, value: string) => {
+  const handleInputChange = (field: keyof SignUpData, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
@@ -80,53 +58,16 @@ const CarRegisterModal = ({
 
   const handleCancel = () => {
     setFormData({
-      brand: '',
-      model: '',
-      carYear: '',
-      carType: '',
-      carNumber: '',
-      sumDist: '',
-      selectedAddress: '',
-      lastLatitude: '',
-      lastLongitude: '',
+      loginId: '',
+      password: '',
+      name: '',
+      email: '',
+      birthdate: '',
+      phoneNumber: '',
+      brn: '',
+      companyName: '',
     });
-    setGeocodingError(null);
     onClose();
-  };
-
-  // 주소 선택 핸들러
-  const handleAddressSelect = async (result: AddressSearchResult) => {
-    setIsGeocodingLoading(true);
-    setGeocodingError(null);
-
-    try {
-      // 표시할 주소는 도로명 주소 우선
-      const displayAddress =
-        result.road_address?.address_name || result.address_name;
-
-      // 역지오코딩: 선택된 주소 문자열을 좌표로 변환
-      const coordinates = await getCoordinatesFromAddress(displayAddress);
-
-      if (!coordinates) {
-        throw new Error('주소를 좌표로 변환할 수 없습니다.');
-      }
-
-      setFormData(prev => ({
-        ...prev,
-        lastLatitude: coordinates.latitude.toString(),
-        lastLongitude: coordinates.longitude.toString(),
-        selectedAddress: displayAddress,
-      }));
-    } catch (error) {
-      setGeocodingError(
-        error instanceof Error
-          ? error.message
-          : '주소 변환 중 오류가 발생했습니다.'
-      );
-      console.error('주소 변환 오류:', error);
-    } finally {
-      setIsGeocodingLoading(false);
-    }
   };
 
   if (!isOpen) return null;
@@ -143,7 +84,7 @@ const CarRegisterModal = ({
             style={{ borderImage: 'var(--main-gradient) 1' }}
           >
             <CardTitle className="font-bold tracking-wide flex items-start justify-around">
-              <span>🚗차량 등록</span>
+              <span>회원 가입 신청서</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -151,35 +92,17 @@ const CarRegisterModal = ({
               <div className="flex flex-col gap-3">
                 <div className="space-y-1">
                   <Label
-                    htmlFor="brand"
-                    className="font-semibold text-gray-700 flex items-center"
-                  >
-                    차량 브랜드
-                  </Label>
-                  <Input
-                    id="brand"
-                    type="text"
-                    placeholder="예: 현대, 기아, 삼성"
-                    value={formData.brand}
-                    onChange={e => handleInputChange('brand', e.target.value)}
-                    className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <Label
                     htmlFor="model"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    모델명
+                    아이디
                   </Label>
                   <Input
                     id="model"
                     type="text"
-                    placeholder="예: 소나타, K5, 아반떼"
-                    value={formData.model}
-                    onChange={e => handleInputChange('model', e.target.value)}
+                    placeholder="아이디를 입력해주세요"
+                    value={formData.loginId}
+                    onChange={e => handleInputChange('loginId', e.target.value)}
                     className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
                     required
                   />
@@ -190,14 +113,14 @@ const CarRegisterModal = ({
                     htmlFor="carYear"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    차량 연식
+                    비밀번호
                   </Label>
                   <Input
                     id="carYear"
                     type="text"
-                    placeholder="예: 2023"
-                    value={formData.carYear}
-                    onChange={e => handleInputChange('carYear', e.target.value)}
+                    placeholder="비밀번호를 입력해주세요"
+                    value={formData.password}
+                    onChange={e => handleInputChange('password', e.target.value)}
                     className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
                     required
                   />
@@ -205,39 +128,20 @@ const CarRegisterModal = ({
 
                 <div className="space-y-1">
                   <Label
-                    htmlFor="carType"
+                    htmlFor="name"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    차종
+                    관리자 이름
                   </Label>
-                  <Select
-                    value={formData.carType}
-                    onValueChange={value => handleInputChange('carType', value)}
-                  >
-                    <SelectTrigger className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white">
-                      <SelectValue placeholder="차종을 선택하세요" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border-gray-200 shadow-xl">
-                      <SelectItem
-                        value="소형"
-                        className="hover:bg-indigo-50 focus:bg-indigo-50"
-                      >
-                        소형
-                      </SelectItem>
-                      <SelectItem
-                        value="중형"
-                        className="hover:bg-indigo-50 focus:bg-indigo-50"
-                      >
-                        중형
-                      </SelectItem>
-                      <SelectItem
-                        value="대형"
-                        className="hover:bg-indigo-50 focus:bg-indigo-50"
-                      >
-                        대형
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="성함을 입력해주세요"
+                    value={formData.name}
+                    onChange={e => handleInputChange('name', e.target.value)}
+                    className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
+                    required
+                  />
                 </div>
 
                 <div className="space-y-1">
@@ -245,15 +149,15 @@ const CarRegisterModal = ({
                     htmlFor="carNumber"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    차량번호
+                    이메일
                   </Label>
                   <Input
                     id="carNumber"
                     type="text"
-                    placeholder="예: 12가1234"
-                    value={formData.carNumber}
+                    placeholder="예: ooo@oooo.com"
+                    value={formData.email}
                     onChange={e =>
-                      handleInputChange('carNumber', e.target.value)
+                      handleInputChange('email', e.target.value)
                     }
                     className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white font-mono tracking-wider"
                     required
@@ -265,14 +169,14 @@ const CarRegisterModal = ({
                     htmlFor="sumDist"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    총 주행거리
+                    생년월일
                   </Label>
                   <Input
                     id="sumDist"
                     type="text"
-                    placeholder="예: 45678 km"
-                    value={formData.sumDist}
-                    onChange={e => handleInputChange('sumDist', e.target.value)}
+                    placeholder="예: 1000-10-10"
+                    value={formData.birthdate}
+                    onChange={e => handleInputChange('birthdate', e.target.value)}
                     className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
                     required
                   />
@@ -280,35 +184,54 @@ const CarRegisterModal = ({
 
                 <div className="space-y-1">
                   <Label
-                    htmlFor="addressSearch"
+                    htmlFor="sumDist"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    위치
+                    휴대폰 번호
                   </Label>
-                  <AddressSearch
-                    onAddressSelect={handleAddressSelect}
-                    placeholder="주소를 입력하세요 (예: 서울시 강남구 테헤란로)"
-                    value={formData.selectedAddress || ''}
+                  <Input
+                    id="sumDist"
+                    type="text"
+                    placeholder="예: 010-0000-0000"
+                    value={formData.phoneNumber}
+                    onChange={e => handleInputChange('phoneNumber', e.target.value)}
+                    className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
                     required
                   />
-                  {isGeocodingLoading && (
-                    <div className="mt-2 text-sm text-blue-600">
-                      좌표 변환 중...
-                    </div>
-                  )}
-                  {geocodingError && (
-                    <div className="mt-2 text-sm text-red-600">
-                      {geocodingError}
-                    </div>
-                  )}
-                  {formData.selectedAddress &&
-                    formData.lastLatitude &&
-                    formData.lastLongitude && (
-                      <div className="mt-2 text-xs text-gray-500">
-                        위도: {formData.lastLatitude}, 경도:{' '}
-                        {formData.lastLongitude}
-                      </div>
-                    )}
+                </div>
+
+                <div className="space-y-1">
+                  <Label
+                    htmlFor="sumDist"
+                    className="font-semibold text-gray-700 flex items-center"
+                  >
+                    사업자 등록 번호
+                  </Label>
+                  <Input
+                    id="sumDist"
+                    type="text"
+                    placeholder="예: 000-00-00000"
+                    value={formData.brn}
+                    onChange={e => handleInputChange('brn', e.target.value)}
+                    className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <Label
+                    htmlFor="sumDist"
+                    className="font-semibold text-gray-700 flex items-center"
+                  >
+                    렌트카 업체명
+                  </Label>
+                  <Input
+                    id="sumDist"
+                    type="text"
+                    placeholder="예: 2theCore"
+                    value={formData.companyName}
+                    onChange={e => handleInputChange('companyName', e.target.value)}
+                    className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
+                  />
                 </div>
 
                 <div className="flex gap-4 pt-2">
@@ -346,4 +269,4 @@ const CarRegisterModal = ({
   );
 };
 
-export default CarRegisterModal;
+export default SignUpModal;

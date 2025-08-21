@@ -1,3 +1,4 @@
+import SignUpModal, { SignUpData } from '@/components/signup-modal';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -23,6 +24,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCredentials(prev => ({
@@ -48,6 +50,30 @@ export default function Login() {
       navigate('/');
     } catch (error: any) {
       setError(error.message || '로그인에 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignUp = async (formData: SignUpData) => {
+    try {
+      setLoading(true);
+
+      const signUpData = {
+        loginId: formData.loginId,
+        name: formData.name,
+        email: formData.email,
+        birthdate: formData.birthdate,
+        phoneNumber: formData.phoneNumber,
+        password: formData.password,
+        brn: formData.brn,
+        companyName: formData.companyName,
+      };
+
+      alert('회원 신청이 완료되었습니다. 영업일 기준 2-3일내로 처리됩니다.');
+    } catch (error) {
+      console.error('회원가입 실패:', error);
+      setError('회원가입에 실패했습니다.');
     } finally {
       setLoading(false);
     }
@@ -99,20 +125,18 @@ export default function Login() {
             </div>
           </form>
         </CardContent>
-        <CardAction className="flex-col gap-2">
-          <Button variant="link">회원가입</Button>
-        </CardAction>
         <CardFooter className="flex-col gap-2">
+          <CardAction className="flex-col gap-2">
+            <Button variant="link">회원가입</Button>
+          </CardAction>
           <p>새 계정 등록 문의: ooo@oooo.com</p>
         </CardFooter>
       </Card>
+      <SignUpModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSignUp}
+      />
     </div>
   );
 }
-// 사업자등록번호, 렌트카업체명, 대표자 이름
-	// "loginId": String
-	// "password": String
-	// "name": String
-	// "email": String
-	// "birthdate": String
-	// "phoneNumber": String
