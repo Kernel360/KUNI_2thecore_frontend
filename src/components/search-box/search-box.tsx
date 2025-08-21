@@ -232,7 +232,6 @@ const SearchBox = () => {
           setBrandModel={setBrandModel}
           status={status}
           setStatus={setStatus}
-          onFilterApply={handleFilterApply}
         />
 
         {error && (
