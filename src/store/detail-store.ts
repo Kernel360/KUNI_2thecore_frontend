@@ -16,5 +16,9 @@ export const useDetailStore = create<DetailStore>(set => ({
   carYear: 0,
   sumDist: 0,
   carType: '',
-  setDetail: detail => set(detail),
+  setDetail: detail => set({
+    ...detail,
+    brandModel: `${detail.brand} ${detail.model}`,
+    sumDist: detail.sumDist ? Number(detail.sumDist.toFixed(2)) : 0
+  }),
 }));
