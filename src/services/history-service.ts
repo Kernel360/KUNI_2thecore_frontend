@@ -30,32 +30,34 @@ export interface DriveLog {
 }
 
 export class HistoryService {
-  // 차량 주행 기록 조회 (POST /drivelogs) - 요청 바디로 전달
+  // 차량 주행 기록 조회 (GET /drivelogs) - 쿼리 스트링으로 전달
   static async getDriveLogs(
     params?: DriveLogQueryParams,
     page: number = 1,
     offset: number = 10
   ): Promise<PageResponse<DriveLog>> {
-    // Date 객체를 ISO 문자열(YYYY-MM-DD)로 변환하여 요청 바디에 포함
-    const requestBody = params
-      ? {
-          ...params,
-          startTime: params.startTime
-            ? params.startTime.toISOString().split('T')[0]
-            : undefined,
-          endTime: params.endTime
-            ? params.endTime.toISOString().split('T')[0]
-            : undefined,
-          page,
-          offset,
-          sortBy: params.sortBy || 'startTime',
-          sortOrder: params.sortOrder || 'ASC',
-        }
-      : { page, offset, sortBy: 'startTime', sortOrder: 'ASC' };
+    // Date 객체를 LocalDate 형식 문자열(YYYY-MM-DD)로 변환하여 쿼리 파라미터에 포함
+    const queryParams = new URLSearchParams();
+    
+    if (params?.carNumber) queryParams.set('carNumber', params.carNumber);
+    if (params?.status) queryParams.set('status', params.status);
+    if (params?.brand) queryParams.set('brand', params.brand);
+    if (params?.model) queryParams.set('model', params.model);
+    if (params?.startTime) {
+      queryParams.set('startTime', params.startTime.toISOString().split('T')[0]);
+    }
+    if (params?.endTime) {
+      queryParams.set('endTime', params.endTime.toISOString().split('T')[0]);
+    }
+    queryParams.set('twoParam', String(params?.twoParam !== undefined ? params.twoParam : true));
+    
+    queryParams.set('page', String(page));
+    queryParams.set('offset', String(offset));
+    queryParams.set('sortBy', params?.sortBy || 'startTime');
+    queryParams.set('sortOrder', params?.sortOrder || 'ASC');
 
-    const response = await mainApi.post<ApiResponse<PageResponse<DriveLog>>>(
-      '/drivelogs',
-      requestBody
+    const response = await mainApi.get<ApiResponse<PageResponse<DriveLog>>>(
+      `/drivelogs?${queryParams.toString()}`
     );
     return response.data.data;
   }

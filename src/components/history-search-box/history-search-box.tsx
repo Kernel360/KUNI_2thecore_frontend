@@ -108,8 +108,8 @@ const HistorySearchBox = ({
         }
       }
 
-      // 상태 처리
-      if (status) {
+      // 상태 처리 - total이면 status를 포함하지 않음
+      if (status && status !== 'total') {
         queryParams.status = status;
       }
 
