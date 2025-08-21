@@ -1,9 +1,9 @@
+import { mainApi, TokenManager } from '@/lib/api';
 import {
   DriveLog,
   DriveLogQueryParams,
   HistoryService,
 } from '@/services/history-service';
-import { mainApi } from '@/lib/api';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import BrandFilterBox from '../search-box/filter-box';
@@ -18,9 +18,9 @@ interface HistorySearchBoxProps {
 }
 
 const HistorySearchBox = ({
-                            onSearchResults,
-                            onLoadingChange,
-                          }: HistorySearchBoxProps) => {
+  onSearchResults,
+  onLoadingChange,
+}: HistorySearchBoxProps) => {
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
   const [status, setStatus] = useState('total');
@@ -28,19 +28,24 @@ const HistorySearchBox = ({
   //  엑셀 다운로드 상태 추가
   const [isDownloading, setIsDownloading] = useState(false);
 
-  // 일주일 전을 기본 시작일로 설정
-  const today = new Date();
-  const weekAgo = new Date();
-  console.log('weekAgo');
-  console.log(weekAgo);
-  weekAgo.setDate(today.getDate() - 7);
-  console.log(weekAgo);
-  weekAgo.setHours(0, 0, 0, 0);
-  console.log(weekAgo);
+  // 날짜를 YYYY-MM-DD 형식으로 포맷팅하는 함수 (시간대 문제 해결)
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    to: new Date(),
-    from: weekAgo,
+  // 일주일 전을 기본 시작일로 설정
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
+    const today = new Date();
+    const weekAgo = new Date();
+    weekAgo.setDate(today.getDate() - 7);
+    weekAgo.setHours(0, 0, 0, 0);
+    return {
+      to: today,
+      from: weekAgo,
+    };
   });
 
   // 초기 1회만 주행 기록 목록 로드
@@ -72,49 +77,52 @@ const HistorySearchBox = ({
     }
   };
 
-  const handleSearch = async () => {
+  // 공통 쿼리 파라미터 생성 및 상태 검증 함수
+  const buildCommonQueryParams = (): DriveLogQueryParams | null => {
     if (!dateRange?.from || !dateRange?.to) {
       alert('주행 기간을 선택해주세요.');
-      return;
+      return null;
     }
 
+    const queryParams: DriveLogQueryParams = {
+      startTime: dateRange.from,
+      endTime: dateRange.to,
+      page: 1,
+      offset: 10,
+    };
+
+    if (carNumber.trim()) {
+      queryParams.carNumber = carNumber.trim();
+    }
+
+    if (brandModel.trim()) {
+      const parts = brandModel.trim().split(/\s+/);
+      const brand = parts[0] || '';
+      const model = parts.slice(1).join(' ') || '';
+
+      if (brand && model) {
+        queryParams.brand = brand.trim();
+        queryParams.model = model.trim();
+        queryParams.twoParam = true;
+      } else if (brand) {
+        queryParams.brand = brand.trim();
+        queryParams.twoParam = false;
+      }
+    }
+
+    if (status && status !== 'total') {
+      queryParams.status = status;
+    }
+
+    return queryParams;
+  };
+
+  const handleSearch = async () => {
     try {
       onLoadingChange(true);
       setError(null);
-
-      const queryParams: DriveLogQueryParams = {
-        startTime: dateRange.from,
-        endTime: dateRange.to,
-        page: 1,
-        offset: 10,
-      };
-
-      // 차량 번호가 입력된 경우만 추가
-      if (carNumber.trim()) {
-        queryParams.carNumber = carNumber.trim();
-      }
-
-      // 브랜드/모델 처리
-      if (brandModel.trim()) {
-        const parts = brandModel.trim().split(/\s+/);
-        const brand = parts[0] || '';
-        const model = parts.slice(1).join(' ') || '';
-
-        if (brand && model) {
-          queryParams.brand = brand.trim();
-          queryParams.model = model.trim();
-          queryParams.twoParam = true;
-        } else if (brand) {
-          // 브랜드만 입력된 경우
-          queryParams.brand = brand.trim();
-          queryParams.twoParam = false;
-        }
-      }
-
-      // 상태 처리 - total이면 status를 포함하지 않음
-      if (status && status !== 'total') {
-        queryParams.status = status;
-      }
+      const queryParams = buildCommonQueryParams();
+      if (!queryParams) return;
 
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
       console.log('통합 검색 결과:', result);
@@ -130,53 +138,66 @@ const HistorySearchBox = ({
 
   // 엑셀 다운로드 함수 추가 (전체 함수 새로 추가)
   const handleExcelDownload = async () => {
-    if (!dateRange?.from || !dateRange?.to) {
-      alert('주행 기간을 선택해주세요.');
-      return;
-    }
-
     try {
       setIsDownloading(true);
+      const queryParams = buildCommonQueryParams();
+      if (!queryParams) return;
+      const query = new URLSearchParams();
+      if (queryParams.carNumber) query.set('carNumber', queryParams.carNumber);
+      if (queryParams.status) query.set('status', queryParams.status);
+      if (queryParams.brand) query.set('brand', queryParams.brand);
+      if (queryParams.model) query.set('model', queryParams.model);
+      if (queryParams.startTime)
+        query.set('startTime', formatDate(queryParams.startTime));
+      if (queryParams.endTime)
+        query.set('endTime', queryParams.endTime.toISOString().split('T')[0]);
+      query.set(
+        'twoParam',
+        String(queryParams.twoParam !== undefined ? queryParams.twoParam : true)
+      );
 
-      // 현재 검색 조건과 동일한 파라미터 구성
-      const queryParams: any = {
-        startTime: dateRange.from.toISOString().split('T')[0], // YYYY-MM-DD 형식
-        endTime: dateRange.to.toISOString().split('T')[0],
-      };
+      const baseUrl = (mainApi.defaults?.baseURL || '').replace(/\/+$/, '');
+      const url = `${baseUrl}/drivelogs/excel?${query.toString()}`;
+      const authHeader = TokenManager.getAuthHeader();
 
-      // 차량 번호가 입력된 경우만 추가
-      if (carNumber.trim()) {
-        queryParams.carNumber = carNumber.trim();
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: authHeader ? { Authorization: authHeader } : undefined,
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `엑셀 다운로드 실패: ${response.status} ${response.statusText}`
+        );
       }
 
-      // 브랜드/모델 처리
-      if (brandModel.trim()) {
-        const parts = brandModel.trim().split(/\s+/);
-        const brand = parts[0] || '';
-        const model = parts.slice(1).join(' ') || '';
-
-        if (brand && model) {
-          queryParams.brand = brand.trim();
-          queryParams.model = model.trim();
-          queryParams.twoParam = 'true';
-        } else if (brand) {
-          queryParams.brand = brand.trim();
-          queryParams.twoParam = 'false';
-        }
+      const contentType =
+        response.headers.get('content-type') ||
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      const dataBlob = await response.blob();
+      const blob = new Blob([dataBlob], { type: contentType });
+      let filename = '주행기록.xlsx';
+      const disposition = response.headers.get('content-disposition');
+      if (disposition) {
+        const match =
+          /filename\*=UTF-8''([^;]+)|filename=\"?([^;\"]+)\"?/i.exec(
+            disposition
+          );
+        const encoded = match?.[1];
+        const plain = match?.[2];
+        if (encoded) filename = decodeURIComponent(encoded);
+        else if (plain) filename = plain.replace(/\"/g, '');
       }
 
-      // 상태 처리 - total이면 status를 포함하지 않음
-      if (status && status !== 'total') {
-        queryParams.status = status;
-      }
-
-      // URL 파라미터 생성
-      const queryString = new URLSearchParams(queryParams).toString();
-      const downloadUrl = `${mainApi.defaults.baseURL}/drivelogs/excel?${queryString}`;
-
-      // 새 창에서 다운로드
-      window.open(downloadUrl, '_blank');
-
+      const objectUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = objectUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(objectUrl);
     } catch (error) {
       console.error('엑셀 다운로드 실패:', error);
       alert('엑셀 다운로드에 실패했습니다.');
@@ -186,61 +207,61 @@ const HistorySearchBox = ({
   };
 
   return (
-      <div className="flex flex-col">
-        <div className={styles.numberSearchContainer}>
-          <Input
-              type="text"
-              placeholder="차량 번호"
-              className={styles.numberSearchInput}
-              value={carNumber}
-              onChange={e => setCarNumber(e.target.value)}
-              onKeyPress={e => {
-                if (e.key === 'Enter') {
-                  handleSearch();
-                }
-              }}
-          />
-          <DoubleCalendar
-              startTime={dateRange?.from}
-              endTime={dateRange?.to}
-              onStartTimeChange={date =>
-                  setDateRange(prev =>
-                      prev ? { ...prev, from: date } : { from: date, to: undefined }
-                  )
-              }
-              onEndTimeChange={date =>
-                  setDateRange(prev =>
-                      prev ? { ...prev, to: date } : { from: undefined, to: date }
-                  )
-              }
-          />
-          <Button
-              className={styles.searchButton}
-              onClick={handleSearch}
-              disabled={false}
-          >
-            검색
-          </Button>
-        </div>
-        <div className="flex flex-row p-3">
-          <BrandFilterBox
-              brandModel={brandModel}
-              setBrandModel={setBrandModel}
-              status={status}
-              setStatus={setStatus}
-              onSearch={handleSearch}
-          />
-          <Button
-              onClick={handleExcelDownload} // onClick 핸들러 추가
-              disabled={isDownloading} // disabled 속성 추가
-              className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
-            rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
-          >
-            {/* 다운로드 상태에 따른 텍스트 변경 */}
-            {isDownloading ? '다운로드 중...' : '엑셀 다운로드'}
-          </Button>
-        </div>
+    <div className="flex flex-col">
+      <div className={styles.numberSearchContainer}>
+        <Input
+          type="text"
+          placeholder="차량 번호"
+          className={styles.numberSearchInput}
+          value={carNumber}
+          onChange={e => setCarNumber(e.target.value)}
+          onKeyPress={e => {
+            if (e.key === 'Enter') {
+              handleSearch();
+            }
+          }}
+        />
+        <DoubleCalendar
+          startTime={dateRange?.from}
+          endTime={dateRange?.to}
+          onStartTimeChange={date =>
+            setDateRange(prev =>
+              prev ? { ...prev, from: date } : { from: date, to: undefined }
+            )
+          }
+          onEndTimeChange={date =>
+            setDateRange(prev =>
+              prev ? { ...prev, to: date } : { from: undefined, to: date }
+            )
+          }
+        />
+        <Button
+          className={styles.searchButton}
+          onClick={handleSearch}
+          disabled={false}
+        >
+          검색
+        </Button>
       </div>
+      <div className="flex flex-row p-3">
+        <BrandFilterBox
+          brandModel={brandModel}
+          setBrandModel={setBrandModel}
+          status={status}
+          setStatus={setStatus}
+          onSearch={handleSearch}
+        />
+        <Button
+          onClick={handleExcelDownload} // onClick 핸들러 추가
+          disabled={isDownloading} // disabled 속성 추가
+          className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
+            rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
+        >
+          {/* 다운로드 상태에 따른 텍스트 변경 */}
+          {isDownloading ? '다운로드 중...' : '엑셀 다운로드'}
+        </Button>
+      </div>
+    </div>
   );
 };
 
