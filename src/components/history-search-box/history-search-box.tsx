@@ -22,8 +22,10 @@ const HistorySearchBox = ({
 }: HistorySearchBoxProps) => {
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
-  const [status, setStatus] = useState('운행');
+  const [status, setStatus] = useState('total');
   const [error, setError] = useState<string | null>(null);
+  //  엑셀 다운로드 상태 추가
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // 일주일 전을 기본 시작일로 설정
   const today = new Date();
@@ -40,12 +42,10 @@ const HistorySearchBox = ({
     from: weekAgo,
   });
 
-  // 초기 주행 기록 목록 로드 (dateRange가 설정된 후)
+  // 초기 1회만 주행 기록 목록 로드
   useEffect(() => {
-    if (dateRange?.from && dateRange?.to) {
-      loadInitialLogs();
-    }
-  }, [dateRange]);
+    loadInitialLogs();
+  }, []);
 
   const loadInitialLogs = async () => {
     if (!dateRange?.from || !dateRange?.to) return;
@@ -93,8 +93,30 @@ const HistorySearchBox = ({
         queryParams.carNumber = carNumber.trim();
       }
 
+      // 브랜드/모델 처리
+      if (brandModel.trim()) {
+        const parts = brandModel.trim().split(/\s+/);
+        const brand = parts[0] || '';
+        const model = parts.slice(1).join(' ') || '';
+
+        if (brand && model) {
+          queryParams.brand = brand.trim();
+          queryParams.model = model.trim();
+          queryParams.twoParam = true;
+        } else if (brand) {
+          // 브랜드만 입력된 경우
+          queryParams.brand = brand.trim();
+          queryParams.twoParam = false;
+        }
+      }
+
+      // 상태 처리 - total이면 status를 포함하지 않음
+      if (status && status !== 'total') {
+        queryParams.status = status;
+      }
+
       const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
-      console.log('검색 결과:', result);
+      console.log('통합 검색 결과:', result);
       onSearchResults(result.content, queryParams);
     } catch (error) {
       console.error('주행 기록 검색 실패:', error);
@@ -105,54 +127,59 @@ const HistorySearchBox = ({
     }
   };
 
-  // 필터 적용 (브랜드/모델 + 상태)
-  const handleFilterApply = async () => {
+  // 엑셀 다운로드 함수 추가 (전체 함수 새로 추가)
+  const handleExcelDownload = async () => {
     if (!dateRange?.from || !dateRange?.to) {
       alert('주행 기간을 선택해주세요.');
       return;
     }
 
     try {
-      onLoadingChange(true);
-      const parts = brandModel.trim().split(/\s+/);
-      const brand = parts[0] || '';
-      const model = parts.slice(1).join(' ') || '';
+      setIsDownloading(true);
 
-      const queryParams: DriveLogQueryParams = {
-        startTime: dateRange.from,
-        endTime: dateRange.to,
-        page: 1,
-        offset: 10,
+      // 현재 검색 조건과 동일한 파라미터 구성
+      const queryParams: any = {
+        startTime: dateRange.from.toISOString().split('T')[0], // YYYY-MM-DD 형식
+        endTime: dateRange.to.toISOString().split('T')[0],
       };
 
-      // 브랜드와 모델 처리
-      if (brand && model) {
-        queryParams.brand = brand.trim();
-        queryParams.model = model.trim();
-        queryParams.twoParam = true;
-      } else if (brand) {
-        // 브랜드만 입력된 경우
-        queryParams.brand = brand.trim();
-        queryParams.twoParam = false;
-      } else if (model) {
-        // 모델만 입력된 경우
-        queryParams.brand = model.trim();
-        queryParams.twoParam = false;
+      // 차량 번호가 입력된 경우만 추가
+      if (carNumber.trim()) {
+        queryParams.carNumber = carNumber.trim();
       }
 
-      // 상태 처리
-      if (status) {
+      // 브랜드/모델 처리
+      if (brandModel.trim()) {
+        const parts = brandModel.trim().split(/\s+/);
+        const brand = parts[0] || '';
+        const model = parts.slice(1).join(' ') || '';
+
+        if (brand && model) {
+          queryParams.brand = brand.trim();
+          queryParams.model = model.trim();
+          queryParams.twoParam = 'true';
+        } else if (brand) {
+          queryParams.brand = brand.trim();
+          queryParams.twoParam = 'false';
+        }
+      }
+
+      // 상태 처리 - total이면 status를 포함하지 않음
+      if (status && status !== 'total') {
         queryParams.status = status;
       }
 
-      const result = await HistoryService.getDriveLogs(queryParams, 1, 10);
-      onSearchResults(result.content, queryParams);
+      // URL 파라미터 생성
+      const queryString = new URLSearchParams(queryParams).toString();
+      const downloadUrl = `/api/drivelogs/excel?${queryString}`;
+
+      // 새 창에서 다운로드
+      window.open(downloadUrl, '_blank');
     } catch (error) {
-      console.error('필터 검색 실패:', error);
-      alert('필터 검색에 실패했습니다.');
-      onSearchResults([]);
+      console.error('엑셀 다운로드 실패:', error);
+      alert('엑셀 다운로드에 실패했습니다.');
     } finally {
-      onLoadingChange(false);
+      setIsDownloading(false);
     }
   };
 
@@ -194,13 +221,15 @@ const HistorySearchBox = ({
           setBrandModel={setBrandModel}
           status={status}
           setStatus={setStatus}
-          onFilterApply={handleFilterApply}
         />
         <Button
+          onClick={handleExcelDownload} // onClick 핸들러 추가
+          disabled={isDownloading} // disabled 속성 추가
           className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
-          rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
+            rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
         >
-          엑셀 다운로드
+          {/* 다운로드 상태에 따른 텍스트 변경 */}
+          {isDownloading ? '다운로드 중...' : '엑셀 다운로드'}
         </Button>
       </div>
     </div>

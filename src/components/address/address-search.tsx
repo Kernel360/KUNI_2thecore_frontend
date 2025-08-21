@@ -21,7 +21,7 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
   const [showResults, setShowResults] = useState(false);
   const { results, loading, error, searchAddress, clearResults } = useAddressSearch();
   const inputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<NodeJS.Timeout>(null);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
 
   useEffect(() => {

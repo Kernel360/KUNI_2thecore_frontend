@@ -27,9 +27,9 @@ export interface CarFormData {
   carType: string;
   carNumber: string;
   sumDist: string;
-  selectedAddress: string;
-  lastLatitude: string;
-  lastLongitude: string;
+  selectedAddress?: string;
+  lastLatitude?: string;
+  lastLongitude?: string;
 }
 
 const CarRegisterModal = ({
@@ -45,8 +45,6 @@ const CarRegisterModal = ({
     carNumber: '',
     sumDist: '',
     selectedAddress: '',
-    lastLatitude: '',
-    lastLongitude: '',
   });
 
   // 주소 검색 관련 state
