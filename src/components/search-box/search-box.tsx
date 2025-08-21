@@ -67,11 +67,19 @@ const SearchBox = () => {
     try {
       setLoading(true);
       setError(null);
-      const carData = await CarService.getAllCars(1, 10);
+      
+      // 기본 status 값('운행')을 포함한 검색 파라미터 구성
+      const searchParams: CarSearchParams = {
+        status: status,
+        page: 1,
+        offset: 10,
+      };
+      
+      const carData = await CarService.searchCars(searchParams, 1, 10);
       setCars(carData.content);
       setPage(1);
       setHasNextPage(carData.content.length === 10);
-      setCurrentSearchParams(null);
+      setCurrentSearchParams(searchParams);
       setIsFetching(false);
     } catch (error) {
       console.error('차량 목록 조회 실패:', error);
@@ -83,21 +91,41 @@ const SearchBox = () => {
 
   // 차량 번호로 검색 (백엔드 API 2.6 명세에 맞게 수정)
   const handleNumberSearch = async () => {
-    if (!carNumber.trim()) {
-      setError('차량 번호를 입력해주세요.');
-      return;
-    }
-
     try {
       setLoading(true);
       setError(null);
 
       // 백엔드 API 2.6 명세에 맞게 파라미터 구성
       const searchParams: CarSearchParams = {
-        carNumber: carNumber.trim(),
         page: 1,
         offset: 10,
       };
+
+      // 차량 번호가 입력된 경우에만 추가
+      if (carNumber.trim()) {
+        searchParams.carNumber = carNumber.trim();
+      }
+
+      // 차량명(브랜드/모델) 처리
+      if (brandModel.trim()) {
+        const parts = brandModel.trim().split(/\s+/);
+        const brand = parts[0] || '';
+        const model = parts.slice(1).join(' ') || '';
+
+        if (brand && model) {
+          searchParams.brand = brand.trim();
+          searchParams.model = model.trim();
+          searchParams.twoParam = true;
+        } else if (brand) {
+          searchParams.brand = brand.trim();
+          searchParams.twoParam = false;
+        }
+      }
+
+      // 상태 파라미터 추가
+      if (status) {
+        searchParams.status = status;
+      }
 
       const result = await CarService.searchCars(searchParams, 1, 10);
       setCars(result.content);
@@ -232,6 +260,7 @@ const SearchBox = () => {
           setBrandModel={setBrandModel}
           status={status}
           setStatus={setStatus}
+          onSearch={handleNumberSearch}
         />
 
         {error && (

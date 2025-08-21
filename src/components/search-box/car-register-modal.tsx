@@ -265,7 +265,7 @@ const CarRegisterModal = ({
                     htmlFor="sumDist"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    총 주행거리
+                    총 주행거리(km)
                   </Label>
                   <Input
                     id="sumDist"

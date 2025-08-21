@@ -3,6 +3,7 @@ import {
   DriveLogQueryParams,
   HistoryService,
 } from '@/services/history-service';
+import { mainApi } from '@/lib/api';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import BrandFilterBox from '../search-box/filter-box';
@@ -17,9 +18,9 @@ interface HistorySearchBoxProps {
 }
 
 const HistorySearchBox = ({
-  onSearchResults,
-  onLoadingChange,
-}: HistorySearchBoxProps) => {
+                            onSearchResults,
+                            onLoadingChange,
+                          }: HistorySearchBoxProps) => {
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
   const [status, setStatus] = useState('total');
@@ -171,10 +172,11 @@ const HistorySearchBox = ({
 
       // URL 파라미터 생성
       const queryString = new URLSearchParams(queryParams).toString();
-      const downloadUrl = `/api/drivelogs/excel?${queryString}`;
+      const downloadUrl = `${mainApi.defaults.baseURL}/drivelogs/excel?${queryString}`;
 
       // 새 창에서 다운로드
       window.open(downloadUrl, '_blank');
+
     } catch (error) {
       console.error('엑셀 다운로드 실패:', error);
       alert('엑셀 다운로드에 실패했습니다.');
@@ -184,55 +186,55 @@ const HistorySearchBox = ({
   };
 
   return (
-    <div className="flex flex-col">
-      <div className={styles.numberSearchContainer}>
-        <Input
-          type="text"
-          placeholder="차량 번호"
-          className={styles.numberSearchInput}
-          value={carNumber}
-          onChange={e => setCarNumber(e.target.value)}
-        />
-        <DoubleCalendar
-          startTime={dateRange?.from}
-          endTime={dateRange?.to}
-          onStartTimeChange={date =>
-            setDateRange(prev =>
-              prev ? { ...prev, from: date } : { from: date, to: undefined }
-            )
-          }
-          onEndTimeChange={date =>
-            setDateRange(prev =>
-              prev ? { ...prev, to: date } : { from: undefined, to: date }
-            )
-          }
-        />
-        <Button
-          className={styles.searchButton}
-          onClick={handleSearch}
-          disabled={false}
-        >
-          검색
-        </Button>
-      </div>
-      <div className="flex flex-row p-3">
-        <BrandFilterBox
-          brandModel={brandModel}
-          setBrandModel={setBrandModel}
-          status={status}
-          setStatus={setStatus}
-        />
-        <Button
-          onClick={handleExcelDownload} // onClick 핸들러 추가
-          disabled={isDownloading} // disabled 속성 추가
-          className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
+      <div className="flex flex-col">
+        <div className={styles.numberSearchContainer}>
+          <Input
+              type="text"
+              placeholder="차량 번호"
+              className={styles.numberSearchInput}
+              value={carNumber}
+              onChange={e => setCarNumber(e.target.value)}
+          />
+          <DoubleCalendar
+              startTime={dateRange?.from}
+              endTime={dateRange?.to}
+              onStartTimeChange={date =>
+                  setDateRange(prev =>
+                      prev ? { ...prev, from: date } : { from: date, to: undefined }
+                  )
+              }
+              onEndTimeChange={date =>
+                  setDateRange(prev =>
+                      prev ? { ...prev, to: date } : { from: undefined, to: date }
+                  )
+              }
+          />
+          <Button
+              className={styles.searchButton}
+              onClick={handleSearch}
+              disabled={false}
+          >
+            검색
+          </Button>
+        </div>
+        <div className="flex flex-row p-3">
+          <BrandFilterBox
+              brandModel={brandModel}
+              setBrandModel={setBrandModel}
+              status={status}
+              setStatus={setStatus}
+          />
+          <Button
+              onClick={handleExcelDownload} // onClick 핸들러 추가
+              disabled={isDownloading} // disabled 속성 추가
+              className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
             rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
-        >
-          {/* 다운로드 상태에 따른 텍스트 변경 */}
-          {isDownloading ? '다운로드 중...' : '엑셀 다운로드'}
-        </Button>
+          >
+            {/* 다운로드 상태에 따른 텍스트 변경 */}
+            {isDownloading ? '다운로드 중...' : '엑셀 다운로드'}
+          </Button>
+        </div>
       </div>
-    </div>
   );
 };
 

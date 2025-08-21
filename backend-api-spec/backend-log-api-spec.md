@@ -272,3 +272,35 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "end_time" : "로그 collect 종료시간"
   }
   }
+
+### 3.5 드라이브 로그 엑셀 다운로드
+
+- **Method**: GET
+- **Path**: `/api/drivelogs/excel`
+- **설명**: 조건에 맞는 운행 기록을 Excel 파일(`.xlsx`)로 다운로드
+- **상태**: 완료
+
+- **request & response**:
+```json
+{
+  "request": {
+    "carNumber": "차량 번호",                 // 선택
+    "status": "운행 상태",                    // 선택 (예: 운행, 정지)
+    "brand": "차량 브랜드",                   // 선택
+    "model": "차량 모델",                     // 선택
+    "startTime": "조회 시작일 (yyyy-MM-dd)",  // 선택
+    "endTime": "조회 종료일 (yyyy-MM-dd)",    // 선택
+    "twoParam": true,                         // 선택 (추가 조건 여부)
+    "sortBy": "정렬 기준 필드",               // 선택
+    "sortOrder": "asc 또는 desc"              // 선택
+  },
+  "response": {
+    "headers": {
+      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "Content-Disposition": "attachment; filename=drive_logs.xlsx"
+    },
+    "body": "Excel(.xlsx) 파일 바이너리 데이터"
+  }
+}
+
+
