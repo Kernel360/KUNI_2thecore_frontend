@@ -98,9 +98,14 @@
   align-items: center;
   justify-content: center;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: absolute;
+  top: 40px;
+  left: 48px;
 }
 
 .goBack svg {
+  width: 30px;
+  height:30px;
   filter: drop-shadow(0 8px 20px rgba(58, 112, 255, 0.3));
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -108,4 +113,5 @@
 .goBack:hover svg {
   transform: scale(1.12) translateY(-4px) rotate(5deg);
   filter: drop-shadow(0 8px 20px rgba(58, 112, 255, 0.4));
+  transform: scale(1.12) translateY(-4px);
 }
