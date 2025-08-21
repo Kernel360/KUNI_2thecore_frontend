@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
 import { AuthService } from '@/services/auth-service';
+import { TokenManager } from '@/lib/token-manager';
 
 /**
  * 로그아웃 처리 함수
@@ -39,11 +40,12 @@ const useLogout = () => {
 
 export function AccountDropdown() {
   const handleLogout = useLogout();
+  const loginId = TokenManager.getLoginId();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className={styles.Button}>👤 관리자 님</Button>
+        <Button className={styles.Button}>👤 {loginId} 님</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className={`w-56 ${styles.AccountDropdown}`}
