@@ -7,6 +7,16 @@ export interface LoginRequest {
   password: string;
 }
 
+// 회원가입 요청 타입
+export interface SignUpRequest {
+  loginId: string;
+  password: string;
+  name: string;
+  email: string;
+  birthdate: string;
+  phoneNumber: string;
+}
+
 // 인증 토큰 데이터 타입 - 프론트엔드에서 관리하는 데이터만
 export interface AuthTokenData {
   accessToken: string;
@@ -18,6 +28,9 @@ export interface LoginResponse extends ApiResponse<AuthTokenData> {}
 
 // 로그아웃 응답 타입 - 백엔드 명세에 맞게
 export interface LogoutResponse extends ApiResponse<null> {}
+
+// 회원가입 응답 타입
+export interface SignUpResponse extends ApiResponse<null> {}
 
 // 토큰 검증 응답 데이터 타입
 export interface TokenValidationData {
@@ -68,5 +81,17 @@ export class AuthService {
   // 인증 상태 확인 (로컬 토큰 존재 여부만 체크)
   static hasValidTokens(): boolean {
     return TokenManager.hasValidTokens();
+  }
+
+  // 회원가입
+  static async signUp(userData: SignUpRequest): Promise<void> {
+    const response = await mainApi.post<SignUpResponse>(
+      '/admin/signup',
+      userData
+    );
+
+    if (!response.data.result) {
+      throw new Error(response.data.message || '회원가입에 실패했습니다.');
+    }
   }
 }
