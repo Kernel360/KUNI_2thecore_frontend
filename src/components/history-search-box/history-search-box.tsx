@@ -221,6 +221,7 @@ const HistorySearchBox = ({
           setBrandModel={setBrandModel}
           status={status}
           setStatus={setStatus}
+          onSearch={handleSearch}
         />
         <Button
           onClick={handleExcelDownload} // onClick 핸들러 추가
