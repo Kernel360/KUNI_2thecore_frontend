@@ -33,6 +33,7 @@ const BrandFilterBox = ({
         className={styles.filterInput}
         value={brandModel}
         onChange={e => setBrandModel(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
     </div>
   );

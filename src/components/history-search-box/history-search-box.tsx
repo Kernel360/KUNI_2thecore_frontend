@@ -192,6 +192,11 @@ const HistorySearchBox = ({
           className={styles.numberSearchInput}
           value={carNumber}
           onChange={e => setCarNumber(e.target.value)}
+          onKeyPress={e => {
+            if (e.key === 'Enter') {
+              handleSearch();
+            }
+          }}
         />
         <DoubleCalendar
           startTime={dateRange?.from}
