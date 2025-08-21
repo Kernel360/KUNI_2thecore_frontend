@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { CarDetail, CarService } from '@/services/car-service';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { useDetailStore } from '@/store/detail-store';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './detail.module.css';
 
@@ -14,6 +14,7 @@ const DetailPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const urlCarNumber = searchParams.get('carNumber');
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const {
     carNumber,
     brand,
@@ -225,7 +226,13 @@ const DetailPage = () => {
         {/* 지도 */}
         <Card className={styles.mapCard}>
           <CardContent className={styles.mapContent}>
-            <CarLocationMap width="100%" height="100%" />
+            <CarLocationMap 
+              width="100%" 
+              height="100%" 
+              carNumber={carNumber}
+              lastLatitude={lastLatitude}
+              lastLongitude={lastLongitude}
+            />
           </CardContent>
         </Card>
       </div>

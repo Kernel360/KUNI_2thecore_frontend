@@ -1,31 +1,30 @@
 import { CarDetail } from '@/services/car-service';
-import { useDetailStore } from '@/store/detail-store';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Map from './map';
 
 export default function CarLocationMap({
   width,
   height,
+  lastLatitude,
+  lastLongitude,
+  carNumber,
 }: {
   width: string;
   height: string;
+  lastLatitude?: string;
+  lastLongitude?: string;
+  carNumber: string;
 }) {
   const [carLocation, setCarLocation] = useState<CarDetail | null>(null);
+  const [mapReady, setMapReady] = useState(false);
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
   const infowindowRef = useRef<any>(null);
 
-  const { carNumber, lastLatitude, lastLongitude } = useDetailStore();
-
   const loadCarLocation = useCallback(async () => {
     if (!carNumber || !lastLatitude || !lastLongitude) return;
 
-    console.log('useDetailStore에서 가져온 위치 정보:', {
-      lastLatitude,
-      lastLongitude,
-    });
-
-    // useDetailStore의 위치 정보를 CarDetail 형식으로 변환
+    // props의 위치 정보를 CarDetail 형식으로 변환
     const carDetail: CarDetail = {
       carNumber,
       brand: '',
@@ -38,14 +37,17 @@ export default function CarLocationMap({
     setCarLocation(carDetail);
   }, [carNumber, lastLatitude, lastLongitude]);
 
-  const handleMapLoad = useCallback(
-    (mapInstance: any) => {
-      mapRef.current = mapInstance;
-      // 초기 로딩
+  const handleMapLoad = useCallback((mapInstance: any) => {
+    mapRef.current = mapInstance;
+    setMapReady(true);
+  }, []);
+
+  // props 변경 시 차량 위치 업데이트
+  useEffect(() => {
+    if (mapReady && lastLatitude && lastLongitude && carNumber) {
       loadCarLocation();
-    },
-    [loadCarLocation]
-  );
+    }
+  }, [mapReady, lastLatitude, lastLongitude, carNumber, loadCarLocation]);
 
   // 차량 위치 마커 업데이트
   useEffect(() => {
@@ -106,8 +108,8 @@ export default function CarLocationMap({
     );
 
     // 지도 중심을 차량 위치로 이동하고 확대
-      mapRef.current.setLevel(3);
-      mapRef.current.setCenter(position);
+    mapRef.current.setLevel(3);
+    mapRef.current.setCenter(position);
   }, [carLocation, carNumber]);
 
   return (
