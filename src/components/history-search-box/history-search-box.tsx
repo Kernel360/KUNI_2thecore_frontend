@@ -1,9 +1,9 @@
+import { mainApi } from '@/lib/api';
 import {
   DriveLog,
   DriveLogQueryParams,
   HistoryService,
 } from '@/services/history-service';
-import { mainApi } from '@/lib/api';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import BrandFilterBox from '../search-box/filter-box';
@@ -18,9 +18,9 @@ interface HistorySearchBoxProps {
 }
 
 const HistorySearchBox = ({
-                            onSearchResults,
-                            onLoadingChange,
-                          }: HistorySearchBoxProps) => {
+  onSearchResults,
+  onLoadingChange,
+}: HistorySearchBoxProps) => {
   const [carNumber, setCarNumber] = useState('');
   const [brandModel, setBrandModel] = useState('');
   const [status, setStatus] = useState('total');
@@ -176,7 +176,6 @@ const HistorySearchBox = ({
 
       // 새 창에서 다운로드
       window.open(downloadUrl, '_blank');
-
     } catch (error) {
       console.error('엑셀 다운로드 실패:', error);
       alert('엑셀 다운로드에 실패했습니다.');
@@ -235,12 +234,12 @@ const HistorySearchBox = ({
               disabled={isDownloading} // disabled 속성 추가
               className="w-40 h-11 mt-3 ml-0 mr-3 bg-gradient-to-br from-green-600 to-green-700 text-white text-sm font-semibold border-0
             rounded-xl shadow-lg shadow-green-600/30 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:shadow-green-800/40 active:scale-95 hover:-translate-y-1"
-          >
-            {/* 다운로드 상태에 따른 텍스트 변경 */}
-            {isDownloading ? '다운로드 중...' : '엑셀 다운로드'}
-          </Button>
-        </div>
+        >
+          {/* 다운로드 상태에 따른 텍스트 변경 */}
+          {isDownloading ? '다운로드 중...' : '엑셀 다운로드'}
+        </Button>
       </div>
+    </div>
   );
 };
 
