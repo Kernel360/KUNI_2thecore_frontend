@@ -3,6 +3,7 @@ import {
   DriveLogQueryParams,
   HistoryService,
 } from '@/services/history-service';
+import { mainApi } from '@/lib/api';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import BrandFilterBox from '../search-box/filter-box';
@@ -171,7 +172,7 @@ const HistorySearchBox = ({
 
       // URL 파라미터 생성
       const queryString = new URLSearchParams(queryParams).toString();
-      const downloadUrl = `/api/drivelogs/excel?${queryString}`;
+      const downloadUrl = `${mainApi.defaults.baseURL}/drivelogs/excel?${queryString}`;
 
       // 새 창에서 다운로드
       window.open(downloadUrl, '_blank');
