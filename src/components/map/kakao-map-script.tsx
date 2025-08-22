@@ -12,15 +12,6 @@ export default function KakaoMapScript() {
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_API_KEY}&libraries=services,clusterer&autoload=false`;
     script.async = true;
     
-    // 스크립트 로딩 완료 이벤트 추가
-    script.onload = () => {
-      console.log('Kakao Maps SDK loaded successfully');
-    };
-    
-    script.onerror = () => {
-      console.error('Failed to load Kakao Maps SDK');
-    };
-    
     document.head.appendChild(script);
 
     return () => {

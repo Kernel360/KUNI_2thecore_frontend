@@ -148,10 +148,7 @@ export class CarService {
   }
 
   // 실시간 전체 차량 위치 데이터 조회
-  static async getCarLocations(bounds?: {
-    sw: { lat: number; lng: number };
-    ne: { lat: number; lng: number };
-  }): Promise<
+  static async getCarLocations(): Promise<
     Array<{
       carNumber: string;
       status: '운행' | '대기' | '수리';
@@ -159,16 +156,6 @@ export class CarService {
       lastLongitude: string;
     }>
   > {
-    const params: any = {};
-    
-    // bounds가 제공되면 서버사이드 필터링을 위해 파라미터 추가
-    if (bounds) {
-      params.swLat = bounds.sw.lat;
-      params.swLng = bounds.sw.lng;
-      params.neLat = bounds.ne.lat;
-      params.neLng = bounds.ne.lng;
-    }
-
     const response = await mainApi.get<
       ApiResponse<
         Array<{
@@ -178,7 +165,7 @@ export class CarService {
           lastLongitude: string;
         }>
       >
-    >('/cars/locations', { params });
+    >('/cars/locations');
     return response.data.data;
   }
 }
