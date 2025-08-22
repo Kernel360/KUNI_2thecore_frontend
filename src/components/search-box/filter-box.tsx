@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Dropdown } from './dropdown';
 import styles from './search-filter.module.css';
@@ -9,7 +8,7 @@ interface BrandFilterBoxProps {
   setBrandModel: (value: string) => void;
   status: string;
   setStatus: (value: string) => void;
-  onFilterApply: () => void;
+  onSearch: () => void;
 }
 
 const BrandFilterBox = ({
@@ -17,15 +16,11 @@ const BrandFilterBox = ({
   setBrandModel,
   status,
   setStatus,
-  onFilterApply,
+  onSearch,
 }: BrandFilterBoxProps) => {
-  const handleFilterApply = () => {
-    onFilterApply();
-  };
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleFilterApply();
+      onSearch();
     }
   };
 
@@ -40,9 +35,6 @@ const BrandFilterBox = ({
         onChange={e => setBrandModel(e.target.value)}
         onKeyPress={handleKeyPress}
       />
-      <Button className={styles.filterButton} onClick={handleFilterApply}>
-        필터 적용
-      </Button>
     </div>
   );
 };

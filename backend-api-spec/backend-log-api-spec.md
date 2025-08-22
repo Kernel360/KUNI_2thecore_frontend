@@ -45,140 +45,167 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 - **Method**: GET
 - **Path**: `/api/drivelogs`
 - **상태**: 완료
-- **query parameters**:
-  interface DriveLogQueryParams {
+- **request**: {
   carNumber?: string; // 차량 번호
-  rentDate?: string; // 렌트 시작일 (형식: YYYY-MM-DD)
-  returnDate?: string; // 렌트 종료일 (형식: YYYY-MM-DD)
-  status?: string; // 차량 상태 (ex: 운행, 대기, 점검중)
+  status?: string; // 차량 상태 (ex: 운행, 대기, 수리)
   brand?: string; // 브랜드명
   model?: string; // 모델명
+  startTime?: LocalDate; // 주행 시작 날짜 ("2025-08-15")
+  endTime?: LocalDate; // 주행 종료 날짜 ("2025-08-16")
+  twoParam?: boolean // 브랜드 + 모델명 길이가 2가 아닌 경우 false
+  // 대신 길이가 0인 경우는 true
+  page?: Integer // 몇번째 페이지를 불러올것인지
+  offset?: Integer // 한 페이지에 데이터를 몇개를 불러올 것인지
+  sortBy?: String // 어떤 조건을 기준으로 정렬 할 것인지
+  // 조건의 종류는 : carNumber, startTime, endTime
+  // brand, model, startPoint, endPoint, driveDist, status
+  // status는 대기, 수리, 운행 순으로 오름차순 내림차순을 진행한다.
+  // default는 startTime이다.
+  sortOrder?: String // 오름차순 혹은 내림차순
+  // 정렬 방식은 ASC, DESC 이며 default는 ASC이다.
   }
-- **request**: Request 바디 없음
 - **request example**: X
-- **response**:{
-  "result": "boolean",
-  "message": "string",
-  "data": [
+- **response**:{"result": true,
+  "message": "메세지"
+  "data": {
+  "totalElements": "쿼리의 결과로 나온 튜플 수",
+  "totalPages": "전체 페이지",
+  "first": "첫번째 페이지인지",
+  "last": "마지막 페이지인지",
+  "size": ",
+  "content": [
   {
-  "carNumber": "string",
-  "startPoint": "string",
-  "startLatitude": "string",
-  "startLongitude": "string",
-  "startTime": "string",
-  "endPoint": "string",
-  "endLatitude": "string",
-  "endLongitude": "string",
-  "endTime": "string",
-  "driveDist": "Number",
-  "speed": "string",
-  "createdAt": "string",
-  "model": "string",
-  "brand": "string"
+  "carNumber": "차량번호",
+  "brand": "차량브랜드",
+  "model": "차량모델명",
+  "startTime": "주행시작시간",
+  "endTime": "주행종료시간",
+  "startPoint": "주행시작위치",
+  "endPoint": "주행종료위치",
+  "driveDist": "주행거리",
+  "status": "차량상태",
+  "memo": "주행기록 간의 메모"
   }
-  ]
+  ],
+  "pageable": "페이지네이션객체"{
+  "pageNumber": "서버상의 현재 페이지넘버",
+  "pageSize": "페이지 크기"
+  "sort": { "정렬여부"
+  "empty": "페이지가 비어있는지"
+  "sorted": "정렬여부",
+  "unsorted": "비정렬여부"
+  },
+  "offset": "전체 페이지 내에서 현재 페이지 시작 인덱스"
+  "paged": "페이지 적용 여부"
+  "unpaged": "페이지 비적용 여부"
+
+      },
+      "last": "마지막 페이지인지",
+      "totalPages": "전체 페이지수"
+      "totalElements": "전체 데이터수"
+      "first": "첫번째 페이지인지",
+      "size": "한페이지 내의 데이터수",
+      "number": "서버상의 현재 페이지수"
+      "sort": { //위와 동일
+        "empty": true,
+        "sorted": false,
+        "unsorted": true
+      },
+      "numberOfElements": 5,
+      "empty": false
+
   }
+  }
+
 - **response example**:{
-  "result": true, // 요청 성공 여부
-  "message": "전체 주행기록 조회 완료", // 처리 결과 메시지
-  "data": [
+  "result": true,
+  "message": null,
+  "data": {
+  "content": [
   {
-  "carNumber": "1", // 차량 번호
-  "startPoint": "서울시 강남구", // 출발지 이름
-  "startLatitude": "37.4979", // 출발지 위도
-  "startLongitude": "127.0276", // 출발지 경도
-  "startTime": "2025-07-31T08:30:00", // 출발 시간 (ISO 8601 형식)
-  "endPoint": "서울시 종로구", // 도착지 이름
-  "endLatitude": "37.5729", // 도착지 위도
-  "endLongitude": "126.9794", // 도착지 경도
-  "endTime": "2025-07-31T08:50:00", // 도착 시간 (ISO 8601 형식)
-  "driveDist": 12000, // 주행 거리 (미터 단위)
-  "speed": "60km/h", // 주행 속도 (문자열)
-  "createdAt": "2025-07-31T10:17:34", // 주행기록 저장 시각 (ISO 8601 형식)
-  "model": "", // 차량 모델명
-  "brand": "" // 차량 브랜드명
-  },
-  {
-  "carNumber": "2",
-  "startPoint": "서울시 양천구",
-  "startLatitude": "123.456",
-  "startLongitude": "789.101",
-  "startTime": "2025-08-04T02:53:29",
-  "endPoint": "서울시 성북구",
-  "endLatitude": "112.131",
-  "endLongitude": "415.161",
-  "endTime": "2025-08-04T02:53:29",
-  "driveDist": 121314,
-  "speed": "50e^4km/h",
-  "createdAt": "2025-08-04T12:06:26",
-  "model": "",
-  "brand": ""
-  },
-  {
-  "carNumber": "3",
+  "carNumber": "12가1233",
+  "brand": "기아",
+  "model": "소나타",
+  "startTime": "2025-08-08",
+  "endTime": "2025-08-08",
   "startPoint": "서울역",
-  "startLatitude": "37.554722",
-  "startLongitude": "126.970833",
-  "startTime": "2025-08-08T01:57:10",
   "endPoint": "강남역",
-  "endLatitude": "37.498095",
-  "endLongitude": "127.027610",
-  "endTime": "2025-08-08T02:30:00",
   "driveDist": 15000,
-  "speed": "60km/h",
-  "createdAt": "2025-08-08T11:10:36",
-  "model": "아이오닉5",
-  "brand": "현대"
+  "status": "대기"
+  },
+  {
+  "carNumber": "12가1234",
+  "brand": "현대",
+  "model": "아이오닉",
+  "startTime": "2025-08-08",
+  "endTime": "2025-08-08",
+  "startPoint": "서울역",
+  "endPoint": "강남역",
+  "driveDist": 15000,
+  "status": "대기"
+  },
+  {
+  "carNumber": "12가1234",
+  "brand": "현대",
+  "model": "아이오닉",
+  "startTime": "2025-08-08",
+  "endTime": "2025-08-08",
+  "startPoint": "서울역",
+  "endPoint": "강남역",
+  "driveDist": 15000,
+  "status": "대기"
+  },
+  {
+  "carNumber": "12가1234",
+  "brand": "현대",
+  "model": "아이오닉",
+  "startTime": "2025-08-08",
+  "endTime": "2025-08-08",
+  "startPoint": "서울역",
+  "endPoint": "강남역",
+  "driveDist": 15000,
+  "status": "대기"
+  },
+  {
+  "carNumber": "12가1234",
+  "brand": "현대",
+  "model": "아이오닉",
+  "startTime": "2025-08-08",
+  "endTime": "2025-08-08",
+  "startPoint": "서울역",
+  "endPoint": "강남역",
+  "driveDist": 15000,
+  "status": "대기"
   }
-  ]
+  ],
+  "pageable": {
+  "pageNumber": 0,
+  "pageSize": 10,
+  "sort": {
+  "empty": true,
+  "sorted": false,
+  "unsorted": true
+  },
+  "offset": 0,
+  "paged": true,
+  "unpaged": false
+  },
+  "last": true,
+  "totalElements": 5,
+  "totalPages": 1,
+  "first": true,
+  "size": 10,
+  "number": 0,
+  "sort": {
+  "empty": true,
+  "sorted": false,
+  "unsorted": true
+  },
+  "numberOfElements": 5,
+  "empty": false
+  }
   }
 
-### 3.2 특정 차량 운행 정보
-
-- **Method**: GET
-- **Path**: `/api/logs/{car_number}`
-- **상태**: 완료
-- **request**: X
-- **request example**: X
-- **response**:{
-
-      "message": "차량 운행 정보 조회에 성공했습니다.",
-      "data": [
-      {
-        "carNumber": "차량번호",
-        "carName" : "차량명", // 브랜드명 + 모델명
-        "status" : "상태",    // "운행", "대기", "점검"
-          "currLocation" : "현재 위치", // 서울 강남구 역삼동
-          "currLatitude" : "현재 위도",
-          "currLongitude" : "현재 경도",
-        "speed" : "속도",
-          "year" : "차량 연식",
-          "totalDist" : "주행 거리"
-      },
-      ...
-
-  ]
-  }
-
-- **response example**:{
-
-      "message": "차량 운행 정보 조회에 성공했습니다.",
-      "data": [
-      {
-        "carNumber": "12가 1234",
-        "carName" : "기아 K5",
-        "status" : "운행",
-          "currLocation" : "서울 강남구 역삼동",
-          "currLatitude" : "37.503325",
-          "currLongitude" : "127.044034",
-        "speed" : "60km/h",
-          "year" : "2022년",
-          "totalDist" : "45,678km"
-      },
-      ...
-
-  ]
-  }
 
 ### 3.3 시동 로그
 
@@ -245,3 +272,35 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
   "end_time" : "로그 collect 종료시간"
   }
   }
+
+### 3.5 드라이브 로그 엑셀 다운로드
+
+- **Method**: GET
+- **Path**: `/api/drivelogs/excel`
+- **설명**: 조건에 맞는 운행 기록을 Excel 파일(`.xlsx`)로 다운로드
+- **상태**: 완료
+
+- **request & response**:
+```json
+{
+  "request": {
+    "carNumber": "차량 번호",                 // 선택
+    "status": "운행 상태",                    // 선택 (예: 운행, 정지)
+    "brand": "차량 브랜드",                   // 선택
+    "model": "차량 모델",                     // 선택
+    "startTime": "조회 시작일 (yyyy-MM-dd)",  // 선택
+    "endTime": "조회 종료일 (yyyy-MM-dd)",    // 선택
+    "twoParam": true,                         // 선택 (추가 조건 여부)
+    "sortBy": "정렬 기준 필드",               // 선택
+    "sortOrder": "asc 또는 desc"              // 선택
+  },
+  "response": {
+    "headers": {
+      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "Content-Disposition": "attachment; filename=drive_logs.xlsx"
+    },
+    "body": "Excel(.xlsx) 파일 바이너리 데이터"
+  }
+}
+
+

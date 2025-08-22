@@ -1,6 +1,8 @@
+import SignUpModal, { SignUpData } from '@/components/signup-modal';
 import { Button } from '@/components/ui/button';
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -10,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import TopBar from '@/components/ui/topBar';
-import { AuthService } from '@/services/auth-service';
+import { AuthService, SignUpRequest } from '@/services/auth-service';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,6 +24,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCredentials(prev => ({
@@ -52,6 +55,30 @@ export default function Login() {
     }
   };
 
+  const handleSignUp = async (formData: SignUpData) => {
+    try {
+      setLoading(true);
+
+      const signUpData: SignUpRequest = {
+        loginId: formData.loginId,
+        password: formData.password,
+        name: formData.name,
+        email: formData.email,
+        birthdate: formData.birthdate,
+        phoneNumber: formData.phoneNumber,
+      };
+
+      await AuthService.signUp(signUpData);
+      setIsModalOpen(false);
+      alert('가입 신청서가 제출되었습니다. 영업일 기준 2-3일내로 처리됩니다.');
+    } catch (error: any) {
+      console.error('회원가입 실패:', error);
+      setError(error.message || '회원가입에 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-center">
       <TopBar title="로그인"></TopBar>
@@ -63,6 +90,11 @@ export default function Login() {
         <CardHeader>
           <CardTitle>로그인</CardTitle>
           <CardDescription>아이디와 비밀번호를 입력하세요.</CardDescription>
+          <CardAction className="flex-end">
+            <Button variant="link" onClick={() => setIsModalOpen(true)}>
+              회원가입
+            </Button>
+          </CardAction>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
@@ -99,9 +131,14 @@ export default function Login() {
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <p>새 계정 등록 문의: ooo@oooo.com</p>
+          <p>문의사항이 있으시면 2the@core.com로 연락 바랍니다.</p>
         </CardFooter>
       </Card>
+      <SignUpModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSignUp}
+      />
     </div>
   );
 }

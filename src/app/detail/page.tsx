@@ -1,3 +1,4 @@
+import iconStyles from '@/components/icon-button/icon-button.module.css';
 import CarLocationMap from '@/components/map/car-location-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { CarDetail, CarService } from '@/services/car-service';
 import { setDetailChangeStore } from '@/store/detail-change';
 import { useDetailStore } from '@/store/detail-store';
-import { useEffect, useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './detail.module.css';
 
@@ -14,6 +16,7 @@ const DetailPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const urlCarNumber = searchParams.get('carNumber');
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const {
     carNumber,
     brand,
@@ -25,28 +28,17 @@ const DetailPage = () => {
     setDetail,
     brandModel,
     lastLatitude,
-    lastLongitude,
+    lastLongitude
   } = useDetailStore();
   const detailChange = setDetailChangeStore(state => state.detailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
+
+  const goBack = useCallback(() => {
+    window.history.back();
+  }, []);
+
   // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리
   const safeStatus = status ?? '대기';
-  // URL에서 carNumber가 있으면 API 호출해서 데이터 가져오기
-  useEffect(() => {
-    if (urlCarNumber) {
-      const fetchCarDetail = async () => {
-        try {
-          const carDetail = await CarService.getCar(urlCarNumber);
-          setDetail(carDetail);
-        } catch (error) {
-          console.error('차량 정보 로드 실패:', error);
-          alert('차량 정보를 불러오는데 실패했습니다.');
-          navigate('/search');
-        }
-      };
-      fetchCarDetail();
-    }
-  }, [urlCarNumber, carNumber, setDetail, navigate]);
 
   // URL에서 carNumber가 있으면 API 호출해서 데이터 가져오기
   useEffect(() => {
@@ -141,6 +133,9 @@ const DetailPage = () => {
         {/* 상세 정보 */}
         <Card className={styles.detailCard}>
           <CardContent className={styles.cardContent}>
+            <button onClick={goBack} className={iconStyles.goBack}>
+              <ArrowLeft size={20} color="#535968" />
+            </button>
             <div className={styles.title}>차량 정보</div>
             <div className={styles.formGrid}>
               <label className={styles.label}>차량 번호</label>
@@ -179,7 +174,7 @@ const DetailPage = () => {
                     : undefined
                 }
               />
-              <label className={styles.label}>주행 거리</label>
+              <label className={styles.label}>주행 거리 (km)</label>
               <Input
                 className={styles.input}
                 value={sumDist}
@@ -225,7 +220,13 @@ const DetailPage = () => {
         {/* 지도 */}
         <Card className={styles.mapCard}>
           <CardContent className={styles.mapContent}>
-            <CarLocationMap width="100%" height="100%" />
+            <CarLocationMap 
+              width="100%" 
+              height="100%" 
+              carNumber={carNumber}
+              lastLatitude={lastLatitude}
+              lastLongitude={lastLongitude}
+            />
           </CardContent>
         </Card>
       </div>
