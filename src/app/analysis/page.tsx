@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -9,11 +8,18 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Loader2 } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { analysisApi } from '@/lib/api';
+import { Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 // 공통 응답 인터페이스
 interface BaseAnalysisResponse {
@@ -94,18 +100,18 @@ const visualizationTitles = {
   seasonality_radar: '계절성 분석',
   seasonality_strength_bar: '계절성 강도',
   statistical_comparison: '통계 비교',
-  
+
   // 1.2 연도별 트렌드 분석
   brand_trend_lines: '브랜드별 트렌드',
   model_ranking_change: '모델 순위 변화',
   car_age_preference: '차량 연식별 선호도',
   market_share_evolution: '시장 점유율 진화',
   trend_summary: '트렌드 요약',
-  
+
   // 1.3 일별 운행차량 수 예측
   usage_trend_with_prediction: '운행 추세 및 예측',
   weekday_pattern: '요일별 패턴',
-  
+
   // 1.4 지역별 클러스터링 분석
   cluster_map: '클러스터 지도',
   recommendation_map: '추천 지역 지도',
@@ -119,30 +125,34 @@ const visualizationDescriptions = {
   seasonality_radar: '계절별 브랜드 선호도 패턴 분석',
   seasonality_strength_bar: '브랜드별 계절성 영향력 정도',
   statistical_comparison: '브랜드간 통계적 비교 분석',
-  
+
   // 1.2 연도별 트렌드 분석
   brand_trend_lines: '연도별 브랜드 시장 점유율 트렌드',
   model_ranking_change: '상위 모델들의 트렌드 변화',
   car_age_preference: '차량 연식별 선호도 트렌드',
   market_share_evolution: '브랜드별 변동성 및 성장률',
   trend_summary: '브랜드별 트렌드 종합 분석',
-  
+
   // 1.3 일별 운행차량 수 예측
   usage_trend_with_prediction: '과거 데이터와 미래 예측 트렌드',
   weekday_pattern: '요일별 운행 차량 수 패턴',
-  
+
   // 1.4 지역별 클러스터링 분석
   cluster_map: '수요 집중 지역 클러스터링 결과',
   recommendation_map: '신규 영업소 추천 위치',
 };
 
-export function AnalysisPage() {
+export default function AnalysisPage() {
   // 각 탭별 데이터 상태
   const [periodData, setPeriodData] = useState<PeriodAnalysisData | null>(null);
   const [trendData, setTrendData] = useState<TrendAnalysisData | null>(null);
-  const [forecastData, setForecastData] = useState<ForecastAnalysisData | null>(null);
-  const [clusterData, setClusterData] = useState<ClusterAnalysisData | null>(null);
-  
+  const [forecastData, setForecastData] = useState<ForecastAnalysisData | null>(
+    null
+  );
+  const [clusterData, setClusterData] = useState<ClusterAnalysisData | null>(
+    null
+  );
+
   // 각 탭별 로딩 상태
   const [loading, setLoading] = useState({
     period: false,
@@ -264,7 +274,10 @@ export function AnalysisPage() {
     fetchPeriodAnalysis();
   }, []);
 
-  const renderVisualization = (key: keyof typeof visualizationTitles, base64Data?: string) => {
+  const renderVisualization = (
+    key: keyof typeof visualizationTitles,
+    base64Data?: string
+  ) => {
     if (!base64Data) return null;
 
     return (
@@ -279,7 +292,7 @@ export function AnalysisPage() {
               src={`data:image/png;base64,${base64Data}`}
               alt={visualizationTitles[key]}
               className="max-w-full h-auto rounded-lg shadow-sm"
-              onError={(e) => {
+              onError={e => {
                 e.currentTarget.src = '/placeholder-chart.png';
                 e.currentTarget.alt = '차트를 불러올 수 없습니다';
               }}
@@ -291,7 +304,12 @@ export function AnalysisPage() {
   };
 
   const renderTabContent = (
-    data: PeriodAnalysisData | TrendAnalysisData | ForecastAnalysisData | ClusterAnalysisData | null,
+    data:
+      | PeriodAnalysisData
+      | TrendAnalysisData
+      | ForecastAnalysisData
+      | ClusterAnalysisData
+      | null,
     isLoading: boolean,
     onRetry: () => void
   ) => {
@@ -315,7 +333,9 @@ export function AnalysisPage() {
       );
     }
 
-    const visualizations = Object.entries(data.visualizations).filter(([, value]) => value);
+    const visualizations = Object.entries(data.visualizations).filter(
+      ([, value]) => value
+    );
 
     if (visualizations.length === 0) {
       return (
@@ -403,15 +423,17 @@ export function AnalysisPage() {
                 <Input
                   type="text"
                   value={periodParams.year}
-                  onChange={(e) => setPeriodParams(prev => ({ ...prev, year: e.target.value }))}
+                  onChange={e =>
+                    setPeriodParams(prev => ({ ...prev, year: e.target.value }))
+                  }
                   className="w-20"
                 />
               </div>
               <div className="flex items-center gap-2">
                 <label className="text-sm font-medium">분석 유형:</label>
-                <Select 
-                  value={periodParams.period_type} 
-                  onValueChange={(value: 'month' | 'season') => 
+                <Select
+                  value={periodParams.period_type}
+                  onValueChange={(value: 'month' | 'season') =>
                     setPeriodParams(prev => ({ ...prev, period_type: value }))
                   }
                 >
@@ -425,7 +447,9 @@ export function AnalysisPage() {
                 </Select>
               </div>
               <Button onClick={fetchPeriodAnalysis} disabled={loading.period}>
-                {loading.period ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                {loading.period ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
                 분석 실행
               </Button>
             </div>
@@ -440,7 +464,12 @@ export function AnalysisPage() {
                 <Input
                   type="number"
                   value={trendParams.start_year}
-                  onChange={(e) => setTrendParams(prev => ({ ...prev, start_year: parseInt(e.target.value) }))}
+                  onChange={e =>
+                    setTrendParams(prev => ({
+                      ...prev,
+                      start_year: parseInt(e.target.value),
+                    }))
+                  }
                   className="w-24"
                 />
               </div>
@@ -449,7 +478,12 @@ export function AnalysisPage() {
                 <Input
                   type="number"
                   value={trendParams.end_year}
-                  onChange={(e) => setTrendParams(prev => ({ ...prev, end_year: parseInt(e.target.value) }))}
+                  onChange={e =>
+                    setTrendParams(prev => ({
+                      ...prev,
+                      end_year: parseInt(e.target.value),
+                    }))
+                  }
                   className="w-24"
                 />
               </div>
@@ -460,12 +494,19 @@ export function AnalysisPage() {
                   min="1"
                   max="20"
                   value={trendParams.top_n}
-                  onChange={(e) => setTrendParams(prev => ({ ...prev, top_n: parseInt(e.target.value) }))}
+                  onChange={e =>
+                    setTrendParams(prev => ({
+                      ...prev,
+                      top_n: parseInt(e.target.value),
+                    }))
+                  }
                   className="w-20"
                 />
               </div>
               <Button onClick={fetchTrendAnalysis} disabled={loading.trend}>
-                {loading.trend ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                {loading.trend ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
                 분석 실행
               </Button>
             </div>
@@ -480,7 +521,12 @@ export function AnalysisPage() {
                 <Input
                   type="date"
                   value={forecastParams.start_date}
-                  onChange={(e) => setForecastParams(prev => ({ ...prev, start_date: e.target.value }))}
+                  onChange={e =>
+                    setForecastParams(prev => ({
+                      ...prev,
+                      start_date: e.target.value,
+                    }))
+                  }
                   className="w-36"
                 />
               </div>
@@ -489,7 +535,12 @@ export function AnalysisPage() {
                 <Input
                   type="date"
                   value={forecastParams.end_date}
-                  onChange={(e) => setForecastParams(prev => ({ ...prev, end_date: e.target.value }))}
+                  onChange={e =>
+                    setForecastParams(prev => ({
+                      ...prev,
+                      end_date: e.target.value,
+                    }))
+                  }
                   className="w-36"
                 />
               </div>
@@ -500,16 +551,30 @@ export function AnalysisPage() {
                   min="1"
                   max="30"
                   value={forecastParams.forecast_days}
-                  onChange={(e) => setForecastParams(prev => ({ ...prev, forecast_days: parseInt(e.target.value) }))}
+                  onChange={e =>
+                    setForecastParams(prev => ({
+                      ...prev,
+                      forecast_days: parseInt(e.target.value),
+                    }))
+                  }
                   className="w-20"
                 />
               </div>
-              <Button onClick={fetchForecastAnalysis} disabled={loading.forecast}>
-                {loading.forecast ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              <Button
+                onClick={fetchForecastAnalysis}
+                disabled={loading.forecast}
+              >
+                {loading.forecast ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
                 분석 실행
               </Button>
             </div>
-            {renderTabContent(forecastData, loading.forecast, fetchForecastAnalysis)}
+            {renderTabContent(
+              forecastData,
+              loading.forecast,
+              fetchForecastAnalysis
+            )}
           </TabsContent>
 
           {/* 1.4 지역별 클러스터링 분석 */}
@@ -520,7 +585,12 @@ export function AnalysisPage() {
                 <Input
                   type="date"
                   value={clusterParams.start_date}
-                  onChange={(e) => setClusterParams(prev => ({ ...prev, start_date: e.target.value }))}
+                  onChange={e =>
+                    setClusterParams(prev => ({
+                      ...prev,
+                      start_date: e.target.value,
+                    }))
+                  }
                   className="w-36"
                 />
               </div>
@@ -529,7 +599,12 @@ export function AnalysisPage() {
                 <Input
                   type="date"
                   value={clusterParams.end_date}
-                  onChange={(e) => setClusterParams(prev => ({ ...prev, end_date: e.target.value }))}
+                  onChange={e =>
+                    setClusterParams(prev => ({
+                      ...prev,
+                      end_date: e.target.value,
+                    }))
+                  }
                   className="w-36"
                 />
               </div>
@@ -540,15 +615,20 @@ export function AnalysisPage() {
                   min="1"
                   max="50"
                   value={clusterParams.k}
-                  onChange={(e) => setClusterParams(prev => ({ ...prev, k: parseInt(e.target.value) }))}
+                  onChange={e =>
+                    setClusterParams(prev => ({
+                      ...prev,
+                      k: parseInt(e.target.value),
+                    }))
+                  }
                   className="w-20"
                 />
               </div>
               <div className="flex items-center gap-2">
                 <label className="text-sm font-medium">방법:</label>
-                <Select 
-                  value={clusterParams.method} 
-                  onValueChange={(value: 'kmeans' | 'dbscan') => 
+                <Select
+                  value={clusterParams.method}
+                  onValueChange={(value: 'kmeans' | 'dbscan') =>
                     setClusterParams(prev => ({ ...prev, method: value }))
                   }
                 >
@@ -562,11 +642,17 @@ export function AnalysisPage() {
                 </Select>
               </div>
               <Button onClick={fetchClusterAnalysis} disabled={loading.cluster}>
-                {loading.cluster ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                {loading.cluster ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
                 분석 실행
               </Button>
             </div>
-            {renderTabContent(clusterData, loading.cluster, fetchClusterAnalysis)}
+            {renderTabContent(
+              clusterData,
+              loading.cluster,
+              fetchClusterAnalysis
+            )}
           </TabsContent>
         </Tabs>
       </main>

@@ -6,13 +6,13 @@ import axios, {
 } from 'axios';
 import { TokenManager } from './token-manager';
 
-// 환경변수 기반 API 설정
+// 환경변수 기반 API 설정 (Vite 방식)
 const API_BASE_URL =
-  process.env.CAR_BASE_URL || 'http://52.78.122.150:8080/api';
+  import.meta.env.VITE_CAR_BASE_URL || 'http://52.78.122.150:8080/api';
 const EMULATOR_API_BASE_URL =
-  process.env.EMULATOR_BASE_URL || 'http://15.165.171.174:8081/api';
+  import.meta.env.VITE_EMULATOR_BASE_URL || 'http://15.165.171.174:8081/api';
 const ANALYSIS_API_BASE_URL =
-  process.env.ANALYSIS_BASE_URL || 'http://15.165.203.28/api';
+  import.meta.env.VITE_ANALYSIS_API_BASE_URL || 'http://192.168.1.60:5000/api';
 
 // 페이징 응답 타입 (차량 목록 등에서 사용)
 export interface PageResponse<T> {
@@ -173,10 +173,45 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
   return instance;
 };
 
+/**
+ * Flask 서버용 단순 Axios 인스턴스 생성 (JWT 없이)
+ * - withCredentials: false로 CORS 이슈 방지
+ * - Authorization 헤더 없음
+ */
+const createFlaskApiInstance = (baseURL: string): AxiosInstance => {
+  const instance = axios.create({
+    baseURL,
+    timeout: 10000,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    withCredentials: false, // Flask 서버는 인증이 필요없으므로 false
+  });
+
+  // 에러 처리만 추가 (JWT 처리는 제외)
+  instance.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    error => {
+      const apiError = new ApiError(
+        getKoreanErrorMessage(
+          error.response?.status || 500,
+          error.response?.data?.message
+        ),
+        error.response?.status || 500,
+        error.response?.data?.code,
+        error.response?.data
+      );
+      return Promise.reject(apiError);
+    }
+  );
+
+  return instance;
+};
+
 // API 인스턴스들 export
 export const mainApi = createApiInstance(API_BASE_URL);
 export const emulatorApi = createApiInstance(EMULATOR_API_BASE_URL);
-export const analysisApi = createApiInstance(ANALYSIS_API_BASE_URL);
+export const analysisApi = createFlaskApiInstance(ANALYSIS_API_BASE_URL);
 
 // 타입과 유틸리티 export
 export { TokenManager };
