@@ -38,9 +38,19 @@ export default function CarClustererMap({
         };
       }
 
-      // bounds 기반으로 서버에서 필터링된 차량 데이터 요청
-      const locations = await CarService.getCarLocations(bounds);
-      const carData: Car[] = locations.map(loc => ({
+      // 전체 차량 데이터 요청 (서버에서 bounds 필터링 미지원)
+      const locations = await CarService.getCarLocations();
+      // 클라이언트에서 bounds 내의 차량만 필터링
+      const filteredLocations = bounds 
+        ? locations.filter(loc => {
+            const lat = parseFloat(loc.lastLatitude);
+            const lng = parseFloat(loc.lastLongitude);
+            return lat >= bounds.sw.lat && lat <= bounds.ne.lat &&
+                   lng >= bounds.sw.lng && lng <= bounds.ne.lng;
+          })
+        : locations;
+
+      const carData: Car[] = filteredLocations.map(loc => ({
         carNumber: loc.carNumber,
         status:
           loc.status === '운행'
@@ -51,7 +61,43 @@ export default function CarClustererMap({
         lastLatitude: loc.lastLatitude,
         lastLongitude: loc.lastLongitude,
       }));
-      setCars(carData);
+
+      // 대기/수리 차량은 기존 데이터 유지, 운행 차량만 업데이트
+      setCars(prevCars => {
+        const updatedCars = [...carData];
+        
+        // 현재 시간과 마지막 업데이트 시간 비교
+        const now = Date.now();
+        const oneMinute = 60000;
+        
+        prevCars.forEach(prevCar => {
+          if (prevCar.status === 'idle' || prevCar.status === 'maintenance') {
+            const lastUpdate = (prevCar as any).lastUpdate || 0;
+            if (now - lastUpdate < oneMinute) {
+              // 1분이 지나지 않았으면 기존 데이터 유지
+              const existingCarIndex = updatedCars.findIndex(car => car.carNumber === prevCar.carNumber);
+              if (existingCarIndex >= 0) {
+                updatedCars[existingCarIndex] = prevCar;
+              }
+            } else {
+              // 1분이 지났으면 새 데이터에 업데이트 시간 추가
+              const newCarIndex = updatedCars.findIndex(car => car.carNumber === prevCar.carNumber);
+              if (newCarIndex >= 0) {
+                (updatedCars[newCarIndex] as any).lastUpdate = now;
+              }
+            }
+          }
+        });
+
+        // 운행 중인 차량은 항상 최신 데이터로 업데이트
+        updatedCars.forEach(car => {
+          if (car.status === 'driving') {
+            (car as any).lastUpdate = now;
+          }
+        });
+
+        return updatedCars;
+      });
     } catch (error) {
       console.error('차량 위치 데이터 조회 실패:', error);
     } finally {
@@ -123,9 +169,16 @@ export default function CarClustererMap({
         // 마커 클릭 이벤트 추가
         window.kakao.maps.event.addListener(marker, 'click', function () {
           const position = marker.getPosition();
-          // 애니메이션 없이 즉시 중심 이동 및 줌인
-          mapRef.current.setCenter(position);
-          mapRef.current.setLevel(3);
+          // 줌인과 중심 이동을 동시에 수행
+          mapRef.current.setLevel(3, {
+            anchor: position,
+            animate: { duration: 500 }
+          });
+          
+          // 애니메이션 완료 후 중심 재조정
+          setTimeout(() => {
+            mapRef.current.setCenter(position);
+          }, 600);
         });
 
         return marker;
