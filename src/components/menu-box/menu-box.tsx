@@ -94,7 +94,7 @@ const MenuBox = () => {
               onMouseEnter={e => handleMouseEnter(e, '/emulator')}
               onMouseLeave={e => handleMouseLeave(e, '/emulator')}
             >
-              <Link to="/emulator">⚒️ 에뮬레이터</Link>
+              <Link to="/emulator">⚙️ 에뮬레이터</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>

@@ -139,7 +139,6 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
 
           // new-access-token이 없는 경우
           console.warn(`새 액세스 토큰 없음 (시도 ${attempt}/3)`);
-
           if (attempt === 3) {
             // 3회 모두 실패 시 로그아웃
             console.warn('새 액세스 토큰 3회 확인 실패 - 자동 로그아웃 처리');
