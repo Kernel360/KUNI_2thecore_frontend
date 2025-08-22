@@ -60,7 +60,7 @@ const DetailPage = () => {
   useEffect(() => {
     if (!urlCarNumber) return;
 
-    // 5초 간격으로 API를 호출하는 interval 설정
+    // 3초 간격으로 API를 호출하는 interval 설정
     const intervalId = setInterval(async () => {
       try {
         const updatedCarDetail = await CarService.getCar(urlCarNumber);
@@ -68,7 +68,7 @@ const DetailPage = () => {
       } catch (error) {
         console.error(`'${urlCarNumber}' 차량 정보 갱신 실패:`, error);
       }
-    }, 5000); // 5초
+    }, 3000); // 3초
 
     // 컴포넌트가 언마운트될 때 interval 정리
     return () => clearInterval(intervalId);
