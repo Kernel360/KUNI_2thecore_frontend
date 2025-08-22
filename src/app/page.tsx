@@ -1,3 +1,4 @@
+import DataLanking from '@/components/data-lanking/data-lanking';
 import CarClustererMap from '@/components/map/car-clusterer-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import MapModal from '@/components/map/map-modal';
@@ -11,14 +12,15 @@ export default function Home() {
 
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   return (
-    <>
+    <div className="flex flex-col">
+      <DataLanking />
       <div className="flex flex-row gap-6 p-4 w-[98%] mx-auto">
-        <div>
+        <>
           <StatusContainer
             carStatusFilter={carStatusFilter}
             setCarStatusFilter={setCarStatusFilter}
           />
-        </div>
+        </>
         <div className="relative flex-1 max-h-[900px] rounded-2xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-xl">
           <KakaoMapScript />
           <CarClustererMap
@@ -34,6 +36,6 @@ export default function Home() {
         isOpen={isMapModalOpen}
         onClose={() => setIsMapModalOpen(false)}
       />
-    </>
+    </div>
   );
 }

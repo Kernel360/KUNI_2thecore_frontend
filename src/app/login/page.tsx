@@ -90,6 +90,11 @@ export default function Login() {
         <CardHeader>
           <CardTitle>로그인</CardTitle>
           <CardDescription>아이디와 비밀번호를 입력하세요.</CardDescription>
+          <CardAction className="flex-end">
+            <Button variant="link" onClick={() => setIsModalOpen(true)}>
+              회원가입
+            </Button>
+          </CardAction>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
@@ -126,10 +131,7 @@ export default function Login() {
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <CardAction className="flex-col gap-2">
-            <Button variant="link" onClick={() => setIsModalOpen(true)}>회원가입</Button>
-          </CardAction>
-          <p>새 계정 등록 문의: ooo@oooo.com</p>
+          <p>문의사항이 있으시면 2the@core.com로 연락 바랍니다.</p>
         </CardFooter>
       </Card>
       <SignUpModal

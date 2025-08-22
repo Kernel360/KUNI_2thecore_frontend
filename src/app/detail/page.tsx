@@ -27,6 +27,8 @@ const DetailPage = () => {
     carType,
     setDetail,
     brandModel,
+    lastLatitude,
+    lastLongitude
   } = useDetailStore();
   const detailChange = setDetailChangeStore(state => state.detailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
@@ -53,12 +55,24 @@ const DetailPage = () => {
       };
       fetchCarDetail();
     }
-  }, [urlCarNumber, carNumber, setDetail, navigate]);
+  }, [urlCarNumber, setDetail, navigate]);
 
   useEffect(() => {
-    const checkMap = () => {};
-    checkMap();
-  }, [detailChange]);
+    if (!urlCarNumber) return;
+
+    // 3초 간격으로 API를 호출하는 interval 설정
+    const intervalId = setInterval(async () => {
+      try {
+        const updatedCarDetail = await CarService.getCar(urlCarNumber);
+        setDetail(updatedCarDetail);
+      } catch (error) {
+        console.error(`'${urlCarNumber}' 차량 정보 갱신 실패:`, error);
+      }
+    }, 3000); // 3초
+
+    // 컴포넌트가 언마운트될 때 interval 정리
+    return () => clearInterval(intervalId);
+  }, [urlCarNumber, setDetail]);
 
   const handleChange = (
     field: 'brandModel' | keyof CarDetail,
