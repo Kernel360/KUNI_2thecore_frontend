@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute.tsx';
 import './styles/globals.css';
 
 // Pages
+import AnalysisPage from './app/analysis/page.tsx';
 import DetailPage from './app/detail/page.tsx';
 import EmulatorPage from './app/emulator/page.tsx';
 import HistoryPage from './app/history/page.tsx';
@@ -34,6 +35,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="emulator" element={<EmulatorPage />} />
           <Route path="history" element={<HistoryPage />} />
           <Route path="search" element={<SearchPage />} />
+          <Route path="analysis" element={<AnalysisPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
