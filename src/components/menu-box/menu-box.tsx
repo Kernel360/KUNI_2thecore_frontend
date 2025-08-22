@@ -1,3 +1,4 @@
+import styles from '@/components/menu-box/menu-box.module.css';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -7,13 +8,12 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Link, useLocation } from 'react-router-dom';
 import { AccountDropdown } from '../user-box';
-import styles from '@/components/menu-box/menu-box.module.css'
 
 const MenuBox = () => {
   const location = useLocation();
-  
+
   const isActive = (path: string) => location.pathname === path;
-  
+
   const getItemStyle = (path: string) => {
     const isCurrentPage = isActive(path);
     return {
@@ -22,17 +22,19 @@ const MenuBox = () => {
       color: isCurrentPage ? 'white' : '#1e293b',
     };
   };
-  
+
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>, path: string) => {
     if (!isActive(path)) {
       e.currentTarget.style.background = '#3a70ff';
       e.currentTarget.style.color = 'white';
     }
   };
-  
+
   const handleMouseLeave = (e: React.MouseEvent<HTMLElement>, path: string) => {
     const isCurrentPage = isActive(path);
-    e.currentTarget.style.background = isCurrentPage ? '#3a70ff' : 'transparent';
+    e.currentTarget.style.background = isCurrentPage
+      ? '#3a70ff'
+      : 'transparent';
     e.currentTarget.style.color = isCurrentPage ? 'white' : '#1e293b';
   };
 
@@ -70,7 +72,7 @@ const MenuBox = () => {
               onMouseEnter={e => handleMouseEnter(e, '/history')}
               onMouseLeave={e => handleMouseLeave(e, '/history')}
             >
-              <Link to="/history">📍 주행 기록</Link>
+              <Link to="/history">📝 주행 기록</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
