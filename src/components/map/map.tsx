@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { CarService } from '@/services/car-service';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './map.module.css';
 
 export interface Car {
@@ -122,10 +122,11 @@ export default function Map({
 
   // 초기 데이터 로딩
   useEffect(() => {
-    if (cars.length === 0) {
+    // mapInstance 존재, 외부전달 cars 데이터 없을 때만 데이터 로드
+    if (mapInstance && cars.length === 0) {
       loadCarLocations();
     }
-  }, [cars.length, loadCarLocations]);
+  }, [mapInstance, cars.length, loadCarLocations]);
 
   // 렌더링할 차량 데이터 결정
   const carsToRender = cars.length > 0 ? cars : internalCars;

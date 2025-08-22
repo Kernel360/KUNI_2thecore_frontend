@@ -43,6 +43,27 @@ export default function CarClustererMap({
         clustererRef.current,
         'clusterclick',
         function (cluster: any) {
+          const center = cluster.getCenter();
+
+          // 'idle' 이벤트에 대한 리스너를 한 번만 실행하도록 정의
+          const centerAfterZoom = () => {
+            mapRef.current.setCenter(center);
+            // 이벤트 리스너를 사용 후 즉시 제거
+            window.kakao.maps.event.removeListener(
+              mapRef.current,
+              'idle',
+              centerAfterZoom
+            );
+          };
+
+          // 'idle' 이벤트 리스너 등록
+          window.kakao.maps.event.addListener(
+            mapRef.current,
+            'idle',
+            centerAfterZoom
+          );
+
+          // 줌인 액션 실행
           mapRef.current.setLevel(mapRef.current.getLevel() - 1, {
             anchor: cluster.getCenter(),
             animate: { duration: 350 },
@@ -86,8 +107,26 @@ export default function CarClustererMap({
         // 마커 클릭 이벤트 추가
         window.kakao.maps.event.addListener(marker, 'click', function () {
           const position = marker.getPosition();
-          mapRef.current.setCenter(position);
-          mapRef.current.setLevel(3);
+          // 'idle' 이벤트에 대한 리스너를 한 번만 실행하도록 정의
+          const centerAfterZoom = () => {
+            mapRef.current.setCenter(position);
+            // 이벤트 리스너를 사용 후 즉시 제거하여 중복 실행 방지
+            window.kakao.maps.event.removeListener(
+              mapRef.current,
+              'idle',
+              centerAfterZoom
+            );
+          };
+
+          // 'idle' 이벤트 리스너 등록
+          window.kakao.maps.event.addListener(
+            mapRef.current,
+            'idle',
+            centerAfterZoom
+          );
+
+          // 줌인 액션 실행
+          mapRef.current.setLevel(3, { animate: { duration: 350 } });
         });
 
         return marker;
