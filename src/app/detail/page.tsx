@@ -27,6 +27,8 @@ const DetailPage = () => {
     carType,
     setDetail,
     brandModel,
+    lastLatitude,
+    lastLongitude,
   } = useDetailStore();
   const detailChange = setDetailChangeStore(state => state.detailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
