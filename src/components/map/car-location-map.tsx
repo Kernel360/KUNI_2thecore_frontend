@@ -1,4 +1,3 @@
-import { CarDetail } from '@/services/car-service';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Map from './map';
 
@@ -15,26 +14,14 @@ export default function CarLocationMap({
   lastLongitude?: string;
   carNumber: string;
 }) {
-  const [carLocation, setCarLocation] = useState<CarDetail | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
   const infowindowRef = useRef<any>(null);
 
   const loadCarLocation = useCallback(async () => {
-    if (!carNumber || !lastLatitude || !lastLongitude) return;
-
-    // props의 위치 정보를 CarDetail 형식으로 변환
-    const carDetail: CarDetail = {
-      carNumber,
-      brand: '',
-      model: '',
-      brandModel: '',
-      status: '운행',
-      lastLatitude,
-      lastLongitude,
-    };
-    setCarLocation(carDetail);
+    // props로 받은 위치 정보가 있는지 확인만 하면 됨
+    return carNumber && lastLatitude && lastLongitude;
   }, [carNumber, lastLatitude, lastLongitude]);
 
   const handleMapLoad = useCallback((mapInstance: any) => {
@@ -42,20 +29,14 @@ export default function CarLocationMap({
     setMapReady(true);
   }, []);
 
-  // props 변경 시 차량 위치 업데이트
-  useEffect(() => {
-    if (mapReady && lastLatitude && lastLongitude && carNumber) {
-      loadCarLocation();
-    }
-  }, [mapReady, lastLatitude, lastLongitude, carNumber, loadCarLocation]);
-
   // 차량 위치 마커 업데이트
   useEffect(() => {
     if (
       !mapRef.current ||
-      !carLocation ||
-      !carLocation.lastLatitude ||
-      !carLocation.lastLongitude
+      !mapReady ||
+      !lastLatitude ||
+      !lastLongitude ||
+      !carNumber
     )
       return;
 
@@ -68,8 +49,8 @@ export default function CarLocationMap({
     }
 
     const position = new window.kakao.maps.LatLng(
-      parseFloat(carLocation.lastLatitude),
-      parseFloat(carLocation.lastLongitude)
+      parseFloat(lastLatitude),
+      parseFloat(lastLongitude)
     );
 
     // 새 마커 생성
@@ -110,7 +91,7 @@ export default function CarLocationMap({
     // 지도 중심을 차량 위치로 이동하고 확대
     mapRef.current.setLevel(3);
     mapRef.current.setCenter(position);
-  }, [carLocation, carNumber]);
+  }, [mapReady, lastLatitude, lastLongitude, carNumber]);
 
   return (
     <div style={{ width, height }}>
@@ -118,8 +99,6 @@ export default function CarLocationMap({
         width={width}
         height={height}
         onLoad={handleMapLoad}
-        onRefresh={loadCarLocation}
-        enableAutoRefresh={true}
       />
     </div>
   );

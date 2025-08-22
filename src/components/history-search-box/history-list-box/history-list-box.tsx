@@ -189,7 +189,9 @@ const HistoryListBox = ({
                   {new Date(log.startTime).toLocaleString('ko-KR')}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
-                  {new Date(log.endTime).toLocaleString('ko-KR') || '-'}
+                  {log.endTime
+                    ? new Date(log.endTime).toLocaleString('ko-KR')
+                    : '-'}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
                   {log.startPoint}
