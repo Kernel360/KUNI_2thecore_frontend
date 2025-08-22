@@ -99,8 +99,6 @@ export default function CarLocationMap({
         width={width}
         height={height}
         onLoad={handleMapLoad}
-        onRefresh={loadCarLocation}
-        enableAutoRefresh={true}
       />
     </div>
   );
