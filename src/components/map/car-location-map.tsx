@@ -21,7 +21,7 @@ export default function CarLocationMap({
   const markerRef = useRef<any>(null);
   const infowindowRef = useRef<any>(null);
 
-  const loadCarLocation = useCallback(() => {
+  const loadCarLocation = useCallback(async () => {
     if (!carNumber || !lastLatitude || !lastLongitude) return;
 
     // props의 위치 정보를 CarDetail 형식으로 변환
@@ -42,13 +42,12 @@ export default function CarLocationMap({
     setMapReady(true);
   }, []);
 
-
   // props 변경 시 차량 위치 업데이트
   useEffect(() => {
-    if (mapReady) {
+    if (mapReady && lastLatitude && lastLongitude && carNumber) {
       loadCarLocation();
     }
-  }, [mapReady, loadCarLocation]);
+  }, [mapReady, lastLatitude, lastLongitude, carNumber, loadCarLocation]);
 
   // 차량 위치 마커 업데이트 및 인포윈도우 표시
   useEffect(() => {
