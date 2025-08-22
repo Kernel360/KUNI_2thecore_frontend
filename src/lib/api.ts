@@ -96,7 +96,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
         // result: false면 refresh token도 만료 - 즉시 로그아웃
         if (response.data.result === false) {
           console.warn('리프레시 토큰 만료 - 자동 로그아웃 처리');
-          //TokenManager.clearTokens();
+          TokenManager.clearTokens();
           if (typeof window !== 'undefined') {
             window.location.href = '/login';
           }
@@ -114,12 +114,42 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
       return response;
     },
     async error => {
-      // 401 에러 시 즉시 로그아웃 (JWT 필터에서 이미 처리됨)
+      // 401 에러 시 새 액세스 토큰 확인 후 재시도
       if (error.response?.status === 401) {
-        console.warn('401 인증 오류 - 자동 로그아웃 처리');
-        //TokenManager.clearTokens();
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+        console.warn('401 인증 오류 - 새 액세스 토큰 확인 중...');
+
+        // 최대 3회 재시도
+        for (let attempt = 1; attempt <= 3; attempt++) {
+          console.log(`새 액세스 토큰 확인 시도 ${attempt}/3`);
+
+          // 응답 헤더에서 new-access-token 확인
+          if (error.response?.headers['new-access-token']) {
+            const newAccessToken = error.response.headers['new-access-token'];
+            TokenManager.updateAccessToken(newAccessToken);
+            console.log(`새 액세스 토큰 발견 및 저장 완료 (시도 ${attempt}회)`);
+
+            // 원래 요청에 새 토큰으로 재시도
+            const originalRequest = error.config;
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+            return instance.request(originalRequest);
+          }
+
+          // new-access-token이 없는 경우
+          console.warn(`새 액세스 토큰 없음 (시도 ${attempt}/3)`);
+          
+          if (attempt === 3) {
+            // 3회 모두 실패 시 로그아웃
+            console.warn('새 액세스 토큰 3회 확인 실패 - 자동 로그아웃 처리');
+            TokenManager.clearTokens();
+            if (typeof window !== 'undefined') {
+              window.location.href = '/login';
+            }
+            break;
+          }
+
+          // 다음 시도 전 1초 대기
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
 
