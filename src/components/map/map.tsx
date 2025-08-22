@@ -1,20 +1,51 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { CarService } from '@/services/car-service';
 import styles from './map.module.css';
+
+export interface Car {
+  carNumber: string;
+  status: 'driving' | 'idle' | 'maintenance';
+  lastLatitude: string;
+  lastLongitude: string;
+}
 
 interface MapProps {
   width: string;
   height: string;
   onLoad?: (map: any) => void;
-  onRefresh?: () => void;
   enableAutoRefresh?: boolean;
+  cars?: Car[];
+  carStatusFilter?: 'total' | 'driving' | 'maintenance' | 'idle';
+  showMarkers?: boolean;
+  zoomLevel?: number;
+  onCarsUpdate?: (cars: Car[]) => void;
 }
 
-export default function Map({ width, height, onLoad, onRefresh, enableAutoRefresh = false }: MapProps) {
+const statusToImage: { [key in Car['status']]?: string } = {
+  driving: '/car_green.png',
+  maintenance: '/car_red.png',
+  idle: '/car_yellow.png',
+};
+
+export default function Map({
+  width,
+  height,
+  onLoad,
+  enableAutoRefresh = false,
+  cars = [],
+  carStatusFilter = 'total',
+  showMarkers = false,
+  zoomLevel = 13,
+  onCarsUpdate,
+}: MapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<any>(null);
   const [mapType, setMapType] = useState<'roadmap' | 'skyview'>('roadmap');
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [currentZoomLevel, setCurrentZoomLevel] = useState<number>(13);
+  const [currentZoomLevel, setCurrentZoomLevel] = useState<number>(zoomLevel);
+  const markersRef = useRef<any[]>([]);
+  const [internalCars, setInternalCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (mapInstance || !mapRef.current) return;
@@ -23,92 +54,131 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
     const checkKakaoMaps = () => {
       if (typeof window !== 'undefined' && window.kakao && window.kakao.maps) {
         window.kakao.maps.load(() => {
-          const options = {
-            center: new window.kakao.maps.LatLng(36.2,128.1),
-            level:13,
-          };
-
-          const map = new window.kakao.maps.Map(mapRef.current, options);
-
-          map.setMaxLevel(13);
-
-          // 줌 레벨 변경 이벤트 리스너 추가
-          window.kakao.maps.event.addListener(map, 'zoom_changed', () => {
-            const level = map.getLevel();
-            setCurrentZoomLevel(level);
+          const map = new window.kakao.maps.Map(mapRef.current, {
+            center: new window.kakao.maps.LatLng(36.2, 128.1),
+            level: zoomLevel,
           });
 
-          setMapInstance(map);
+          map.setMaxLevel(13);
+          window.kakao.maps.event.addListener(map, 'zoom_changed', () =>
+            setCurrentZoomLevel(map.getLevel())
+          );
 
-          if (onLoad) {
-            onLoad(map);
-          }
+          setMapInstance(map);
+          setTimeout(() => map.relayout(), 100);
+
+          onLoad?.(map);
         });
       } else {
-        // 스크립트가 아직 로드되지 않았으면 100ms 후 다시 시도
-        setTimeout(checkKakaoMaps, 100);
+        // 스크립트가 아직 로드되지 않았으면 250ms 후 다시 시도
+        setTimeout(checkKakaoMaps, 250);
       }
     };
 
     checkKakaoMaps();
-  }, []);
+  }, [zoomLevel, onLoad]);
 
-  // 자동 갱신 로직
-  const setupAutoRefresh = useCallback(() => {
-    if (!enableAutoRefresh || !onRefresh) return;
-
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+  // 차량 위치 데이터 로딩
+  const loadCarLocations = useCallback(async () => {
+    setLoading(true);
+    try {
+      const locations = await CarService.getCarLocations();
+      const carData: Car[] = locations.map(loc => ({
+        carNumber: loc.carNumber,
+        status:
+          loc.status === '운행'
+            ? 'driving'
+            : loc.status === '대기'
+              ? 'idle'
+              : 'maintenance', // '수리'
+        lastLatitude: loc.lastLatitude,
+        lastLongitude: loc.lastLongitude,
+      }));
+      setInternalCars(carData);
+      onCarsUpdate?.(carData);
+    } catch (error) {
+      console.error('차량 위치 데이터 조회 실패:', error);
+    } finally {
+      setLoading(false);
     }
+  }, [onCarsUpdate]);
 
-    // 줌 레벨에 따른 갱신 간격 결정
-    // 레벨 8 이하(확대)면 5초, 9 초과(축소)면 1분
-    const refreshInterval = currentZoomLevel <= 8 ? 5000 : 60000;
-
-    intervalRef.current = setInterval(() => {
-      onRefresh();
-    }, refreshInterval);
-  }, [enableAutoRefresh, onRefresh, currentZoomLevel]);
-
+  // 자동 갱신 설정
   useEffect(() => {
-    setupAutoRefresh();
+    if (!enableAutoRefresh) return;
+
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    // 줌 레벨에 따른 갱신 간격 결정 - 레벨 8 이하(확대)면 5초, 9 초과(축소)면 1분
+    intervalRef.current = setInterval(
+      loadCarLocations,
+      currentZoomLevel <= 8 ? 5000 : 60000
+    );
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [setupAutoRefresh]);
+  }, [enableAutoRefresh, loadCarLocations, currentZoomLevel]);
+
+  // 초기 데이터 로딩
+  useEffect(() => {
+    if (cars.length === 0) {
+      loadCarLocations();
+    }
+  }, [cars.length, loadCarLocations]);
+
+  // 렌더링할 차량 데이터 결정
+  const carsToRender = cars.length > 0 ? cars : internalCars;
+
+  // 마커 렌더링
+  useEffect(() => {
+    if (!mapInstance || !showMarkers) return;
+
+    // 기존 마커들 제거
+    markersRef.current.forEach(marker => marker.setMap(null));
+    markersRef.current = [];
+
+    // 필터링된 차량들
+    const filteredCars =
+      carStatusFilter === 'total'
+        ? carsToRender
+        : carsToRender.filter((car: Car) => car.status === carStatusFilter);
+
+    markersRef.current = filteredCars
+      .filter((car: Car) => statusToImage[car.status])
+      .map((car: Car) => {
+        const markerImage = new window.kakao.maps.MarkerImage(
+          statusToImage[car.status]!,
+          new window.kakao.maps.Size(32, 32),
+          { offset: new window.kakao.maps.Point(16, 32) }
+        );
+
+        const marker = new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(
+            parseFloat(car.lastLatitude),
+            parseFloat(car.lastLongitude)
+          ),
+          image: markerImage,
+          title: car.carNumber,
+        });
+
+        marker.setMap(mapInstance);
+        return marker;
+      });
+  }, [mapInstance, carsToRender, carStatusFilter, showMarkers]);
 
   // 페이지 재진입 시 지도 리사이즈
   useEffect(() => {
     if (!mapInstance) return;
 
-    const handleResize = () => {
-      if (mapInstance) {
-        mapInstance.relayout();
-      }
-    };
-
-    // 페이지 visibility 변경 감지 (페이지 재진입)
+    const handleResize = () => mapInstance.relayout();
     const handleVisibilityChange = () => {
-      if (!document.hidden && mapInstance) {
-        setTimeout(() => {
-          mapInstance.relayout();
-        }, 100);
-      }
+      if (!document.hidden) setTimeout(() => mapInstance.relayout(), 100);
     };
 
     window.addEventListener('resize', handleResize);
     document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    // 컴포넌트 마운트 시에도 리사이즈 실행
-    setTimeout(() => {
-      if (mapInstance) {
-        mapInstance.relayout();
-      }
-    }, 100);
+    setTimeout(() => mapInstance.relayout(), 100);
 
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -116,38 +186,27 @@ export default function Map({ width, height, onLoad, onRefresh, enableAutoRefres
     };
   }, [mapInstance]);
 
-  // 라우터 기반 페이지 재진입 감지를 위한 추가 useEffect
-  useEffect(() => {
-    if (!mapInstance) return;
+  const setMapTypeHandler = useCallback(
+    (type: 'roadmap' | 'skyview') => {
+      if (!mapInstance) return;
+      mapInstance.setMapTypeId(
+        type === 'roadmap'
+          ? window.kakao.maps.MapTypeId.ROADMAP
+          : window.kakao.maps.MapTypeId.SKYVIEW
+      );
+      setMapType(type);
+    },
+    [mapInstance]
+  );
 
-    // 컴포넌트가 다시 마운트되거나 의존성이 변경될 때마다 지도 재정렬
-    const relayoutTimer = setTimeout(() => {
-      mapInstance.relayout();
-    }, 50);
-
-    return () => clearTimeout(relayoutTimer);
-  }, [mapInstance, width, height]);
-
-  const setMapTypeHandler = (type: 'roadmap' | 'skyview') => {
-    if (!mapInstance) return;
-
-    if (type === 'roadmap') {
-      mapInstance.setMapTypeId(window.kakao.maps.MapTypeId.ROADMAP);
-    } else {
-      mapInstance.setMapTypeId(window.kakao.maps.MapTypeId.HYBRID);
-    }
-    setMapType(type);
-  };
-
-  const zoomIn = () => {
-    if (!mapInstance) return;
-    mapInstance.setLevel(mapInstance.getLevel() - 1);
-  };
-
-  const zoomOut = () => {
-    if (!mapInstance) return;
-    mapInstance.setLevel(mapInstance.getLevel() + 1);
-  };
+  const zoomIn = useCallback(
+    () => mapInstance?.setLevel(mapInstance.getLevel() - 1),
+    [mapInstance]
+  );
+  const zoomOut = useCallback(
+    () => mapInstance?.setLevel(mapInstance.getLevel() + 1),
+    [mapInstance]
+  );
 
   return (
     <div className={styles.map_wrap} style={{ width, height }}>
