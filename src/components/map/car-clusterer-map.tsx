@@ -1,5 +1,4 @@
 import iconStyles from '@/components/icon-button/icon-button.module.css';
-import { CarService } from '@/services/car-service';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Map, { Car } from './map';
 
@@ -19,91 +18,8 @@ export default function CarClustererMap({
   isMapModalOpen,
 }: CarClustererMapProps) {
   const [cars, setCars] = useState<Car[]>([]);
-  const [loading, setLoading] = useState(false);
   const mapRef = useRef<any>(null);
   const clustererRef = useRef<any>(null);
-
-  const loadCarLocations = useCallback(async () => {
-    setLoading(true);
-    try {
-      // 현재 지도 bounds 가져오기
-      let bounds;
-      if (mapRef.current) {
-        const mapBounds = mapRef.current.getBounds();
-        const sw = mapBounds.getSouthWest();
-        const ne = mapBounds.getNorthEast();
-        bounds = {
-          sw: { lat: sw.getLat(), lng: sw.getLng() },
-          ne: { lat: ne.getLat(), lng: ne.getLng() }
-        };
-      }
-
-      // 전체 차량 데이터 요청 (서버에서 bounds 필터링 미지원)
-      const locations = await CarService.getCarLocations();
-      // 클라이언트에서 bounds 내의 차량만 필터링
-      const filteredLocations = bounds 
-        ? locations.filter(loc => {
-            const lat = parseFloat(loc.lastLatitude);
-            const lng = parseFloat(loc.lastLongitude);
-            return lat >= bounds.sw.lat && lat <= bounds.ne.lat &&
-                   lng >= bounds.sw.lng && lng <= bounds.ne.lng;
-          })
-        : locations;
-
-      const carData: Car[] = filteredLocations.map(loc => ({
-        carNumber: loc.carNumber,
-        status:
-          loc.status === '운행'
-            ? 'driving'
-            : loc.status === '대기'
-              ? 'idle'
-              : 'maintenance', // '수리'
-        lastLatitude: loc.lastLatitude,
-        lastLongitude: loc.lastLongitude,
-      }));
-
-      // 대기/수리 차량은 기존 데이터 유지, 운행 차량만 업데이트
-      setCars(prevCars => {
-        const updatedCars = [...carData];
-        
-        // 현재 시간과 마지막 업데이트 시간 비교
-        const now = Date.now();
-        const oneMinute = 60000;
-        
-        prevCars.forEach(prevCar => {
-          if (prevCar.status === 'idle' || prevCar.status === 'maintenance') {
-            const lastUpdate = (prevCar as any).lastUpdate || 0;
-            if (now - lastUpdate < oneMinute) {
-              // 1분이 지나지 않았으면 기존 데이터 유지
-              const existingCarIndex = updatedCars.findIndex(car => car.carNumber === prevCar.carNumber);
-              if (existingCarIndex >= 0) {
-                updatedCars[existingCarIndex] = prevCar;
-              }
-            } else {
-              // 1분이 지났으면 새 데이터에 업데이트 시간 추가
-              const newCarIndex = updatedCars.findIndex(car => car.carNumber === prevCar.carNumber);
-              if (newCarIndex >= 0) {
-                (updatedCars[newCarIndex] as any).lastUpdate = now;
-              }
-            }
-          }
-        });
-
-        // 운행 중인 차량은 항상 최신 데이터로 업데이트
-        updatedCars.forEach(car => {
-          if (car.status === 'driving') {
-            (car as any).lastUpdate = now;
-          }
-        });
-
-        return updatedCars;
-      });
-    } catch (error) {
-      console.error('차량 위치 데이터 조회 실패:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
   const handleMapLoad = useCallback((mapInstance: any) => {
     mapRef.current = mapInstance;
@@ -111,32 +27,40 @@ export default function CarClustererMap({
     // 지도 로딩 완료 후 relayout 실행
     setTimeout(() => {
       mapInstance.relayout();
-      loadCarLocations();
     }, 100);
-  }, [loadCarLocations]);
+  }, []);
 
+  const handleCarsUpdate = useCallback((updatedCars: Car[]) => {
+    setCars(updatedCars);
+  }, []);
+
+  // 클러스터러 초기화
   useEffect(() => {
     if (!mapRef.current) return;
 
-    clustererRef.current = new window.kakao.maps.MarkerClusterer({
-      map: mapRef.current,
-      averageCenter: true,
-      minLevel: 10,
-      disableClickZoom: false,
-    });
-
-    // 클러스터 클릭 이벤트 리스너 추가
-    window.kakao.maps.event.addListener(clustererRef.current, 'clusterclick', function (cluster: any) {
-      mapRef.current.setLevel(mapRef.current.getLevel() - 1, {
-        anchor: cluster.getCenter(),
-        animate: { duration: 350 }
+    if (!clustererRef.current) {
+      clustererRef.current = new window.kakao.maps.MarkerClusterer({
+        map: mapRef.current,
+        averageCenter: true,
+        minLevel: 10,
+        disableClickZoom: false,
       });
-    });
+
+      // 클러스터 클릭 이벤트 리스너 추가
+      window.kakao.maps.event.addListener(clustererRef.current, 'clusterclick', function (cluster: any) {
+        mapRef.current.setLevel(mapRef.current.getLevel() - 1, {
+          anchor: cluster.getCenter(),
+          animate: { duration: 350 }
+        });
+      });
+    }
   }, [mapRef.current]);
 
+  // 마커 업데이트
   useEffect(() => {
-    if (!clustererRef.current) return;
+    if (!clustererRef.current || !cars.length) return;
 
+    // 기존 마커들 제거
     clustererRef.current.clear();
 
     // 필터링
@@ -169,16 +93,9 @@ export default function CarClustererMap({
         // 마커 클릭 이벤트 추가
         window.kakao.maps.event.addListener(marker, 'click', function () {
           const position = marker.getPosition();
-          // 줌인과 중심 이동을 동시에 수행
-          mapRef.current.setLevel(3, {
-            anchor: position,
-            animate: { duration: 500 }
-          });
-          
-          // 애니메이션 완료 후 중심 재조정
-          setTimeout(() => {
-            mapRef.current.setCenter(position);
-          }, 600);
+          // 애니메이션 없이 즉시 중심 이동 및 줌인
+          mapRef.current.setCenter(position);
+          mapRef.current.setLevel(3);
         });
 
         return marker;
@@ -193,8 +110,9 @@ export default function CarClustererMap({
         width={width}
         height={height}
         onLoad={handleMapLoad}
-        onRefresh={loadCarLocations}
         enableAutoRefresh={true}
+        enableBoundsFiltering={true}
+        onCarsUpdate={handleCarsUpdate}
         zoomLevel={13}
       />
       {onOpenModal && !isMapModalOpen && (

@@ -1,6 +1,6 @@
 import { CarDetail } from '@/services/car-service';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Map from './map';
+import Map, { Car } from './map';
 
 export default function CarLocationMap({
   width,
