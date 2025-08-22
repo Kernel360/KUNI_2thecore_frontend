@@ -11,6 +11,8 @@ const API_BASE_URL =
   process.env.CAR_BASE_URL || 'http://52.78.122.150:8080/api';
 const EMULATOR_API_BASE_URL =
   process.env.EMULATOR_BASE_URL || 'http://15.165.171.174:8081/api';
+const ANALYSIS_API_BASE_URL =
+  process.env.ANALYSIS_BASE_URL || 'http://15.165.203.28/api';
 
 // 페이징 응답 타입 (차량 목록 등에서 사용)
 export interface PageResponse<T> {
@@ -137,7 +139,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
 
           // new-access-token이 없는 경우
           console.warn(`새 액세스 토큰 없음 (시도 ${attempt}/3)`);
-          
+
           if (attempt === 3) {
             // 3회 모두 실패 시 로그아웃
             console.warn('새 액세스 토큰 3회 확인 실패 - 자동 로그아웃 처리');
@@ -174,6 +176,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
 // API 인스턴스들 export
 export const mainApi = createApiInstance(API_BASE_URL);
 export const emulatorApi = createApiInstance(EMULATOR_API_BASE_URL);
+export const analysisApi = createApiInstance(ANALYSIS_API_BASE_URL);
 
 // 타입과 유틸리티 export
 export { TokenManager };
