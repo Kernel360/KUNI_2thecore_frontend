@@ -70,7 +70,18 @@ const MenuBox = () => {
               onMouseEnter={e => handleMouseEnter(e, '/history')}
               onMouseLeave={e => handleMouseLeave(e, '/history')}
             >
-              <Link to="/history">📊 주행 기록</Link>
+              <Link to="/history">📍 주행 기록</Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              asChild
+              className={`${navigationMenuTriggerStyle()} hover:text-white focus:text-white`}
+              style={getItemStyle('/analysis')}
+              onMouseEnter={e => handleMouseEnter(e, '/analysis')}
+              onMouseLeave={e => handleMouseLeave(e, '/analysis')}
+            >
+              <Link to="/analysis">📊 데이터 분석</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
@@ -81,7 +92,7 @@ const MenuBox = () => {
               onMouseEnter={e => handleMouseEnter(e, '/emulator')}
               onMouseLeave={e => handleMouseLeave(e, '/emulator')}
             >
-              <Link to="/emulator">⚒️ 에뮬레이터</Link>
+              <Link to="/emulator">⚙️ 에뮬레이터</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
