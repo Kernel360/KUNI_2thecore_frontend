@@ -28,7 +28,7 @@ const DetailPage = () => {
     setDetail,
     brandModel,
     lastLatitude,
-    lastLongitude
+    lastLongitude,
   } = useDetailStore();
   const detailChange = setDetailChangeStore(state => state.detailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
@@ -220,9 +220,9 @@ const DetailPage = () => {
         {/* 지도 */}
         <Card className={styles.mapCard}>
           <CardContent className={styles.mapContent}>
-            <CarLocationMap 
-              width="100%" 
-              height="100%" 
+            <CarLocationMap
+              width="100%"
+              height="100%"
               carNumber={carNumber}
               lastLatitude={lastLatitude}
               lastLongitude={lastLongitude}

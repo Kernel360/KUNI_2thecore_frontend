@@ -1,6 +1,6 @@
 import { CarDetail } from '@/services/car-service';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Map from './map';
+import Map, { Car } from './map';
 
 export default function CarLocationMap({
   width,
@@ -49,7 +49,7 @@ export default function CarLocationMap({
     }
   }, [mapReady, lastLatitude, lastLongitude, carNumber, loadCarLocation]);
 
-  // 차량 위치 마커 업데이트
+  // 차량 위치 마커 업데이트 및 인포윈도우 표시
   useEffect(() => {
     if (
       !mapRef.current ||
@@ -72,9 +72,27 @@ export default function CarLocationMap({
       parseFloat(carLocation.lastLongitude)
     );
 
+    // status에 따른 마커 이미지 결정
+    const statusToImage = {
+      '운행': '/car_green.png',
+      '수리': '/car_red.png',
+      '대기': '/car_yellow.png',
+    };
+
+    const markerImageSrc = statusToImage[carLocation.status as keyof typeof statusToImage] || '/car_yellow.png';
+    
+    // 커스텀 마커 이미지 생성
+    const markerImage = new window.kakao.maps.MarkerImage(
+      markerImageSrc,
+      new window.kakao.maps.Size(32, 32),
+      { offset: new window.kakao.maps.Point(16, 32) }
+    );
+
     // 새 마커 생성
     const marker = new window.kakao.maps.Marker({
       position: position,
+      image: markerImage,
+      title: carNumber,
     });
     marker.setMap(mapRef.current);
     markerRef.current = marker;
@@ -87,25 +105,19 @@ export default function CarLocationMap({
 
     // 주소 조회 및 인포윈도우 표시
     const geocoder = new window.kakao.maps.services.Geocoder();
-    geocoder.coord2Address(
-      position.getLng(),
-      position.getLat(),
-      (result: any, status: any) => {
-        if (status === window.kakao.maps.services.Status.OK) {
-          const roadAddress = result[0].road_address?.address_name || '';
+    geocoder.coord2Address(position.getLng(), position.getLat(), (result: any, status: any) => {
+      const roadAddress = status === window.kakao.maps.services.Status.OK 
+        ? result[0].road_address?.address_name || result[0].address?.address_name || '주소를 찾을 수 없습니다'
+        : '주소 조회 실패';
 
-          const content = `
-            <div style="padding: 8px;">
-              <h4 style="margin: 0 0 5px 0;">${carNumber}</h4>
-              <p style="margin: 0; font-size: 12px;">${roadAddress}</p>
-            </div>
-          `;
-
-          infowindow.setContent(content);
-          infowindow.open(mapRef.current, marker);
-        }
-      }
-    );
+      infowindow.setContent(`
+        <div style="padding: 8px; min-width: 200px;">
+          <h4 style="margin: 0 0 5px 0; font-size: 14px; font-weight: bold;">${carNumber}</h4>
+          <p style="margin: 0; font-size: 12px; color: #666;">${roadAddress}</p>
+        </div>
+      `);
+      infowindow.open(mapRef.current, marker);
+    });
 
     // 지도 중심을 차량 위치로 이동하고 확대
     mapRef.current.setLevel(3);
@@ -120,6 +132,7 @@ export default function CarLocationMap({
         onLoad={handleMapLoad}
         onRefresh={loadCarLocation}
         enableAutoRefresh={true}
+        zoomLevel={3}
       />
     </div>
   );
