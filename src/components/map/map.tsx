@@ -46,7 +46,7 @@ export default function Map({
   const markersRef = useRef<any[]>([]);
   const [internalCars, setInternalCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
+  
   useEffect(() => {
     if (mapInstance || !mapRef.current) return;
 
