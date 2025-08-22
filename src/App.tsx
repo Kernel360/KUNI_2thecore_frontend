@@ -5,8 +5,6 @@ import styles from '@/components/menu-box/menu-box.module.css';
 
 function App() {
   const location = useLocation();
-  const isFloatingPage =
-    location.pathname === '/history' || location.pathname === '/search';
 
   return (
     <div className="flex flex-col h-screen">
@@ -16,8 +14,7 @@ function App() {
       </div>
       <div className="mx-auto flex flex-col justify-center items-center w-full flex-1 mt-2">
         <div
-          className={`bg-[#f6f6f6] pt-0 px-2.5 pb-6 mt-[3px] w-[98%] h-fit min-h-[500px] max-w-[1290px] rounded-[10px] ${
-            isFloatingPage ? 'mb-6' : ''
+          className={`bg-[#f6f6f6] pt-0 px-2.5 pb-6 mt-[3px] w-[98%] h-fit max-w-[1260px] min-h-[500px] rounded-[10px] mb-6
           }`}
         >
           <Outlet />

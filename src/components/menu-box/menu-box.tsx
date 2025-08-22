@@ -38,7 +38,7 @@ const MenuBox = () => {
               asChild
               className={getMenuItemClass('/history')}
             >
-              <Link to="/history">📍 주행 기록</Link>
+              <Link to="/history">📝 주행 기록</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
