@@ -109,10 +109,10 @@ export default function Map({
 
     if (intervalRef.current) clearInterval(intervalRef.current);
 
-    // 줌 레벨에 따른 갱신 간격 결정 - 레벨 8 이하(확대)면 5초, 9 초과(축소)면 1분
+    // 줌 레벨에 따른 갱신 간격 결정 - 레벨 8 이하(확대)면 3초, 9 초과(축소)면 1분
     intervalRef.current = setInterval(
       loadCarLocations,
-      currentZoomLevel <= 8 ? 5000 : 60000
+      currentZoomLevel <= 8 ? 3000 : 60000
     );
 
     return () => {
