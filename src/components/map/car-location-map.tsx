@@ -7,12 +7,14 @@ export default function CarLocationMap({
   lastLatitude,
   lastLongitude,
   carNumber,
+  status,
 }: {
   width: string;
   height: string;
   lastLatitude?: string;
   lastLongitude?: string;
   carNumber: string;
+  status: 'driving' | 'maintenance' | 'idle';
 }) {
   const [mapReady, setMapReady] = useState(false);
   const mapRef = useRef<any>(null);
@@ -21,8 +23,8 @@ export default function CarLocationMap({
 
   const loadCarLocation = useCallback(async () => {
     // props로 받은 위치 정보가 있는지 확인만 하면 됨
-    return carNumber && lastLatitude && lastLongitude;
-  }, [carNumber, lastLatitude, lastLongitude]);
+    return carNumber && lastLatitude && lastLongitude && status;
+  }, [carNumber, lastLatitude, lastLongitude, status]);
 
   const handleMapLoad = useCallback((mapInstance: any) => {
     mapRef.current = mapInstance;
@@ -31,14 +33,28 @@ export default function CarLocationMap({
 
   // 차량 위치 마커 업데이트
   useEffect(() => {
+    console.log('CarLocationMap useEffect triggered:', {
+      mapReady,
+      lastLatitude,
+      lastLongitude,
+      carNumber,
+      status,
+      hasMap: !!mapRef.current,
+    });
+
     if (
       !mapRef.current ||
       !mapReady ||
       !lastLatitude ||
       !lastLongitude ||
-      !carNumber
-    )
+      !carNumber ||
+      !status
+    ) {
+      console.log(
+        'CarLocationMap useEffect early return - missing required data'
+      );
       return;
+    }
 
     // 기존 마커와 인포윈도우 제거
     if (markerRef.current) {
@@ -53,10 +69,36 @@ export default function CarLocationMap({
       parseFloat(lastLongitude)
     );
 
+    console.log('CarLocationMap creating marker at position:', {
+      lat: parseFloat(lastLatitude),
+      lng: parseFloat(lastLongitude),
+      status,
+      carNumber,
+    });
+
+    // 상태별 마커 이미지 설정 (car-clusterer-map과 동일한 방식)
+    const statusToImage = {
+      driving: '/car_green.png',
+      maintenance: '/car_red.png',
+      idle: '/car_yellow.png',
+    };
+
+    const markerImage = new window.kakao.maps.MarkerImage(
+      statusToImage[status],
+      new window.kakao.maps.Size(32, 32),
+      { offset: new window.kakao.maps.Point(16, 32) }
+    );
+
+    console.log('CarLocationMap marker image created:', statusToImage[status]);
+
     // 새 마커 생성
     const marker = new window.kakao.maps.Marker({
       position: position,
+      image: markerImage,
+      title: carNumber,
     });
+
+    console.log('CarLocationMap marker created, setting to map');
     marker.setMap(mapRef.current);
     markerRef.current = marker;
 
@@ -78,7 +120,7 @@ export default function CarLocationMap({
           const content = `
             <div style="padding: 8px;">
               <h4 style="margin: 0 0 5px 0;">${carNumber}</h4>
-              <p style="margin: 0; font-size: 12px;">${roadAddress}</p>
+              <p style="margin: 0 0 5px 0; font-size: 12px;">${roadAddress}</p>
             </div>
           `;
 
@@ -91,15 +133,11 @@ export default function CarLocationMap({
     // 지도 중심을 차량 위치로 이동하고 확대
     mapRef.current.setLevel(3);
     mapRef.current.setCenter(position);
-  }, [mapReady, lastLatitude, lastLongitude, carNumber]);
+  }, [mapReady, lastLatitude, lastLongitude, carNumber, status]);
 
   return (
     <div style={{ width, height }}>
-      <Map
-        width={width}
-        height={height}
-        onLoad={handleMapLoad}
-      />
+      <Map width={width} height={height} onLoad={handleMapLoad} />
     </div>
   );
 }
