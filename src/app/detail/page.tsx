@@ -28,7 +28,7 @@ const DetailPage = () => {
     setDetail,
     brandModel,
     lastLatitude,
-    lastLongitude
+    lastLongitude,
   } = useDetailStore();
   const detailChange = setDetailChangeStore(state => state.detailChange);
   const setDetailChange = setDetailChangeStore(state => state.setDetailChange);
@@ -39,6 +39,21 @@ const DetailPage = () => {
 
   // status가 undefined이거나 올바르지 않은 값일 때 기본값 처리
   const safeStatus = status ?? '대기';
+
+  // 한국어 상태를 영어로 매핑
+  const getEnglishStatus = (
+    koreanStatus: string
+  ): 'driving' | 'maintenance' | 'idle' => {
+    switch (koreanStatus) {
+      case '운행':
+        return 'driving';
+      case '수리':
+        return 'maintenance';
+      case '대기':
+      default:
+        return 'idle';
+    }
+  };
 
   // URL에서 carNumber가 있으면 API 호출해서 데이터 가져오기
   useEffect(() => {
@@ -232,12 +247,13 @@ const DetailPage = () => {
         {/* 지도 */}
         <Card className={styles.mapCard}>
           <CardContent className={styles.mapContent}>
-            <CarLocationMap 
-              width="100%" 
-              height="100%" 
+            <CarLocationMap
+              width="100%"
+              height="100%"
               carNumber={carNumber}
               lastLatitude={lastLatitude}
               lastLongitude={lastLongitude}
+              status={getEnglishStatus(safeStatus)}
             />
           </CardContent>
         </Card>
