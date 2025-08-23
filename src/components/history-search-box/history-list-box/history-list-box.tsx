@@ -140,7 +140,7 @@ const HistoryListBox = ({
                 />
               </div>
             </TableHead>
-            <TableHead className={historyStyles.tableHeadSmall}>
+            <TableHead className={historyStyles.tableHeadSmallest}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
@@ -189,7 +189,9 @@ const HistoryListBox = ({
                   {new Date(log.startTime).toLocaleString('ko-KR')}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
-                  {new Date(log.endTime).toLocaleString('ko-KR') || '-'}
+                  {log.endTime
+                    ? new Date(log.endTime).toLocaleString('ko-KR')
+                    : '-'}
                 </TableCell>
                 <TableCell className={historyStyles.tableCell}>
                   {log.startPoint}

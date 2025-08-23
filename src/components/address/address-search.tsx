@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { useAddressSearch } from '@/hooks/useAddressSearch';
 import { AddressSearchResult } from '@/types/address';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './address-search.module.css';
 
 interface AddressSearchProps {
@@ -19,7 +19,8 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
 }) => {
   const [query, setQuery] = useState(value);
   const [showResults, setShowResults] = useState(false);
-  const { results, loading, error, searchAddress, clearResults } = useAddressSearch();
+  const { results, loading, error, searchAddress, clearResults } =
+    useAddressSearch();
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -51,7 +52,8 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
   }, [query, searchAddress, clearResults]);
 
   const handleAddressSelect = (address: AddressSearchResult) => {
-    const displayAddress = address.road_address?.address_name || address.address_name;
+    const displayAddress =
+      address.road_address?.address_name || address.address_name;
     setQuery(displayAddress);
     setShowResults(false);
     onAddressSelect(address);
@@ -76,28 +78,20 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
         ref={inputRef}
         type="text"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={e => setQuery(e.target.value)}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
         placeholder={placeholder}
         className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
         required={required}
       />
-      
-      {loading && (
-        <div className={styles.loading}>
-          검색 중...
-        </div>
-      )}
 
-      {error && (
-        <div className={styles.error}>
-          {error}
-        </div>
-      )}
+      {loading && <div className={styles.loading}>검색 중...</div>}
+
+      {error && <div className={styles.error}>{error}</div>}
 
       {showResults && results.length > 0 && (
-        <div 
+        <div
           className={styles.resultsContainer}
           onMouseDown={() => setIsMouseDown(true)}
           onMouseUp={() => setIsMouseDown(false)}
@@ -113,13 +107,16 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
                 <div className={styles.addressName}>
                   {result.road_address?.address_name || result.address_name}
                 </div>
-                {result.road_address && result.address_name !== result.road_address.address_name && (
-                  <div className={styles.jibunAddress}>
-                    지번: {result.address_name}
-                  </div>
-                )}
+                {result.road_address &&
+                  result.address_name !== result.road_address.address_name && (
+                    <div className={styles.jibunAddress}>
+                      지번: {result.address_name}
+                    </div>
+                  )}
                 <div className={styles.regionInfo}>
-                  {result.address?.region_1depth_name} {result.address?.region_2depth_name} {result.address?.region_3depth_name}
+                  {result.address?.region_1depth_name}{' '}
+                  {result.address?.region_2depth_name}{' '}
+                  {result.address?.region_3depth_name}
                 </div>
               </div>
             ))}
@@ -127,13 +124,14 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
         </div>
       )}
 
-      {showResults && !loading && results.length === 0 && query.trim().length >= 2 && (
-        <div className={styles.resultsContainer}>
-          <div className={styles.noResults}>
-            검색 결과가 없습니다
+      {showResults &&
+        !loading &&
+        results.length === 0 &&
+        query.trim().length >= 2 && (
+          <div className={styles.resultsContainer}>
+            <div className={styles.noResults}>검색 결과가 없습니다</div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 };
