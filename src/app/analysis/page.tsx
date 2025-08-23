@@ -355,8 +355,7 @@ export default function AnalysisPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Main Content */}
+    <>
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">데이터 분석</h1>
@@ -366,17 +365,29 @@ export default function AnalysisPage() {
         </div>
 
         <Tabs defaultValue="period" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="period" className="text-sm">
+          <TabsList className="grid w-full grid-cols-4 mb-4 gap-4">
+            <TabsTrigger
+              value="period"
+              className="text-sm cursor-pointer data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
+            >
               월별/계절별 선호도
             </TabsTrigger>
-            <TabsTrigger value="trend" className="text-sm">
+            <TabsTrigger
+              value="trend"
+              className="text-sm cursor-pointer data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
+            >
               연도별 트렌드
             </TabsTrigger>
-            <TabsTrigger value="forecast" className="text-sm">
+            <TabsTrigger
+              value="forecast"
+              className="text-sm cursor-pointer data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
+            >
               운행량 예측
             </TabsTrigger>
-            <TabsTrigger value="cluster" className="text-sm">
+            <TabsTrigger
+              value="cluster"
+              className="text-sm cursor-pointer data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
+            >
               지역별 클러스터링
             </TabsTrigger>
           </TabsList>
@@ -412,7 +423,11 @@ export default function AnalysisPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button onClick={fetchPeriodAnalysis} disabled={loading.period}>
+              <Button
+                onClick={fetchPeriodAnalysis}
+                disabled={loading.period}
+                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-green-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
+              >
                 {loading.period ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
@@ -469,7 +484,11 @@ export default function AnalysisPage() {
                   className="w-20"
                 />
               </div>
-              <Button onClick={fetchTrendAnalysis} disabled={loading.trend}>
+              <Button
+                onClick={fetchTrendAnalysis}
+                disabled={loading.trend}
+                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-green-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
+              >
                 {loading.trend ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
@@ -529,6 +548,7 @@ export default function AnalysisPage() {
               <Button
                 onClick={fetchForecastAnalysis}
                 disabled={loading.forecast}
+                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-green-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
               >
                 {loading.forecast ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -607,7 +627,11 @@ export default function AnalysisPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button onClick={fetchClusterAnalysis} disabled={loading.cluster}>
+              <Button
+                onClick={fetchClusterAnalysis}
+                disabled={loading.cluster}
+                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-green-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
+              >
                 {loading.cluster ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
@@ -622,6 +646,6 @@ export default function AnalysisPage() {
           </TabsContent>
         </Tabs>
       </main>
-    </div>
+    </>
   );
 }
