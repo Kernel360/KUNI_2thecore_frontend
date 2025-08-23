@@ -31,7 +31,7 @@ export function DoubleCalendar({
           <Button
             variant="outline"
             id="start-date"
-            className="w-48 h-11 rounded-lg justify-between font-normal"
+            className="w-48 h-11 rounded-lg justify-between font-normal cursor-pointer"
           >
             {startTime ? startTime.toLocaleDateString() : '주행시작일'}
             <CalendarIcon />
@@ -54,7 +54,7 @@ export function DoubleCalendar({
           <Button
             variant="outline"
             id="end-date"
-            className="w-48 h-11 justify-between rounded-lg font-normal"
+            className="w-48 h-11 justify-between rounded-lg font-normal cursor-pointer"
           >
             {endTime ? endTime.toLocaleDateString() : '주행종료일'}
             <CalendarIcon />
