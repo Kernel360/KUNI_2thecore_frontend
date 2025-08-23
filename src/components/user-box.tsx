@@ -53,7 +53,7 @@ export function AccountDropdown() {
       >
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className={styles.logout} onClick={handleLogout}>로그아웃</DropdownMenuItem>
+        <DropdownMenuItem className={styles.logout} onClick={handleLogout}>🔓 로그아웃</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

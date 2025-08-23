@@ -33,6 +33,13 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
     companyName: '',
   });
 
+  const [duplicateCheck, setDuplicateCheck] = useState({
+    checked: false,
+    available: false,
+    loading: false,
+    message: ''
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
@@ -54,6 +61,40 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
       ...prev,
       [field]: value,
     }));
+    
+    // 아이디 입력이 변경되면 중복확인 상태 초기화
+    if (field === 'loginId') {
+      setDuplicateCheck({
+        checked: false,
+        available: false,
+        loading: false,
+        message: ''
+      });
+    }
+  };
+
+  const handleDuplicateCheck = async () => {
+    if (!formData.loginId.trim()) {
+      setDuplicateCheck(prev => ({
+        ...prev,
+        message: '아이디를 입력해주세요.'
+      }));
+      return;
+    }
+
+    setDuplicateCheck(prev => ({ ...prev, loading: true, message: '' }));
+
+    // UI 시연용 시뮬레이션
+    setTimeout(() => {
+      const isAvailable = !['admin', 'test', 'user'].includes(formData.loginId.toLowerCase());
+      
+      setDuplicateCheck({
+        checked: true,
+        available: isAvailable,
+        loading: false,
+        message: isAvailable ? '사용 가능한 아이디입니다.' : '이미 사용 중인 아이디입니다.'
+      });
+    }, 1000);
   };
 
   const handleCancel = () => {
@@ -97,15 +138,33 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                   >
                     아이디
                   </Label>
-                  <Input
-                    id="model"
-                    type="text"
-                    placeholder="아이디를 입력해주세요"
-                    value={formData.loginId}
-                    onChange={e => handleInputChange('loginId', e.target.value)}
-                    className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
-                    required
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      id="model"
+                      type="text"
+                      placeholder="아이디를 입력해주세요"
+                      value={formData.loginId}
+                      onChange={e => handleInputChange('loginId', e.target.value)}
+                      className="flex-1 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
+                      required
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleDuplicateCheck}
+                      disabled={duplicateCheck.loading || !formData.loginId.trim()}
+                      className="whitespace-nowrap h-10 px-3 text-sm"
+                    >
+                      {duplicateCheck.loading ? '확인 중...' : '중복확인'}
+                    </Button>
+                  </div>
+                  {duplicateCheck.message && (
+                    <div className={`text-sm ${
+                      duplicateCheck.available ? 'text-green-600' : 'text-red-500'
+                    }`}>
+                      {duplicateCheck.message}
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-1">
