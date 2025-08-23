@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { analysisApi } from '@/lib/api';
+import { DoubleCalendar } from '@/components/history-search-box/double-calendar';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -176,15 +177,15 @@ export default function AnalysisPage() {
 
   // 1.3 일별 예측 분석 파라미터
   const [forecastParams, setForecastParams] = useState({
-    start_date: '2024-01-01',
-    end_date: '2024-01-31',
+    start_date: new Date('2024-01-01'),
+    end_date: new Date('2024-01-31'),
     forecast_days: 7,
   });
 
   // 1.4 클러스터링 분석 파라미터
   const [clusterParams, setClusterParams] = useState({
-    start_date: '2024-01-01',
-    end_date: '2024-12-31',
+    start_date: new Date('2024-01-01'),
+    end_date: new Date('2024-12-31'),
     k: 5,
     method: 'kmeans' as 'kmeans' | 'dbscan',
   });
@@ -234,7 +235,11 @@ export default function AnalysisPage() {
     setLoading(prev => ({ ...prev, forecast: true }));
     try {
       const response = await analysisApi.get('/forecast/daily', {
-        params: forecastParams,
+        params: {
+          start_date: forecastParams.start_date.toISOString().split('T')[0],
+          end_date: forecastParams.end_date.toISOString().split('T')[0],
+          forecast_days: forecastParams.forecast_days,
+        },
       });
       setForecastData(response.data);
     } catch (error) {
@@ -254,7 +259,12 @@ export default function AnalysisPage() {
     setLoading(prev => ({ ...prev, cluster: true }));
     try {
       const response = await analysisApi.get('/clustering/regions', {
-        params: clusterParams,
+        params: {
+          start_date: clusterParams.start_date.toISOString().split('T')[0],
+          end_date: clusterParams.end_date.toISOString().split('T')[0],
+          k: clusterParams.k,
+          method: clusterParams.method,
+        },
       });
       setClusterData(response.data);
     } catch (error) {
@@ -328,7 +338,7 @@ export default function AnalysisPage() {
           <p className="text-gray-500 mb-4">
             {data?.message || '분석 데이터를 불러올 수 없습니다.'}
           </p>
-          <Button onClick={onRetry}>다시 시도</Button>
+          <Button onClick={onRetry} className='cursor-pointer border-1 bg-white'>다시 시도</Button>
         </div>
       );
     }
@@ -426,7 +436,7 @@ export default function AnalysisPage() {
               <Button
                 onClick={fetchPeriodAnalysis}
                 disabled={loading.period}
-                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-green-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
+                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-blue-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
               >
                 {loading.period ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -487,7 +497,7 @@ export default function AnalysisPage() {
               <Button
                 onClick={fetchTrendAnalysis}
                 disabled={loading.trend}
-                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-green-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
+                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-blue-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
               >
                 {loading.trend ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -502,31 +512,22 @@ export default function AnalysisPage() {
           <TabsContent value="forecast" className="space-y-6">
             <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium">시작일:</label>
-                <Input
-                  type="date"
-                  value={forecastParams.start_date}
-                  onChange={e =>
-                    setForecastParams(prev => ({
+                <label className="text-sm font-medium">분석 기간:</label>
+                <DoubleCalendar
+                  startTime={forecastParams.start_date}
+                  endTime={forecastParams.end_date}
+                  onStartTimeChange={date =>
+                    date && setForecastParams(prev => ({
                       ...prev,
-                      start_date: e.target.value,
+                      start_date: date,
                     }))
                   }
-                  className="w-36"
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium">종료일:</label>
-                <Input
-                  type="date"
-                  value={forecastParams.end_date}
-                  onChange={e =>
-                    setForecastParams(prev => ({
+                  onEndTimeChange={date =>
+                    date && setForecastParams(prev => ({
                       ...prev,
-                      end_date: e.target.value,
+                      end_date: date,
                     }))
                   }
-                  className="w-36"
                 />
               </div>
               <div className="flex items-center gap-2">
@@ -548,7 +549,7 @@ export default function AnalysisPage() {
               <Button
                 onClick={fetchForecastAnalysis}
                 disabled={loading.forecast}
-                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-green-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
+                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-blue-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
               >
                 {loading.forecast ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -567,31 +568,22 @@ export default function AnalysisPage() {
           <TabsContent value="cluster" className="space-y-6">
             <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium">시작일:</label>
-                <Input
-                  type="date"
-                  value={clusterParams.start_date}
-                  onChange={e =>
-                    setClusterParams(prev => ({
+                <label className="text-sm font-medium">분석 기간:</label>
+                <DoubleCalendar
+                  startTime={clusterParams.start_date}
+                  endTime={clusterParams.end_date}
+                  onStartTimeChange={date =>
+                    date && setClusterParams(prev => ({
                       ...prev,
-                      start_date: e.target.value,
+                      start_date: date,
                     }))
                   }
-                  className="w-36"
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium">종료일:</label>
-                <Input
-                  type="date"
-                  value={clusterParams.end_date}
-                  onChange={e =>
-                    setClusterParams(prev => ({
+                  onEndTimeChange={date =>
+                    date && setClusterParams(prev => ({
                       ...prev,
-                      end_date: e.target.value,
+                      end_date: date,
                     }))
                   }
-                  className="w-36"
                 />
               </div>
               <div className="flex items-center gap-2">
@@ -630,7 +622,7 @@ export default function AnalysisPage() {
               <Button
                 onClick={fetchClusterAnalysis}
                 disabled={loading.cluster}
-                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-green-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
+                className="cursor-pointer bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-blue-600/30 hover:shadow-blue-800/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
               >
                 {loading.cluster ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

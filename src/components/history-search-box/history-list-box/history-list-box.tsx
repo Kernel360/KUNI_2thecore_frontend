@@ -140,7 +140,7 @@ const HistoryListBox = ({
                 />
               </div>
             </TableHead>
-            <TableHead className={historyStyles.tableHeadSmall}>
+            <TableHead className={historyStyles.tableHeadSmallest}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
