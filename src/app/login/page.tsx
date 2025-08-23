@@ -80,12 +80,11 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      <TopBar title="로그인"></TopBar>
-      <div
-        className="w-[98%] h-px border-b-2"
-        style={{ borderBottomColor: '#3a70ff' }}
-      />
+    <div className="flex flex-col h-screen">
+      <div className="flex flex-row items-center justify-start p-4 border-b-2 border-blue-500">
+        <TopBar showLogo={true} title="로그인" />
+      </div>
+      <div className="flex flex-col justify-center items-center flex-1">
       <Card className="w-full max-w-md mt-20">
         <CardHeader>
           <CardTitle>로그인</CardTitle>
@@ -134,11 +133,12 @@ export default function Login() {
           <p>문의사항이 있으시면 2the@core.com로 연락 바랍니다.</p>
         </CardFooter>
       </Card>
-      <SignUpModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleSignUp}
-      />
+        <SignUpModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleSignUp}
+        />
+      </div>
     </div>
   );
 }
