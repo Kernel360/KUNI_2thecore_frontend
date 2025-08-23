@@ -301,7 +301,7 @@ export default function AnalysisPage() {
             <img
               src={base64Data}
               alt={visualizationTitles[key]}
-              className="max-w-full h-auto rounded-lg shadow-sm"
+              className="max-w-full h-auto rounded-lg"
               onError={e => {
                 e.currentTarget.src = '/placeholder-chart.png';
                 e.currentTarget.alt = '차트를 불러올 수 없습니다';
@@ -378,25 +378,25 @@ export default function AnalysisPage() {
           <TabsList className="grid w-full grid-cols-4 mb-4 gap-4">
             <TabsTrigger
               value="period"
-              className="text-sm cursor-pointer data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
+              className="text-sm cursor-pointer bg-white data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
             >
               월별/계절별 선호도
             </TabsTrigger>
             <TabsTrigger
               value="trend"
-              className="text-sm cursor-pointer data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
+              className="text-sm cursor-pointer bg-white data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
             >
               연도별 트렌드
             </TabsTrigger>
             <TabsTrigger
               value="forecast"
-              className="text-sm cursor-pointer data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
+              className="text-sm cursor-pointer bg-white data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
             >
               운행량 예측
             </TabsTrigger>
             <TabsTrigger
               value="cluster"
-              className="text-sm cursor-pointer data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
+              className="text-sm cursor-pointer bg-white data-[state=active]:bg-indigo-100 data-[state=active]:border-none"
             >
               지역별 클러스터링
             </TabsTrigger>
@@ -517,13 +517,15 @@ export default function AnalysisPage() {
                   startTime={forecastParams.start_date}
                   endTime={forecastParams.end_date}
                   onStartTimeChange={date =>
-                    date && setForecastParams(prev => ({
+                    date &&
+                    setForecastParams(prev => ({
                       ...prev,
                       start_date: date,
                     }))
                   }
                   onEndTimeChange={date =>
-                    date && setForecastParams(prev => ({
+                    date &&
+                    setForecastParams(prev => ({
                       ...prev,
                       end_date: date,
                     }))
@@ -573,13 +575,15 @@ export default function AnalysisPage() {
                   startTime={clusterParams.start_date}
                   endTime={clusterParams.end_date}
                   onStartTimeChange={date =>
-                    date && setClusterParams(prev => ({
+                    date &&
+                    setClusterParams(prev => ({
                       ...prev,
                       start_date: date,
                     }))
                   }
                   onEndTimeChange={date =>
-                    date && setClusterParams(prev => ({
+                    date &&
+                    setClusterParams(prev => ({
                       ...prev,
                       end_date: date,
                     }))
