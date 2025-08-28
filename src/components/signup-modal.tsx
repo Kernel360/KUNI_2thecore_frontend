@@ -136,7 +136,7 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                     htmlFor="model"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    아이디
+                    아이디 <span className="text-red-500 ml-1">*</span>
                   </Label>
                   <div className="flex gap-2">
                     <Input
@@ -172,7 +172,7 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                     htmlFor="carYear"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    비밀번호
+                    비밀번호 <span className="text-red-500 ml-1">*</span>
                   </Label>
                   <Input
                     id="carYear"

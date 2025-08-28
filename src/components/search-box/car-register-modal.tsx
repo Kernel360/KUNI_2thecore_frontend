@@ -143,7 +143,7 @@ const CarRegisterModal = ({
             style={{ borderImage: 'var(--main-gradient) 1' }}
           >
             <CardTitle className="font-bold tracking-wide flex items-start justify-around">
-              <span>🚗차량 등록</span>
+              <span>🚗 차량 등록</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -154,7 +154,7 @@ const CarRegisterModal = ({
                     htmlFor="brand"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    차량 브랜드
+                    차량 브랜드 <span className="text-red-500 ml-1">*</span>
                   </Label>
                   <Input
                     id="brand"
@@ -172,7 +172,7 @@ const CarRegisterModal = ({
                     htmlFor="model"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    모델명
+                    모델명 <span className="text-red-500 ml-1">*</span>
                   </Label>
                   <Input
                     id="model"
@@ -190,7 +190,7 @@ const CarRegisterModal = ({
                     htmlFor="carYear"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    차량 연식
+                    차량 연식 <span className="text-red-500 ml-1">*</span>
                   </Label>
                   <Input
                     id="carYear"
@@ -208,7 +208,7 @@ const CarRegisterModal = ({
                     htmlFor="carType"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    차종
+                    차종 <span className="text-red-500 ml-1">*</span>
                   </Label>
                   <Select
                     value={formData.carType}
@@ -245,7 +245,7 @@ const CarRegisterModal = ({
                     htmlFor="carNumber"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    차량번호
+                    차량번호 <span className="text-red-500 ml-1">*</span>
                   </Label>
                   <Input
                     id="carNumber"
@@ -265,7 +265,7 @@ const CarRegisterModal = ({
                     htmlFor="sumDist"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    총 주행거리(km)
+                    총 주행거리(km) <span className="text-red-500 ml-1">*</span>
                   </Label>
                   <Input
                     id="sumDist"
@@ -283,7 +283,7 @@ const CarRegisterModal = ({
                     htmlFor="addressSearch"
                     className="font-semibold text-gray-700 flex items-center"
                   >
-                    위치
+                    위치 <span className="text-red-500 ml-1">*</span>
                   </Label>
                   <AddressSearch
                     onAddressSelect={handleAddressSelect}
