@@ -80,7 +80,7 @@ Request Parameters(쿼리파라미터){
 "top_n"?: integer //분석할 상위 모델 개수 (1~20) 디폴트: 5}
 
 Request example
-GET /analysis/yearly-trend?start_year=2022&end_year=2024&top_n=3
+GET /analysis/trend?start_year=2022&end_year=2024&top_n=3
 
 response
 {
@@ -238,8 +238,6 @@ Request Parameters(쿼리파라미터){
 "threshold_km"?: float // 수요 중심점으로부터 이 거리(km) 내에 차량이 없으면 서비스 부족 지역으로 판단. 기본값: 5.0
 "min_trips"?: integer // 클러스터로 인정하기 위한 최소 운행 횟수. 기본값: 5
 "eps_km"?: float // DBSCAN 알고리즘의 탐색 반경(km). 기본값: 1.0}
-Request example
-GET /analysis/yearly-trend?start_year=2022&end_year=2024&top_n=3
 
 response
 {
