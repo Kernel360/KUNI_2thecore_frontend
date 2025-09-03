@@ -37,7 +37,7 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
     checked: false,
     available: false,
     loading: false,
-    message: ''
+    message: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -61,14 +61,14 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
       ...prev,
       [field]: value,
     }));
-    
+
     // 아이디 입력이 변경되면 중복확인 상태 초기화
     if (field === 'loginId') {
       setDuplicateCheck({
         checked: false,
         available: false,
         loading: false,
-        message: ''
+        message: '',
       });
     }
   };
@@ -77,7 +77,7 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
     if (!formData.loginId.trim()) {
       setDuplicateCheck(prev => ({
         ...prev,
-        message: '아이디를 입력해주세요.'
+        message: '아이디를 입력해주세요.',
       }));
       return;
     }
@@ -86,13 +86,17 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
 
     // UI 시연용 시뮬레이션
     setTimeout(() => {
-      const isAvailable = !['admin', 'test', 'user'].includes(formData.loginId.toLowerCase());
-      
+      const isAvailable = !['admin', 'test', 'user'].includes(
+        formData.loginId.toLowerCase()
+      );
+
       setDuplicateCheck({
         checked: true,
         available: isAvailable,
         loading: false,
-        message: isAvailable ? '사용 가능한 아이디입니다.' : '이미 사용 중인 아이디입니다.'
+        message: isAvailable
+          ? '사용 가능한 아이디입니다.'
+          : '이미 사용 중인 아이디입니다.',
       });
     }, 1000);
   };
@@ -144,7 +148,9 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                       type="text"
                       placeholder="아이디를 입력해주세요"
                       value={formData.loginId}
-                      onChange={e => handleInputChange('loginId', e.target.value)}
+                      onChange={e =>
+                        handleInputChange('loginId', e.target.value)
+                      }
                       className="flex-1 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
                       required
                     />
@@ -152,16 +158,22 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                       type="button"
                       variant="outline"
                       onClick={handleDuplicateCheck}
-                      disabled={duplicateCheck.loading || !formData.loginId.trim()}
+                      disabled={
+                        duplicateCheck.loading || !formData.loginId.trim()
+                      }
                       className="whitespace-nowrap h-10 px-3 text-sm"
                     >
                       {duplicateCheck.loading ? '확인 중...' : '중복확인'}
                     </Button>
                   </div>
                   {duplicateCheck.message && (
-                    <div className={`text-sm ${
-                      duplicateCheck.available ? 'text-green-600' : 'text-red-500'
-                    }`}>
+                    <div
+                      className={`text-sm ${
+                        duplicateCheck.available
+                          ? 'text-green-600'
+                          : 'text-red-500'
+                      }`}
+                    >
                       {duplicateCheck.message}
                     </div>
                   )}
@@ -179,7 +191,9 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                     type="text"
                     placeholder="비밀번호를 입력해주세요"
                     value={formData.password}
-                    onChange={e => handleInputChange('password', e.target.value)}
+                    onChange={e =>
+                      handleInputChange('password', e.target.value)
+                    }
                     className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
                     required
                   />
@@ -199,7 +213,6 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                     value={formData.name}
                     onChange={e => handleInputChange('name', e.target.value)}
                     className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
-                    required
                   />
                 </div>
 
@@ -215,11 +228,8 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                     type="text"
                     placeholder="예: ooo@oooo.com"
                     value={formData.email}
-                    onChange={e =>
-                      handleInputChange('email', e.target.value)
-                    }
+                    onChange={e => handleInputChange('email', e.target.value)}
                     className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white tracking-wider"
-                    required
                   />
                 </div>
 
@@ -235,9 +245,10 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                     type="text"
                     placeholder="예: 1000-10-10"
                     value={formData.birthdate}
-                    onChange={e => handleInputChange('birthdate', e.target.value)}
+                    onChange={e =>
+                      handleInputChange('birthdate', e.target.value)
+                    }
                     className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
-                    required
                   />
                 </div>
 
@@ -253,9 +264,10 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                     type="text"
                     placeholder="예: 010-0000-0000"
                     value={formData.phoneNumber}
-                    onChange={e => handleInputChange('phoneNumber', e.target.value)}
+                    onChange={e =>
+                      handleInputChange('phoneNumber', e.target.value)
+                    }
                     className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
-                    required
                   />
                 </div>
 
@@ -288,7 +300,9 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                     type="text"
                     placeholder="예: 2theCore"
                     value={formData.companyName}
-                    onChange={e => handleInputChange('companyName', e.target.value)}
+                    onChange={e =>
+                      handleInputChange('companyName', e.target.value)
+                    }
                     className="border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 bg-gray-50/50 hover:bg-white"
                   />
                 </div>
