@@ -1,5 +1,4 @@
 .menuAccountFlex {
-  border-bottom: 2px solid #3a70ff;
   width: 98%;
   max-width: 98%;
   margin: 0 auto;
@@ -41,4 +40,32 @@
 .logout:hover {
   background-color: #f3f4f6;
   border-color: #3a70ff;
+}
+
+.menuItem {
+  transition: all 0.3s ease;
+}
+
+.menuItemActive {
+  background: linear-gradient(135deg, #ecf1fe, #d8e0f3);
+  box-shadow: 0 2px 8px rgba(58, 112, 255, 0.2) !important;
+  color: #1e293b !important;
+}
+
+.menuItemHover:hover {
+  background: linear-gradient(135deg, #ecf1fe, #d8e0f3);
+  box-shadow: 0 2px 8px rgba(58, 112, 255, 0.2) !important;
+  color: #1e293b !important;
+}
+
+.headerBorder {
+  border-bottom: 2px solid #3a70ff;
+  display: flex;
+  flex-direction: flex-row;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  width: 96%;
+  margin: auto;
+  gap: 20px;
 }

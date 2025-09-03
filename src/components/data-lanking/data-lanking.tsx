@@ -67,7 +67,7 @@ export default function DataLanking() {
         ],
       },
       {
-        title: '이달의 최다 빌린 차급 TOP 3',
+        title: '이달의 최다 렌트 차급 TOP 3',
         emoji: '🏆',
         data: [
           {
@@ -116,8 +116,8 @@ export default function DataLanking() {
       setTimeout(() => {
         setCurrentIndex(prevIndex => (prevIndex + 1) % dataTypes.length);
         setIsAnimating(false);
-      }, 300);
-    }, 1000);
+      }, 500);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [dataTypes.length]);
@@ -154,10 +154,10 @@ export default function DataLanking() {
         <div className="flex flex-row items-center h-full">
           <CardHeader>
             <CardTitle
-              className={`text-xl font-bold text-gray-800 whitespace-nowrap ml-5 transition-all duration-300 ${
+              className={`text-xl font-bold text-gray-800 whitespace-nowrap ml-5 transition-all duration-500 ${
                 isAnimating
-                  ? 'opacity-0 translate-x-[-10px]'
-                  : 'opacity-100 translate-x-0'
+                  ? 'opacity-0 translate-y-[-20px]'
+                  : 'opacity-100 translate-y-0'
               }`}
             >
               {currentData.emoji} {currentData.title}
@@ -165,10 +165,10 @@ export default function DataLanking() {
           </CardHeader>
           <CardContent className="flex-1">
             <div
-              className={`flex justify-end gap-20 mr-5 transition-all duration-300 ${
+              className={`flex justify-end gap-20 mr-5 transition-all duration-500 ${
                 isAnimating
-                  ? 'opacity-0 translate-x-[10px]'
-                  : 'opacity-100 translate-x-0'
+                  ? 'opacity-0 translate-y-[-20px]'
+                  : 'opacity-100 translate-y-0'
               }`}
             >
               {currentData.data.map((item, index) => (
