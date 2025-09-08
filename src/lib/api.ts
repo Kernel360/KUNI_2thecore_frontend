@@ -8,9 +8,9 @@ import { TokenManager } from './token-manager';
 
 // 환경변수 기반 API 설정 (Vite 방식)
 const API_BASE_URL =
-  import.meta.env.VITE_CAR_BASE_URL || 'http://52.78.122.150:8080/api';
+  import.meta.env.VITE_CAR_BASE_URL || 'http://43.203.110.104:8080/api';
 const EMULATOR_API_BASE_URL =
-  import.meta.env.VITE_EMULATOR_BASE_URL || 'http://15.165.171.174:8081/api';
+  import.meta.env.VITE_EMULATOR_BASE_URL || 'http://3.37.93.107:8081/api';
 const ANALYSIS_API_BASE_URL =
   import.meta.env.VITE_ANALYSIS_API_BASE_URL || 'http://15.165.203.28/api';
 
