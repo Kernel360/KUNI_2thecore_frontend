@@ -164,28 +164,28 @@ export default function AnalysisPage() {
 
   // 1.1 월별/계절별 선호도 분석 파라미터
   const [periodParams, setPeriodParams] = useState({
-    year: '2024',
+    year: '2025',
     period_type: 'month' as 'month' | 'season',
   });
 
   // 1.2 연도별 트렌드 분석 파라미터
   const [trendParams, setTrendParams] = useState({
     start_year: 2020,
-    end_year: 2024,
+    end_year: 2025,
     top_n: 5,
   });
 
   // 1.3 일별 예측 분석 파라미터
   const [forecastParams, setForecastParams] = useState({
-    start_date: new Date('2024-01-01'),
-    end_date: new Date('2024-01-31'),
+    start_date: new Date('2025-08-01'),
+    end_date: new Date('2025-08-31'),
     forecast_days: 7,
   });
 
   // 1.4 클러스터링 분석 파라미터
   const [clusterParams, setClusterParams] = useState({
-    start_date: new Date('2024-01-01'),
-    end_date: new Date('2024-12-31'),
+    start_date: new Date('2025-01-01'),
+    end_date: new Date('2025-12-31'),
     k: 5,
     method: 'kmeans' as 'kmeans' | 'dbscan',
   });
