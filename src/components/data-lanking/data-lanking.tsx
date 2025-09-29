@@ -165,7 +165,7 @@ export default function DataLanking() {
           </CardHeader>
           <CardContent className="flex-1">
             <div
-              className={`flex justify-end gap-20 mr-5 transition-all duration-500 ${
+              className={`flex justify-end gap-5 mr-5 transition-all duration-500 ${
                 isAnimating
                   ? 'opacity-0 translate-y-[-20px]'
                   : 'opacity-100 translate-y-0'
