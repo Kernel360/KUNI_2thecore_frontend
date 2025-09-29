@@ -81,58 +81,70 @@ export default function Login() {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="flex flex-row items-center justify-start p-4 border-b-2 border-blue-500">
-        <TopBar showLogo={true} title="로그인" />
+      <div
+        className="relative flex flex-row items-center p-4 border-b-2"
+        style={{ borderColor: '#3a70ff' }}
+      >
+        <TopBar showLogo={true} />
+        <h2 className="absolute left-1/2 transform -translate-x-1/2 font-semibold text-xl">
+          로그인
+        </h2>
       </div>
       <div className="flex flex-col justify-center items-center flex-1">
-      <Card className="w-full max-w-md mt-20">
-        <CardHeader>
-          <CardTitle>로그인</CardTitle>
-          <CardDescription>아이디와 비밀번호를 입력하세요.</CardDescription>
-          <CardAction className="flex-end">
-            <Button variant="link" onClick={() => setIsModalOpen(true)}>
-              회원가입
-            </Button>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-4">
-              <Label htmlFor="loginId">아이디</Label>
-              <Input
-                id="loginId"
-                name="loginId"
-                type="text"
-                value={credentials.loginId}
-                onChange={handleChange}
-                required
-              />
-              <Label htmlFor="password">비밀번호</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                value={credentials.password}
-                onChange={handleChange}
-                required
-              />
-              {error && (
-                <div className="text-red-500 text-sm text-center">{error}</div>
-              )}
+        <Card className="w-full max-w-md mt-8">
+          <CardHeader>
+            <CardTitle>로그인</CardTitle>
+            <CardDescription>아이디와 비밀번호를 입력하세요.</CardDescription>
+            <CardAction className="flex-end">
               <Button
-                type="submit"
-                className="w-full bg-gradient-to-br from-blue-500 to-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:shadow-lg hover:shadow-blue-800/40 active:scale-95"
-                disabled={loading}
+                variant="link"
+                onClick={() => setIsModalOpen(true)}
+                style={{ color: '#2956cc' }}
               >
-                {loading ? '로그인 중...' : '로그인'}
+                회원가입
               </Button>
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <p>문의사항이 있으시면 2the@core.com로 연락 바랍니다.</p>
-        </CardFooter>
-      </Card>
+            </CardAction>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-4">
+                <Label htmlFor="loginId">아이디</Label>
+                <Input
+                  id="loginId"
+                  name="loginId"
+                  type="text"
+                  value={credentials.loginId}
+                  onChange={handleChange}
+                  required
+                />
+                <Label htmlFor="password">비밀번호</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={credentials.password}
+                  onChange={handleChange}
+                  required
+                />
+                {error && (
+                  <div className="text-red-500 text-sm text-center">
+                    {error}
+                  </div>
+                )}
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-br from-blue-500 to-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:shadow-lg hover:shadow-blue-800/40 active:scale-95"
+                  disabled={loading}
+                >
+                  {loading ? '로그인 중...' : '로그인'}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            <p>문의사항이 있으시면 2the@core.com로 연락 바랍니다.</p>
+          </CardFooter>
+        </Card>
         <SignUpModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}

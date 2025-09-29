@@ -53,7 +53,13 @@ export function AccountDropdown() {
       >
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className={styles.logout} onClick={handleLogout}>로그아웃</DropdownMenuItem>
+        <DropdownMenuItem>마이페이지</DropdownMenuItem>
+        <DropdownMenuItem>알림</DropdownMenuItem>
+        <DropdownMenuItem>설정</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className={styles.logout} onClick={handleLogout}>
+          🔓 로그아웃
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
