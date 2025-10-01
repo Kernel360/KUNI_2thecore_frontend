@@ -11,7 +11,7 @@ interface DataType {
   data: { rank: string; medal: string; value: string }[];
 }
 
-export default function DataLanking() {
+export default function DataRanking() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [rankingData, setRankingData] = useState<DashboardRanking | null>(null);
