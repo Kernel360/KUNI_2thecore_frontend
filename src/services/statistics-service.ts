@@ -1,41 +1,44 @@
-import axios from 'axios';
+import { ApiResponse, mainApi } from '@/lib/api';
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_CAR_BASE_URL || 'http://localhost:8080/api';
-
+// 차량 통계 데이터 타입
 export interface CarStatistics {
   total: number;
-  operating: number;
-  waiting: number;
-  inspecting: number;
+  driving: number;
+  idle: number;
+  maintenance: number;
 }
 
-export interface ApiResponse<T> {
-  result: boolean;
-  message: string | null;
-  data: T;
+// 대시보드 랭킹 데이터 타입
+export interface DashboardRanking {
+  topCarModel: {
+    model1: string;
+    model2: string;
+    model3: string;
+  };
+  topRegion: {
+    region1: string;
+    region2: string;
+    region3: string;
+  };
+  topCarType: {
+    type1: string;
+    type2: string;
+    type3: string;
+  };
 }
-
-const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0IiwiaWF0IjoxNzU0NTI5OTc5LCJleHAiOjE3NTUxMjk5Nzl9.LXgndqqwz1XEAgG45rmgGJN-r2mUHgnRAtaIZ3FscrM`,
-  },
-});
 
 export class StatisticsService {
+  // 차량 통계 조회
   static async getCarStatistics(): Promise<CarStatistics> {
-    try {
-      const response = await axiosInstance.get('/cars/statistics');
+    const response =
+      await mainApi.get<ApiResponse<CarStatistics>>('/cars/statistics');
+    return response.data.data;
+  }
 
-      if (response.data.result) {
-        return response.data.data;
-      } else {
-        throw new Error(response.data.message || '차량 통계 조회 실패');
-      }
-    } catch (error) {
-      console.error('차량 통계 API 호출 오류:', error);
-      throw error;
-    }
+  // 대시보드 랭킹 데이터 조회
+  static async getDashboardRanking(): Promise<DashboardRanking> {
+    const response =
+      await mainApi.get<ApiResponse<DashboardRanking>>('/dashboard');
+    return response.data.data;
   }
 }

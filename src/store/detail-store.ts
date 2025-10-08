@@ -1,20 +1,24 @@
+import { CarDetail } from '@/services/car-service';
 import { create } from 'zustand';
 
-export type Detail = {
-  carNumber: string;
-  brand: string;
-  model: string;
-  status: '운행중' | '대기중' | '수리중';
-};
-
-type DetailStore = Detail & {
-  setDetail: (detail: Detail) => void;
+type DetailStore = CarDetail & {
+  setDetail: (detail: CarDetail) => void;
 };
 
 export const useDetailStore = create<DetailStore>(set => ({
   carNumber: '',
   brand: '',
   model: '',
-  status: '' as '운행중' | '대기중' | '수리중',
-  setDetail: detail => set(detail),
+  brandModel: '',
+  status: '' as '운행' | '대기' | '수리',
+  lastLatitude: '',
+  lastLongitude: '',
+  carYear: 0,
+  sumDist: 0,
+  carType: '',
+  setDetail: detail => set({
+    ...detail,
+    brandModel: `${detail.brand} ${detail.model}`,
+    sumDist: detail.sumDist ? Number(detail.sumDist.toFixed(2)) : 0
+  }),
 }));

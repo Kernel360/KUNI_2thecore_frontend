@@ -5,6 +5,8 @@
   border-radius: 50%;
   cursor: pointer;
   margin-right: 12px;
+  width: 35px;
+  height: 35px;
 }
 
 .iconButton:hover {
@@ -27,9 +29,89 @@
 }
 
 .sortOrder.ascend {
-  background-image: url('/arrow_drop_down_24dp_000000.svg');
+  background-image: url('/arrow_drop_up_24dp_000000.svg');
 }
 
 .sortOrder.descend {
-  background-image: url('/arrow_drop_up_24dp_000000.svg');
+  background-image: url('/arrow_drop_down_24dp_000000.svg');
+}
+
+.fullScreen {
+  background-color: #424242;
+  background-image: url('/zoom_out_map_24dp_FFFFFF.svg');
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat: no-repeat; /* 반복 안함 */
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10000;
+  opacity: 0.5;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.fullScreen:hover {
+  background-color: #242424;
+}
+
+.closeScreen {
+  background-color: #424242;
+  background-image: url('/zoom_in_map_24dp_FFFFFF.svg');
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat: no-repeat; /* 반복 안함 */
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10000;
+  opacity: 0.5;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.closeScreen:hover {
+  background-color: #242424;
+}
+
+.goBack {
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: absolute;
+  top: 40px;
+  left: 48px;
+}
+
+.goBack svg {
+  width: 30px;
+  height:30px;
+  filter: drop-shadow(0 8px 20px rgba(58, 112, 255, 0.3));
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.goBack:hover svg {
+  transform: scale(1.12) translateY(-4px) rotate(5deg);
+  filter: drop-shadow(0 8px 20px rgba(58, 112, 255, 0.4));
+  transform: scale(1.12) translateY(-4px);
 }

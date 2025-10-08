@@ -1,7 +1,4 @@
-'use client';
-
 import React from 'react';
-import Image from 'next/image';
 import { Button } from '../ui/button';
 import styles from './icon-button.module.css';
 
@@ -27,7 +24,7 @@ const IconButton: React.FC<IconButtonProps> = ({
 
   return (
     <Button size="sm" onClick={onClick} className={styles.iconButton}>
-      <Image
+      <img
         src={getIconPath()}
         alt={`${iconType} icon`}
         width={16}

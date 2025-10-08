@@ -1,143 +1,157 @@
-'use client';
+import iconStyles from '@/components/icon-button/icon-button.module.css';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Map, { Car } from './map';
 
-import { useEffect, useState, useRef } from 'react';
-import { useWebSocket } from '@/hooks/use-websocket';
-import Map from './map';
-
-export interface Car {
-  carNumber: string;
-  status: '운행중' | '대기중' | '수리중';
-  gpsLatitude: string;
-  gpsLongitude: string;
+interface CarClustererMapProps {
+  width: string;
+  height: string;
+  carStatusFilter: 'total' | 'driving' | 'maintenance' | 'idle';
+  onOpenModal?: () => void;
+  isMapModalOpen?: boolean;
 }
 
-export interface WebSocketCarData {
-  loginId: string;
-  carNumber: string;
-  logList: {
-    latitude: string;
-    longitude: string;
-    timestamp: string;
-  }[];
-}
-
-const statusToImage: { [key in Car['status']]?: string } = {
-  운행중: '/car_green.png',
-  수리중: '/car_red.png',
-  대기중: '/car_yellow.png',
-};
-
-export default function CarClustererMap({ width, height, carStatusFilter }: { width: string; height: string; carStatusFilter: '운행중' | '수리중' | '대기중' }) {
-  const [map, setMap] = useState<any>(null);
-  const [cars, setCars] = useState<Car[]>([]);
+export default function CarClustererMap({
+  width,
+  height,
+  carStatusFilter,
+  onOpenModal,
+  isMapModalOpen,
+}: CarClustererMapProps) {
+  const mapRef = useRef<any>(null);
   const clustererRef = useRef<any>(null);
 
-  const { connectionStatus, lastMessage, sendMessage } = useWebSocket({
-    url: 'ws://localhost:8082/map/running',
-    onOpen: () => {
-      console.log('지도 WebSocket 연결됨');
-    },
-    onMessage: (message) => {
-      if (message.type === 'message' && message.data) {
-        try {
-          const carData = message.data as WebSocketCarData;
-          if (carData.logList && carData.logList.length > 0) {
-            const latestLog = carData.logList[carData.logList.length - 1];
-            const newCar: Car = {
-              carNumber: carData.carNumber,
-              status: '운행중', // WebSocket으로 받은 차량은 운행중 상태로 가정
-              gpsLatitude: latestLog.latitude,
-              gpsLongitude: latestLog.longitude
-            };
-            
-            setCars(prevCars => {
-              const existingIndex = prevCars.findIndex(car => car.carNumber === newCar.carNumber);
-              if (existingIndex >= 0) {
-                const updated = [...prevCars];
-                updated[existingIndex] = newCar;
-                return updated;
-              } else {
-                return [...prevCars, newCar];
-              }
-            });
-          }
-        } catch (error) {
-          console.error('WebSocket 데이터 파싱 오류:', error);
-        }
-      }
-    },
-    onError: (error) => {
-      console.error('지도 WebSocket 오류:', error);
-    },
-    onClose: () => {
-      console.log('지도 WebSocket 연결 종료');
-    },
-    reconnectAttempts: 5,
-    reconnectInterval: 3000
-  });
+  const handleMapLoad = useCallback((mapInstance: any) => {
+    mapRef.current = mapInstance;
+    // 지도 로딩 완료 후 relayout 실행
+    setTimeout(() => {
+      mapInstance.relayout();
+    }, 100);
+  }, []);
 
-  useEffect(() => {
-    if (!map) return;
-
-    clustererRef.current = new window.kakao.maps.MarkerClusterer({
-      map: map,
-      averageCenter: true,
-      minLevel: 10,
-      disableClickZoom: true,
-    });
-
-    // WebSocket 연결 상태 확인 후 초기 요청
-    if (connectionStatus === 'Open') {
-      sendMessage({
-        type: 'request_running_cars',
-        timestamp: new Date().toISOString()
+  const handleCarsUpdate = useCallback((updatedCars: Car[]) => {
+    if (!clustererRef.current) {
+      // 클러스터러 초기화
+      clustererRef.current = new window.kakao.maps.MarkerClusterer({
+        map: mapRef.current,
+        averageCenter: true,
+        minLevel: 10,
+        disableClickZoom: false,
       });
+
+      // 클러스터 클릭 이벤트 리스너 추가
+      window.kakao.maps.event.addListener(
+        clustererRef.current,
+        'clusterclick',
+        function (cluster: any) {
+          const center = cluster.getCenter();
+
+          // 'idle' 이벤트에 대한 리스너를 한 번만 실행하도록 정의
+          const centerAfterZoom = () => {
+            mapRef.current.setCenter(center);
+            // 이벤트 리스너를 사용 후 즉시 제거
+            window.kakao.maps.event.removeListener(
+              mapRef.current,
+              'idle',
+              centerAfterZoom
+            );
+          };
+
+          // 'idle' 이벤트 리스너 등록
+          window.kakao.maps.event.addListener(
+            mapRef.current,
+            'idle',
+            centerAfterZoom
+          );
+
+          // 줌인 액션 실행
+          mapRef.current.setLevel(mapRef.current.getLevel() - 1, {
+            anchor: cluster.getCenter(),
+            animate: { duration: 350 },
+          });
+        }
+      );
     }
-  }, [map, connectionStatus, sendMessage]);
 
-  useEffect(() => {
-    if (!clustererRef.current) return;
-
+    // 기존 마커들 제거
     clustererRef.current.clear();
 
-    const filteredCars =
-      carStatusFilter === '운행중'
-        ? cars
-        : cars.filter(car => car.status === carStatusFilter);
+    // 필터링된 차량들에 대해 클러스터러 마커 생성
+    const filteredCars = carStatusFilter === 'total' 
+      ? updatedCars 
+      : updatedCars.filter(car => car.status === carStatusFilter);
+
+    const statusToImage = {
+      driving: '/car_green.png',
+      maintenance: '/car_red.png',
+      idle: '/car_yellow.png',
+    };
 
     const markers = filteredCars
-      .filter(car => statusToImage[car.status])
+      .filter(car => car.lastLatitude && car.lastLongitude)
       .map(car => {
-        const imageSrc = statusToImage[car.status]!;
-        const imageSize = new window.kakao.maps.Size(32, 32);
-        const imageOption = { offset: new window.kakao.maps.Point(16, 32) };
         const markerImage = new window.kakao.maps.MarkerImage(
-          imageSrc,
-          imageSize,
-          imageOption
+          statusToImage[car.status],
+          new window.kakao.maps.Size(32, 32),
+          { offset: new window.kakao.maps.Point(16, 32) }
         );
 
-        return new window.kakao.maps.Marker({
+        const marker = new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(
-            parseFloat(car.gpsLatitude),
-            parseFloat(car.gpsLongitude)
+            parseFloat(car.lastLatitude),
+            parseFloat(car.lastLongitude)
           ),
           image: markerImage,
           title: car.carNumber,
         });
+
+        // 마커 클릭 이벤트 추가
+        window.kakao.maps.event.addListener(marker, 'click', function () {
+          const position = marker.getPosition();
+          // 'idle' 이벤트에 대한 리스너를 한 번만 실행하도록 정의
+          const centerAfterZoom = () => {
+            mapRef.current.setCenter(position);
+            // 이벤트 리스너를 사용 후 즉시 제거하여 중복 실행 방지
+            window.kakao.maps.event.removeListener(
+              mapRef.current,
+              'idle',
+              centerAfterZoom
+            );
+          };
+
+          // 'idle' 이벤트 리스너 등록
+          window.kakao.maps.event.addListener(
+            mapRef.current,
+            'idle',
+            centerAfterZoom
+          );
+
+          // 줌인 액션 실행
+          mapRef.current.setLevel(3, { animate: { duration: 350 } });
+        });
+
+        return marker;
       });
 
     clustererRef.current.addMarkers(markers);
-  }, [cars, carStatusFilter]);
+  }, [carStatusFilter]);
 
   return (
-    <div className="relative">
-      {connectionStatus !== 'Open' && (
-        <div className="absolute top-2 right-2 z-10 px-3 py-1 rounded-full text-sm bg-yellow-100 text-yellow-800">
-          WebSocket {connectionStatus === 'Connecting' ? '연결 중...' : '연결 끊김'}
-        </div>
+    <div style={{ position: 'relative', width, height }}>
+      <Map
+        width={width}
+        height={height}
+        onLoad={handleMapLoad}
+        enableAutoRefresh={true}
+        onCarsUpdate={handleCarsUpdate}
+        showMarkers={false}
+        zoomLevel={13}
+      />
+      {onOpenModal && !isMapModalOpen && (
+        <button
+          className={iconStyles.fullScreen}
+          onClick={onOpenModal}
+        ></button>
       )}
-      <Map width={width} height={height} onLoad={setMap} />
     </div>
   );
 }

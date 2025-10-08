@@ -1,7 +1,7 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
-import StatusText from './status-text';
+import React from 'react';
 import styles from './status-box.module.css';
+import StatusText from './status-text';
 
 interface StatusBoxProps {
   num: number;
@@ -11,9 +11,7 @@ interface StatusBoxProps {
 
 const StatusBox: React.FC<StatusBoxProps> = ({ num, text, active }) => {
   return (
-    <Button
-      className={`${styles.Button} ${active ? styles.active + ' bg-gray-300' : ''}`}
-    >
+    <Button className={`${styles.Button} ${active ? styles.active : ''}`}>
       <StatusText num={num} text={text} />
     </Button>
   );

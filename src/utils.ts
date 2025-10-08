@@ -6,11 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function getAddressFromCoords(
-  lat: number,
-  lng: number
+  latitude: number,
+  longitude: number
 ): Promise<string> {
   const NEXT_PUBLIC_KAKAO_MAP_API_KEY = '카카오RESTAPI키';
-  const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${lng}&y=${lat}`;
+  const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}`;
   const res = await fetch(url, {
     headers: { Authorization: `KakaoAK ${NEXT_PUBLIC_KAKAO_MAP_API_KEY}` },
   });

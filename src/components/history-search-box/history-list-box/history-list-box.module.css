@@ -1,0 +1,27 @@
+.historyTable {
+  margin: 0 auto;
+  max-width: 1300px;
+}
+
+.tableHeadDefault {
+  width: 120px;
+}
+
+.tableHeadSmall {
+  width: 100px;
+}
+
+.tableHeadSmallest {
+  width: 80px;
+}
+
+.tableCell {
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.statusContainer {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}

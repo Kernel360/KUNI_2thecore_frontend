@@ -1,5 +1,3 @@
-import React from 'react';
-
 const TestComponent = ({ name, age }: { name: string; age: number }) => {
   return (
     <div>

@@ -1,6 +1,8 @@
+import SignUpModal, { SignUpData } from '@/components/signup-modal';
 import { Button } from '@/components/ui/button';
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -10,36 +12,145 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import TopBar from '@/components/ui/topBar';
+import { AuthService, SignUpRequest } from '@/services/auth-service';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
+  const [credentials, setCredentials] = useState({
+    loginId: '',
+    password: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCredentials(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+    if (error) setError('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!credentials.loginId || !credentials.password) {
+      setError('아이디와 비밀번호를 입력해주세요.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      await AuthService.login(credentials);
+      navigate('/');
+    } catch (error: any) {
+      setError(error.message || '로그인에 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignUp = async (formData: SignUpData) => {
+    try {
+      setLoading(true);
+
+      const signUpData: SignUpRequest = {
+        loginId: formData.loginId,
+        password: formData.password,
+        name: formData.name,
+        email: formData.email,
+        birthdate: formData.birthdate,
+        phoneNumber: formData.phoneNumber,
+      };
+
+      await AuthService.signUp(signUpData);
+      setIsModalOpen(false);
+      alert('가입 신청서가 제출되었습니다. 영업일 기준 2-3일내로 처리됩니다.');
+    } catch (error: any) {
+      console.error('회원가입 실패:', error);
+      setError(error.message || '회원가입에 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col justify-center items-center h-full">
-      <TopBar title="로그인"></TopBar>
-      <Card className="w-full max-w-md mt-20">
-        <CardHeader>
-          <CardTitle>로그인</CardTitle>
-          <CardDescription>아이디와 비밀번호를 입력하세요.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div className="flex flex-col gap-4">
-              <Label htmlFor="loginId">아이디</Label>
-              <Input id="loginId" type="text" required />
-              <Label htmlFor="password">비밀번호</Label>
-              <Input id="password" type="password" required />
+    <div className="flex flex-col h-screen">
+      <div
+        className="relative flex flex-row items-center p-4 border-b-2"
+        style={{ borderColor: '#3a70ff' }}
+      >
+        <TopBar showLogo={true} />
+        <h2 className="absolute left-1/2 transform -translate-x-1/2 font-semibold text-xl">
+          로그인
+        </h2>
+      </div>
+      <div className="flex flex-col justify-center items-center flex-1">
+        <Card className="w-full max-w-md mt-8">
+          <CardHeader>
+            <CardTitle>로그인</CardTitle>
+            <CardDescription>아이디와 비밀번호를 입력하세요.</CardDescription>
+            <CardAction className="flex-end">
               <Button
-                type="submit"
-                className="w-full bg-blue-500 hover:bg-blue-600"
+                variant="link"
+                onClick={() => setIsModalOpen(true)}
+                style={{ color: '#2956cc' }}
               >
-                로그인
+                회원가입
               </Button>
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <p>새 계정 등록 문의: ooo@oooo.com</p>
-        </CardFooter>
-      </Card>
+            </CardAction>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-4">
+                <Label htmlFor="loginId">아이디</Label>
+                <Input
+                  id="loginId"
+                  name="loginId"
+                  type="text"
+                  value={credentials.loginId}
+                  onChange={handleChange}
+                  required
+                />
+                <Label htmlFor="password">비밀번호</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={credentials.password}
+                  onChange={handleChange}
+                  required
+                />
+                {error && (
+                  <div className="text-red-500 text-sm text-center">
+                    {error}
+                  </div>
+                )}
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-br from-blue-500 to-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:shadow-lg hover:shadow-blue-800/40 active:scale-95"
+                  disabled={loading}
+                >
+                  {loading ? '로그인 중...' : '로그인'}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            <p>문의사항이 있으시면 2the@core.com로 연락 바랍니다.</p>
+          </CardFooter>
+        </Card>
+        <SignUpModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleSignUp}
+        />
+      </div>
     </div>
   );
 }
