@@ -44,10 +44,10 @@
     프로젝트 루트에 `.env` 파일을 생성하고 아래 내용을 채워주세요.
 
     ```env
-    VITE_KAKAO_MAP_API_KEY=여러분의_카카오맵_API_키
-    VITE_CAR_BASE_URL=[http://52.78.122.150:8080/api](http://52.78.122.150:8080/api)
-    VITE_EMULATOR_BASE_URL=[http://15.165.171.174:8081/api](http://15.165.171.174:8081/api)
-    VITE_ANALYSIS_API_BASE_URL=[http://192.168.1.60:5000/api](http://192.168.1.60:5000/api)
+    VITE_KAKAO_MAP_API_KEY=카카오맵_API_키
+    VITE_CAR_BASE_URL=[https://52.78.122.150:8080/api](https://52.78.122.150:8080/api)
+    VITE_EMULATOR_BASE_URL=[https://15.165.171.174:8081/api](https://15.165.171.174:8081/api)
+    VITE_ANALYSIS_API_BASE_URL=[https://192.168.1.60:5000/api](https://192.168.1.60:5000/api)
     ```
 
 3.  **개발 서버 실행**
