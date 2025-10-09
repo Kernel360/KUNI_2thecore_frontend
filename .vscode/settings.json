@@ -34,5 +34,8 @@
   "endOfLine": "lf",
   "files.eol": "\n",
   "prettier.requireConfig": true,
-  "prettier.useEditorConfig": false
+  "prettier.useEditorConfig": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.includeDeprecationDiagnostics": false
 }

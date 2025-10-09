@@ -21,6 +21,7 @@
 | **Routing**       | React Router DOM                  | 클라이언트 사이드 라우팅을 구현합니다.                                     |
 | **Forms**         | React Hook Form, Zod              | 효율적인 폼 상태 관리 및 스키마 기반 유효성 검사를 수행합니다.             |
 | **Data Fetching** | Axios, React Query                | 서버와의 비동기 통신 및 데이터 캐싱/관리를 담당합니다.                     |
+| **WebSocket**     | STOMP.js, SockJS                  | Spring STOMP 백엔드와 실시간 양방향 통신을 구현합니다.                    |
 | **Charts/Maps**   | Recharts, Kakao Maps API          | 데이터 시각화 및 지도 기능을 구현합니다.                                   |
 | **CI/CD**         | Jenkins, AWS S3                   | Jenkins 파이프라인을 통해 빌드 및 S3 버킷으로의 자동 배포를 수행합니다.    |
 | **Formatting**    | Prettier                          | 코드 포맷팅을 자동화합니다.                                                |
@@ -48,7 +49,11 @@
     VITE_CAR_BASE_URL=[http://52.78.122.150:8080/api](http://52.78.122.150:8080/api)
     VITE_EMULATOR_BASE_URL=[http://15.165.171.174:8081/api](http://15.165.171.174:8081/api)
     VITE_ANALYSIS_API_BASE_URL=[http://192.168.1.60:5000/api](http://192.168.1.60:5000/api)
+    VITE_WEBSOCKET_URL=ws://43.203.110.104:8080/ws
     ```
+
+    > **WebSocket 참고**: Spring STOMP 백엔드와 통신하기 위해 SockJS + STOMP 프로토콜을 사용합니다.  
+    > 자세한 내용은 [`docs/stomp-migration-guide.md`](./docs/stomp-migration-guide.md)를 참고하세요.
 
 3.  **개발 서버 실행**
     ```bash
@@ -75,7 +80,12 @@ src/
 │   ├── map/             # 지도 관련 컴포넌트
 │   └── ...
 ├── hooks/               # 커스텀 React 훅
+│   ├── useCarStompWebSocket.ts  # STOMP 차량 WebSocket 훅
+│   └── ...
 ├── lib/                 # API 클라이언트, 토큰 관리 등 라이브러리
+│   ├── api.ts           # Axios 인스턴스 (JWT 자동 관리)
+│   ├── use-stomp.ts     # STOMP WebSocket 기본 훅
+│   └── ...
 ├── services/            # API 호출 서비스 레이어
 ├── store/               # Zustand 전역 상태 관리
 ├── styles/              # 전역 CSS 스타일
@@ -110,6 +120,33 @@ export const useDetailStore = create<DetailStore>(set => ({
 
 Jenkins 파이프라인을 통해 AWS S3로 자동 배포됩니다. 자세한 내용은 `JenkinsFile`을 참고하세요.
 
-## 📄 API 문서
+## � 실시간 통신 (WebSocket)
+
+Spring STOMP 백엔드와 실시간 차량 위치 데이터를 주고받기 위해 **STOMP + SockJS** 프로토콜을 사용합니다.
+
+### 주요 특징
+
+- **STOMP 프로토콜**: Spring `@EnableWebSocketMessageBroker`와 완벽 호환
+- **SockJS 폴백**: WebSocket 미지원 환경에서 HTTP 폴백 제공
+- **자동 재연결**: 연결 끊김 시 5초 간격으로 재시도
+- **성능 최적화**: Token Bucket + Throttling으로 메시지 빈도 제어
+
+### 사용 예시
+
+```typescript
+import { useSingleCarStompWebSocket } from '@/services/websocket-service';
+
+function CarDetailPage() {
+  const { isConnected } = useSingleCarStompWebSocket(
+    '12가1234',
+    carData => console.log('위치 업데이트:', carData),
+    true
+  );
+}
+```
+
+자세한 내용은 [`docs/stomp-migration-guide.md`](./docs/stomp-migration-guide.md)를 참고하세요.
+
+## �📄 API 문서
 
 백엔드 API 명세는 `backend-api-spec/` 디렉토리 내의 마크다운 파일들에서 확인할 수 있습니다.

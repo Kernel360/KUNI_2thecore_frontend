@@ -59,7 +59,7 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# parcel-bundler cache (https://parceljs.org/)
+# parcel-bundler cache (http://parceljs.org/)
 .cache
 .parcel-cache
 
