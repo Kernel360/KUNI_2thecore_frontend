@@ -7,13 +7,17 @@ Spring STOMP 백엔드와 통신하기 위해 **Native WebSocket → STOMP Proto
 ## 🔄 변경 사항
 
 ### Before (Native WebSocket ❌)
+
 ```typescript
 // src/lib/use-websocket.ts - Spring STOMP가 이해 못하는 방식
 const ws = new WebSocket('ws://43.203.110.104:8080/ws');
-ws.send(JSON.stringify({ type: 'subscribe', channel: '/location/cars/12가1234' }));
+ws.send(
+  JSON.stringify({ type: 'subscribe', channel: '/location/cars/12가1234' })
+);
 ```
 
 ### After (STOMP Protocol ✅)
+
 ```typescript
 // src/lib/use-stomp.ts - Spring STOMP 표준 방식
 const client = new Client({
@@ -29,7 +33,7 @@ client.subscribe('/location/cars/12가1234', callback);
 ### 1. 개별 차량 (Detail 페이지)
 
 ```tsx
-import { useSingleCarStompWebSocket } from '@/hooks/useCarStompWebSocket';
+import { useSingleCarStompWebSocket } from '@/hooks/use-carStompWebSocket';
 
 function CarDetailPage() {
   const carNumber = '12가1234';
@@ -57,7 +61,7 @@ function CarDetailPage() {
 ### 2. 다중 차량 (메인 페이지)
 
 ```tsx
-import { useMultipleCarStompWebSocket } from '@/hooks/useCarStompWebSocket';
+import { useMultipleCarStompWebSocket } from '@/hooks/use-carStompWebSocket';
 
 function MainPage() {
   const carNumbers = ['12가1234', '23나2345', '34다3456'];
@@ -101,7 +105,7 @@ function MainPage() {
 
 ```typescript
 // 1. 클라이언트가 채널 구독
-client.subscribe('/location/cars/12가1234', (message) => {
+client.subscribe('/location/cars/12가1234', message => {
   const data = JSON.parse(message.body);
   console.log(data); // { carNumber, status, lastLatitude, lastLongitude }
 });
@@ -119,8 +123,8 @@ client.subscribe('/location/cars/12가1234', (message) => {
 
 ```json
 {
-  "@stomp/stompjs": "^7.2.0",      // STOMP 프로토콜 클라이언트
-  "sockjs-client": "^1.6.1",       // SockJS WebSocket 폴백
+  "@stomp/stompjs": "^7.2.0", // STOMP 프로토콜 클라이언트
+  "sockjs-client": "^1.6.1", // SockJS WebSocket 폴백
   "@types/sockjs-client": "^1.7.3" // TypeScript 타입
 }
 ```
@@ -129,11 +133,11 @@ client.subscribe('/location/cars/12가1234', (message) => {
 
 ## 🔧 핵심 파일
 
-| 파일 | 역할 |
-|------|------|
-| `src/lib/use-stomp.ts` | STOMP 기본 훅 (low-level) |
-| `src/hooks/useCarStompWebSocket.ts` | 차량 전용 STOMP 훅 (high-level) |
-| `src/lib/use-websocket.ts` | ⚠️ 레거시 (STOMP로 대체됨) |
+| 파일                                 | 역할                            |
+| ------------------------------------ | ------------------------------- |
+| `src/lib/use-stomp.ts`               | STOMP 기본 훅 (low-level)       |
+| `src/hooks/use-carStompWebSocket.ts` | 차량 전용 STOMP 훅 (high-level) |
+| `src/lib/use-websocket.ts`           | ⚠️ 레거시 (STOMP로 대체됨)      |
 
 ---
 
@@ -185,11 +189,12 @@ useEffect(() => {
 1. **WS** 필터 선택
 2. `/ws` 연결 확인
 3. **Messages** 탭에서 STOMP 프레임 확인:
+
    ```
    CONNECTED
    destination:/location/cars/12가1234
    message-id:...
-   
+
    {"carNumber":"12가1234","status":"운행","lastLatitude":"37.5665","lastLongitude":"126.9780"}
    ```
 
@@ -211,7 +216,7 @@ useEffect(() => {
 - [x] `sockjs-client` 설치 (이미 완료)
 - [x] `@types/sockjs-client` 설치 (완료)
 - [x] `useStomp` 기본 훅 구현 (완료)
-- [x] `useCarStompWebSocket` 차량 전용 훅 구현 (완료)
+- [x] `use-carStompWebSocket` 차량 전용 훅 구현 (완료)
 - [ ] 메인 페이지에 `useMultipleCarStompWebSocket` 적용
 - [ ] Detail 페이지에 `useSingleCarStompWebSocket` 적용
 - [ ] 기존 `useCarWebSocket` 제거 (레거시)
@@ -227,7 +232,7 @@ useEffect(() => {
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-  
+
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     registry.addEndpoint("/ws")

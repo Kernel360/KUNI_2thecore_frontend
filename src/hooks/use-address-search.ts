@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { AddressSearchResult } from '../types/address';
 import { searchAddressByKeyword } from '../services/kakaoAddressService';
 
-export const useAddressSearch = () => {
+export const use-addressSearch = () => {
   const [results, setResults] = useState<AddressSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

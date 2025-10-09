@@ -11,7 +11,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './detail.module.css';
-
+//누나 바보
 const DetailPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();

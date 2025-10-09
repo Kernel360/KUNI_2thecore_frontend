@@ -21,7 +21,7 @@
 | **Routing**       | React Router DOM                  | 클라이언트 사이드 라우팅을 구현합니다.                                     |
 | **Forms**         | React Hook Form, Zod              | 효율적인 폼 상태 관리 및 스키마 기반 유효성 검사를 수행합니다.             |
 | **Data Fetching** | Axios, React Query                | 서버와의 비동기 통신 및 데이터 캐싱/관리를 담당합니다.                     |
-| **WebSocket**     | STOMP.js, SockJS                  | Spring STOMP 백엔드와 실시간 양방향 통신을 구현합니다.                    |
+| **WebSocket**     | STOMP.js, SockJS                  | Spring STOMP 백엔드와 실시간 양방향 통신을 구현합니다.                     |
 | **Charts/Maps**   | Recharts, Kakao Maps API          | 데이터 시각화 및 지도 기능을 구현합니다.                                   |
 | **CI/CD**         | Jenkins, AWS S3                   | Jenkins 파이프라인을 통해 빌드 및 S3 버킷으로의 자동 배포를 수행합니다.    |
 | **Formatting**    | Prettier                          | 코드 포맷팅을 자동화합니다.                                                |
@@ -80,7 +80,7 @@ src/
 │   ├── map/             # 지도 관련 컴포넌트
 │   └── ...
 ├── hooks/               # 커스텀 React 훅
-│   ├── useCarStompWebSocket.ts  # STOMP 차량 WebSocket 훅
+│   ├── use-carStompWebSocket.ts  # STOMP 차량 WebSocket 훅
 │   └── ...
 ├── lib/                 # API 클라이언트, 토큰 관리 등 라이브러리
 │   ├── api.ts           # Axios 인스턴스 (JWT 자동 관리)
