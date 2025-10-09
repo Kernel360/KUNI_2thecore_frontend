@@ -2,7 +2,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
 
-// https://vite.dev/config/
+// http://vite.dev/config/
 export default defineConfig({
   base: './',
   plugins: [react()],
@@ -25,5 +25,7 @@ export default defineConfig({
     'process.env.NODE_ENV': JSON.stringify(
       process.env.NODE_ENV || 'development'
     ),
+    // sockjs-client를 위한 global 폴리필
+    global: 'globalThis',
   },
 });

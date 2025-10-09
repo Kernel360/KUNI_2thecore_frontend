@@ -254,6 +254,7 @@ const DetailPage = () => {
               lastLatitude={lastLatitude}
               lastLongitude={lastLongitude}
               status={getEnglishStatus(safeStatus)}
+              useWebSocket={true}
             />
           </CardContent>
         </Card>

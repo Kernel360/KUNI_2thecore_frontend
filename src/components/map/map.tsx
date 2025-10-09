@@ -1,4 +1,6 @@
 import { CarService } from '@/services/car-service';
+import { useMultipleCarStompWebSocket } from '@/services/websocket-service';
+import { CarLocationData } from '@/types/websocket';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './map.module.css';
 
@@ -19,6 +21,7 @@ interface MapProps {
   showMarkers?: boolean;
   zoomLevel?: number;
   onCarsUpdate?: (cars: Car[]) => void;
+  useWebSocket?: boolean; // STOMP WebSocket 사용 여부
 }
 
 const statusToImage: { [key in Car['status']]?: string } = {
@@ -37,6 +40,7 @@ export default function Map({
   showMarkers = false,
   zoomLevel = 13,
   onCarsUpdate,
+  useWebSocket = false,
 }: MapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<any>(null);
@@ -46,7 +50,63 @@ export default function Map({
   const markersRef = useRef<any[]>([]);
   const [internalCars, setInternalCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  
+
+  // 운행 차량 목록 (WebSocket 구독용)
+  const [drivingCarNumbers, setDrivingCarNumbers] = useState<string[]>([]);
+
+  // 한국어 상태를 Car status로 변환
+  const convertToCarStatus = (koreanStatus: string): Car['status'] => {
+    switch (koreanStatus) {
+      case '운행':
+        return 'driving';
+      case '수리':
+        return 'maintenance';
+      case '대기':
+      default:
+        return 'idle';
+    }
+  };
+
+  // STOMP WebSocket 실시간 위치 업데이트
+  const handleCarLocationUpdate = useCallback(
+    (carData: CarLocationData) => {
+      setInternalCars(prevCars => {
+        const newStatus = convertToCarStatus(carData.status);
+        const updatedCars = prevCars.map(car =>
+          car.carNumber === carData.carNumber
+            ? {
+                ...car,
+                status: newStatus,
+                lastLatitude: carData.lastLatitude,
+                lastLongitude: carData.lastLongitude,
+              }
+            : car
+        );
+
+        // 새로운 차량이면 추가
+        if (!prevCars.find(car => car.carNumber === carData.carNumber)) {
+          updatedCars.push({
+            carNumber: carData.carNumber,
+            status: newStatus,
+            lastLatitude: carData.lastLatitude,
+            lastLongitude: carData.lastLongitude,
+          });
+        }
+
+        onCarsUpdate?.(updatedCars);
+        return updatedCars;
+      });
+    },
+    [onCarsUpdate]
+  );
+
+  // STOMP WebSocket 훅 (운행 중인 차량만 구독)
+  const { isConnected: wsConnected } = useMultipleCarStompWebSocket(
+    drivingCarNumbers,
+    handleCarLocationUpdate,
+    useWebSocket && drivingCarNumbers.length > 0
+  );
+
   useEffect(() => {
     if (mapInstance || !mapRef.current) return;
 
@@ -85,27 +145,36 @@ export default function Map({
       const locations = await CarService.getCarLocations();
       const carData: Car[] = locations.map(loc => ({
         carNumber: loc.carNumber,
-        status:
-          loc.status === '운행'
-            ? 'driving'
-            : loc.status === '대기'
-              ? 'idle'
-              : 'maintenance', // '수리'
+        status: convertToCarStatus(loc.status),
         lastLatitude: loc.lastLatitude,
         lastLongitude: loc.lastLongitude,
       }));
+
+      // 운행 중인 차량 번호 목록 추출 (WebSocket 구독용)
+      const drivingCars = carData
+        .filter(car => car.status === 'driving')
+        .map(car => car.carNumber);
+
       setInternalCars(carData);
+      setDrivingCarNumbers(drivingCars);
       onCarsUpdate?.(carData);
+
+      if (process.env.NODE_ENV === 'development' && useWebSocket) {
+        console.log(
+          `🚗 운행 중인 차량 ${drivingCars.length}대 WebSocket 구독 준비:`,
+          drivingCars
+        );
+      }
     } catch (error) {
       console.error('차량 위치 데이터 조회 실패:', error);
     } finally {
       setLoading(false);
     }
-  }, [onCarsUpdate]);
+  }, [onCarsUpdate, useWebSocket]);
 
-  // 자동 갱신 설정
+  // 자동 갱신 설정 (WebSocket 미사용 시에만)
   useEffect(() => {
-    if (!enableAutoRefresh) return;
+    if (!enableAutoRefresh || useWebSocket) return;
 
     if (intervalRef.current) clearInterval(intervalRef.current);
 
@@ -118,7 +187,7 @@ export default function Map({
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [enableAutoRefresh, loadCarLocations, currentZoomLevel]);
+  }, [enableAutoRefresh, useWebSocket, loadCarLocations, currentZoomLevel]);
 
   // 초기 데이터 로딩
   useEffect(() => {

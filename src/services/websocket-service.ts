@@ -1,5 +1,5 @@
-// WebSocket Service - Re-exports for backward compatibility
-// 이 파일은 기존 import 경로 호환성을 위해 유지됩니다.
+// WebSocket Service - STOMP 기반 (Spring STOMP 백엔드 지원)
+// Native WebSocket → STOMP Protocol 마이그레이션 완료
 
 export type {
   CarLocationData,
@@ -8,9 +8,8 @@ export type {
   SingleCarLocationMessage,
 } from '@/types/websocket';
 
+// ✅ STOMP 기반 훅만 export (Spring STOMP 백엔드 지원)
 export {
-  createCarLocationWebSocketOptions,
-  useCarLocationWebSocket,
-  useMultipleCarWebSocket,
-  useSingleCarWebSocket,
-} from '@/hooks/useCarWebSocket';
+  useMultipleCarStompWebSocket,
+  useSingleCarStompWebSocket,
+} from '@/hooks/useCarStompWebSocket';
