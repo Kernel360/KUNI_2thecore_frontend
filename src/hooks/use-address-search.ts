@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { searchAddressByKeyword } from '../services/kakao-address-service';
 import { AddressSearchResult } from '../types/address';
-import { searchAddressByKeyword } from '../services/kakaoAddressService';
 
 export const useAddressSearch = () => {
   const [results, setResults] = useState<AddressSearchResult[]>([]);
@@ -15,7 +15,7 @@ export const useAddressSearch = () => {
 
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await searchAddressByKeyword(query);
       setResults(response.documents);

@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getCoordinatesFromAddress } from '@/services/kakaoAddressService';
+import { getCoordinatesFromAddress } from '@/services/kakao-address-service';
 import { AddressSearchResult } from '@/types/address';
 import { useState } from 'react';
 
