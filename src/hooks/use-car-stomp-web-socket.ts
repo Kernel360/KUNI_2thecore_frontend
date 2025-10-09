@@ -1,12 +1,12 @@
-import { useCallback, useEffect } from 'react';
-import { IMessage } from '@stomp/stompjs';
 import { useStomp } from '@/lib/use-stomp';
-import { useThrottledCallback } from './useThrottledCallback';
-import { useTokenBucketRateLimiter } from './useTokenBucketRateLimiter';
-import { SingleCarLocationMessage, CarLocationData } from '@/types/websocket';
+import { CarLocationData } from '@/types/websocket';
+import { IMessage } from '@stomp/stompjs';
+import { useCallback, useEffect } from 'react';
+import { useThrottledCallback } from './use-throttled-callback';
+import { useTokenBucketRateLimiter } from './use-token-bucket-rate-limiter';
 
 const WEBSOCKET_URL =
-  import.meta.env.VITE_WEBSOCKET_URL || 'ws://43.203.110.104:8080/ws';
+  import.meta.env.VITE_WEBSOCKET_URL || 'wss://43.203.110.104:8080/wss';
 
 /**
  * 개별 차량 위치 구독용 STOMP WebSocket 훅 (Detail 페이지용)
@@ -21,12 +21,9 @@ export function useSingleCarStompWebSocket(
   const { tryExecute: tryUpdateLocation } = useTokenBucketRateLimiter(4, 2);
 
   // 쓰로틀링 추가 (2초마다 최대 1회) - 이중 보호
-  const throttledUpdate = useThrottledCallback(
-    (carData: CarLocationData) => {
-      tryUpdateLocation(() => onCarLocationUpdate(carData));
-    },
-    2000
-  );
+  const throttledUpdate = useThrottledCallback((carData: CarLocationData) => {
+    tryUpdateLocation(() => onCarLocationUpdate(carData));
+  }, 2000);
 
   const { connected, subscribe, unsubscribe, disconnect } = useStomp({
     url: enabled && carNumber ? WEBSOCKET_URL : '',
@@ -40,7 +37,7 @@ export function useSingleCarStompWebSocket(
         console.log(`🔴 차량 ${carNumber} STOMP 연결 종료`);
       }
     },
-    onError: (error) => {
+    onError: error => {
       console.error(`❌ 차량 ${carNumber} STOMP 오류:`, error);
     },
     reconnectDelay: 5000,
@@ -51,7 +48,7 @@ export function useSingleCarStompWebSocket(
     if (!connected || !carNumber) return;
 
     const destination = `/location/cars/${carNumber}`;
-    
+
     subscribe(destination, (message: IMessage) => {
       try {
         const data: CarLocationData = JSON.parse(message.body);
@@ -84,7 +81,14 @@ export function useSingleCarStompWebSocket(
         disconnect();
       }
     };
-  }, [connected, enabled, carNumber, subscribeToCarLocation, unsubscribeFromCarLocation, disconnect]);
+  }, [
+    connected,
+    enabled,
+    carNumber,
+    subscribeToCarLocation,
+    unsubscribeFromCarLocation,
+    disconnect,
+  ]);
 
   return {
     isConnected: connected,
@@ -107,12 +111,9 @@ export function useMultipleCarStompWebSocket(
   const { tryExecute: tryUpdateLocation } = useTokenBucketRateLimiter(2, 1);
 
   // 쓰로틀링 추가 (5초마다 최대 1회) - 이중 보호
-  const throttledUpdate = useThrottledCallback(
-    (carData: CarLocationData) => {
-      tryUpdateLocation(() => onCarLocationUpdate(carData));
-    },
-    5000
-  );
+  const throttledUpdate = useThrottledCallback((carData: CarLocationData) => {
+    tryUpdateLocation(() => onCarLocationUpdate(carData));
+  }, 5000);
 
   const { connected, subscribe, unsubscribe, disconnect } = useStomp({
     url: enabled && carNumbers.length > 0 ? WEBSOCKET_URL : '',
@@ -126,7 +127,7 @@ export function useMultipleCarStompWebSocket(
         console.log(`🔴 다중 차량 STOMP 연결 종료`);
       }
     },
-    onError: (error) => {
+    onError: error => {
       console.error(`❌ 다중 차량 STOMP 오류:`, error);
     },
     reconnectDelay: 5000,
@@ -138,7 +139,7 @@ export function useMultipleCarStompWebSocket(
 
     carNumbers.forEach(carNumber => {
       const destination = `/location/cars/${carNumber}`;
-      
+
       subscribe(destination, (message: IMessage) => {
         try {
           const data: CarLocationData = JSON.parse(message.body);
@@ -178,7 +179,14 @@ export function useMultipleCarStompWebSocket(
         disconnect();
       }
     };
-  }, [connected, enabled, carNumbers, subscribeToMultipleCars, unsubscribeFromMultipleCars, disconnect]);
+  }, [
+    connected,
+    enabled,
+    carNumbers,
+    subscribeToMultipleCars,
+    unsubscribeFromMultipleCars,
+    disconnect,
+  ]);
 
   return {
     isConnected: connected,

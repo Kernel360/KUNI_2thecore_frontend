@@ -23,11 +23,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOriginPatterns("*")  // 패턴 매칭 (개발용)
                 .setAllowedOrigins(  // ✅ 명시적 Origin 허용 추가 (필수!)
                         // 로컬 개발 환경
-                        "http://localhost:3000",
-                        "http://localhost:3001",
+                        "https://localhost:3000",
+                        "https://localhost:3001",
                         // S3 배포 환경
-                        "http://2thecore20250809.s3-website.ap-northeast-2.amazonaws.com",
-                        "http://2thecore-fe.s3-website.ap-northeast-2.amazonaws.com"
+                        "https://2thecore20250809.s3-website.ap-northeast-2.amazonaws.com",
+                        "https://2thecore-fe.s3-website.ap-northeast-2.amazonaws.com"
                 );
     }
 
