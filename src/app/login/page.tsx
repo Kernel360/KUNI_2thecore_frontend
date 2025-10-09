@@ -99,7 +99,7 @@ export default function Login() {
               <Button
                 variant="link"
                 onClick={() => setIsModalOpen(true)}
-                style={{ color: '#2956cc' }}
+                style={{ color: '#2956cc', cursor: 'pointer' }}
               >
                 회원가입
               </Button>
