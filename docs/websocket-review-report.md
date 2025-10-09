@@ -13,14 +13,11 @@
 
 ```typescript
 // ❌ 기존 구현: Native WebSocket API 사용
-const ws = new WebSocket('ws://43.203.110.104:8080/ws');
-ws.send(
-  JSON.stringify({ type: 'subscribe', channel: '/location/cars/12가1234' })
-);
+const ws = new WebSocket('wss://43.203.110.104:8080/wss');
+ws.send(JSON.stringify({ type: 'subscribe', channel: '/location/cars/12가1234' }));
 ```
 
 **문제점:**
-
 1. Spring STOMP는 특정 프레임 포맷(`SUBSCRIBE`, `SEND`, `MESSAGE`)을 기대
 2. Native WebSocket의 JSON 메시지는 Spring STOMP가 이해하지 못함
 3. SockJS 레이어 없이 직접 WebSocket 연결 시도
@@ -37,7 +34,8 @@ ws.send(
   - SockJS + STOMP 프로토콜 사용
   - JWT 토큰 자동 전송
   - 자동 재연결 (5초 간격)
-- **`src/hooks/use-carStompWebSocket.ts`**: 차량 전용 STOMP 훅
+  
+- **`src/hooks/useCarStompWebSocket.ts`**: 차량 전용 STOMP 훅
   - `useSingleCarStompWebSocket`: 개별 차량 (Detail 페이지)
   - `useMultipleCarStompWebSocket`: 다중 차량 (메인 페이지)
   - Token Bucket + Throttling 성능 최적화 유지
@@ -51,7 +49,6 @@ npm install --save-dev @types/sockjs-client
 ```
 
 **이미 설치되어 있던 패키지:**
-
 - `@stomp/stompjs@^7.2.0` ✅
 - `sockjs-client@^1.6.1` ✅
 
@@ -65,7 +62,7 @@ npm install --save-dev @types/sockjs-client
 
 ```
 [React Client]
-  └── SockJS (WebSocket + HTTP 폴백)
+  └── SockJS (WebSocket + https 폴백)
         └── STOMP Protocol (메시지 브로커)
               ├── SUBSCRIBE /location/cars/{carNumber}
               ├── MESSAGE (Server → Client)
@@ -120,13 +117,11 @@ const { isConnected } = useMultipleCarStompWebSocket(
 ### 프론트엔드
 
 - [ ] **메인 페이지 수정** (`src/app/page.tsx`)
-
   ```tsx
   // useMultipleCarWebSocket → useMultipleCarStompWebSocket
   ```
 
 - [ ] **Detail 페이지 수정** (`src/app/detail/page.tsx`)
-
   ```tsx
   // useSingleCarWebSocket → useSingleCarStompWebSocket
   ```
@@ -147,7 +142,7 @@ Spring 백엔드가 다음 조건을 만족하는지 확인:
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
+  
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     registry.addEndpoint("/ws")
@@ -164,7 +159,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 ```
 
 메시지 전송 코드:
-
 ```java
 @Autowired
 private SimpMessagingTemplate messagingTemplate;
@@ -189,7 +183,6 @@ npm run dev
 ```
 
 1. 브라우저 콘솔 확인:
-
    ```
    ✅ STOMP 연결 성공
    📡 N대 차량 구독 시작
@@ -202,7 +195,6 @@ npm run dev
 ### 2. 메시지 수신 테스트
 
 백엔드에서 메시지 전송 후:
-
 ```
 📍 차량 12가1234 위치 업데이트: { carNumber, status, lastLatitude, lastLongitude }
 ```
@@ -210,7 +202,6 @@ npm run dev
 ### 3. 생명주기 테스트
 
 페이지 이동 시:
-
 ```
 📴 N대 차량 구독 해제
 🔴 STOMP 연결 종료
@@ -220,12 +211,12 @@ npm run dev
 
 ## 📊 성능 최적화 (유지)
 
-| 항목         | 개별 차량                | 다중 차량                |
-| ------------ | ------------------------ | ------------------------ |
+| 항목 | 개별 차량 | 다중 차량 |
+|------|----------|----------|
 | Token Bucket | capacity=4, refillRate=2 | capacity=2, refillRate=1 |
-| Throttling   | 2초 간격                 | 5초 간격                 |
-| 실제 빈도    | ~30회/분                 | ~12회/분                 |
-| 하트비트     | 5분                      | 5분                      |
+| Throttling | 2초 간격 | 5초 간격 |
+| 실제 빈도 | ~30회/분 | ~12회/분 |
+| 하트비트 | 5분 | 5분 |
 
 ---
 
@@ -249,7 +240,7 @@ npm run dev
 ### ⚠️ 주의사항
 
 - 기존 `useCarWebSocket` 훅은 더 이상 Spring STOMP와 호환되지 않음
-- 모든 페이지를 `use-carStompWebSocket`으로 마이그레이션 필요
+- 모든 페이지를 `useCarStompWebSocket`으로 마이그레이션 필요
 - 백엔드가 `/ws` 엔드포인트에 SockJS를 활성화해야 함
 
 ---
