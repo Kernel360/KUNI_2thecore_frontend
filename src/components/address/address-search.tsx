@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { useAddressSearch } from '@/hooks/useAddressSearch';
+import { useAddressSearch } from '@/hooks/use-address-search';
 import { AddressSearchResult } from '@/types/address';
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './address-search.module.css';

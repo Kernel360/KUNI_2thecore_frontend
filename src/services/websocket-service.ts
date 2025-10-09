@@ -12,4 +12,4 @@ export type {
 export {
   useMultipleCarStompWebSocket,
   useSingleCarStompWebSocket,
-} from '@/hooks/useCarStompWebSocket';
+} from '@/hooks/use-car-stomp-web-socket';

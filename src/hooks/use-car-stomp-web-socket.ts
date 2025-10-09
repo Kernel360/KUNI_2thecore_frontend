@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from 'react';
 import { IMessage } from '@stomp/stompjs';
 import { useStomp } from '@/lib/use-stomp';
-import { useThrottledCallback } from './useThrottledCallback';
-import { useTokenBucketRateLimiter } from './useTokenBucketRateLimiter';
+import { useThrottledCallback } from './use-throttled-callback';
+import { useTokenBucketRateLimiter } from './use-token-bucket-rate-limiter';
 import { SingleCarLocationMessage, CarLocationData } from '@/types/websocket';
 
 const WEBSOCKET_URL =
