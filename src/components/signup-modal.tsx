@@ -161,7 +161,7 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }: SignUpProps) => {
                       disabled={
                         duplicateCheck.loading || !formData.loginId.trim()
                       }
-                      className="whitespace-nowrap h-10 px-3 text-sm"
+                      className="whitespace-nowrap h-10 px-3 text-sm cursor-pointer"
                     >
                       {duplicateCheck.loading ? '확인 중...' : '중복확인'}
                     </Button>

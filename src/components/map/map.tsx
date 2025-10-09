@@ -100,11 +100,11 @@ export default function Map({
     [onCarsUpdate]
   );
 
-  // STOMP WebSocket 훅 (운행 중인 차량만 구독)
+  // STOMP WebSocket 훅 (운행 중인 차량 & 줌레벨 8 이하일 때만 구독)
   const { isConnected: wsConnected } = useMultipleCarStompWebSocket(
     drivingCarNumbers,
     handleCarLocationUpdate,
-    useWebSocket && drivingCarNumbers.length > 0
+    useWebSocket && drivingCarNumbers.length > 0 && currentZoomLevel <= 8
   );
 
   useEffect(() => {
@@ -236,6 +236,13 @@ export default function Map({
         return marker;
       });
   }, [mapInstance, carsToRender, carStatusFilter, showMarkers]);
+
+  // If parent passed `cars` (single-page car view), derive drivingCarNumbers from it
+  useEffect(() => {
+    if (!cars || cars.length === 0) return;
+    const drivingCars = cars.filter(c => c.status === 'driving').map(c => c.carNumber);
+    setDrivingCarNumbers(drivingCars);
+  }, [cars]);
 
   // 페이지 재진입 시 지도 리사이즈
   useEffect(() => {
