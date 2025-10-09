@@ -16,6 +16,7 @@ const DetailPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const urlCarNumber = searchParams.get('carNumber');
+  const urlMode = searchParams.get('mode'); // 'edit' 모드 확인
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const {
     carNumber,
@@ -61,6 +62,10 @@ const DetailPage = () => {
       const fetchCarDetail = async () => {
         try {
           const carDetail = await CarService.getCar(urlCarNumber);
+          // brandModel이 없으면 brand + model로 생성
+          if (!carDetail.brandModel) {
+            carDetail.brandModel = `${carDetail.brand} ${carDetail.model}`;
+          }
           setDetail(carDetail);
         } catch (error) {
           console.error('차량 정보 로드 실패:', error);
@@ -72,13 +77,29 @@ const DetailPage = () => {
     }
   }, [urlCarNumber, setDetail, navigate]);
 
+  // URL 모드 파라미터에 따라 수정 모드 설정
+  useEffect(() => {
+    if (urlMode === 'edit') {
+      setDetailChange(true);
+    } else {
+      setDetailChange(false);
+    }
+  }, [urlMode, setDetailChange]);
+
   useEffect(() => {
     if (!urlCarNumber) return;
+
+    // 수정 모드일 때는 자동 갱신하지 않음
+    if (detailChange) return;
 
     // 3초 간격으로 API를 호출하는 interval 설정
     const intervalId = setInterval(async () => {
       try {
         const updatedCarDetail = await CarService.getCar(urlCarNumber);
+        // brandModel이 없으면 brand + model로 생성
+        if (!updatedCarDetail.brandModel) {
+          updatedCarDetail.brandModel = `${updatedCarDetail.brand} ${updatedCarDetail.model}`;
+        }
         setDetail(updatedCarDetail);
       } catch (error) {
         console.error(`'${urlCarNumber}' 차량 정보 갱신 실패:`, error);
@@ -87,33 +108,52 @@ const DetailPage = () => {
 
     // 컴포넌트가 언마운트될 때 interval 정리
     return () => clearInterval(intervalId);
-  }, [urlCarNumber, setDetail]);
+  }, [urlCarNumber, setDetail, detailChange]);
 
-  const handleChange = (
-    field: 'brandModel' | keyof CarDetail,
-    value: string
-  ) => {
+  const handleChange = (field: keyof CarDetail, value: string) => {
+    // brandModel 수정 시 brand와 model 자동 분리
     if (field === 'brandModel') {
+      const [newBrand = '', newModel = ''] = value.split(' ');
       setDetail({
         carNumber,
-        brand,
-        brandModel: value,
-        model,
+        brand: newBrand,
+        model: newModel,
+        brandModel: value, // 전체 문자열 유지
         status,
         carYear,
         sumDist,
         carType,
+        lastLatitude,
+        lastLongitude,
+      });
+    } else if (field === 'sumDist' || field === 'carYear') {
+      // 숫자 필드는 number로 변환
+      const numValue = value === '' ? 0 : Number(value);
+      setDetail({
+        carNumber,
+        brand,
+        model,
+        brandModel,
+        status,
+        carYear: field === 'carYear' ? numValue : carYear,
+        sumDist: field === 'sumDist' ? numValue : sumDist,
+        carType,
+        lastLatitude,
+        lastLongitude,
       });
     } else {
+      // 다른 필드는 단순하게 업데이트
       setDetail({
         carNumber,
         brand,
-        brandModel,
         model,
+        brandModel,
         status,
         carYear,
         sumDist,
         carType,
+        lastLatitude,
+        lastLongitude,
         [field]: value,
       });
     }
@@ -121,22 +161,27 @@ const DetailPage = () => {
 
   const handleSave = async () => {
     try {
-      // 브랜드와 모델을 분리하는 로직
+      // 브랜드와 모델이 이미 분리되어 있음 (handleChange에서 처리)
+      // brandModel에서 한번 더 분리 (안전장치)
       let finalBrand = brand;
       let finalModel = model;
-      [finalBrand, finalModel] = brandModel.split(' ');
-      console.log('분리된 브랜드,모델명');
-      console.log(finalBrand, finalModel);
+
+      if (brandModel.includes(' ')) {
+        const parts = brandModel.split(' ');
+        finalBrand = parts[0];
+        finalModel = parts.slice(1).join(' '); // 모델명에 공백이 있을 수 있음
+      }
 
       const updateData: Partial<CarDetail> = {
-        brand: finalBrand,
-        model: finalModel,
+        brand: finalBrand.trim(),
+        model: finalModel.trim(),
         status,
         carYear,
         sumDist,
         carType,
       };
 
+      console.log('차량 정보 저장:', updateData);
       await CarService.updateCar(carNumber, updateData);
 
       // 편집 모드 종료
@@ -166,12 +211,11 @@ const DetailPage = () => {
             <div className={styles.title}>차량 정보</div>
             <div className={styles.formGrid}>
               <label className={styles.label}>차량 번호</label>
-
-              <Input className={styles.input} value={carNumber} readOnly />
+              <Input className={styles.input} value={carNumber} />
               <label className={styles.label}>차량 브랜드 이름</label>
               <Input
                 className={styles.input}
-                value={`${brandModel}`}
+                value={brandModel}
                 readOnly={!detailChange}
                 onChange={
                   detailChange
@@ -193,6 +237,7 @@ const DetailPage = () => {
               <label className={styles.label}>차량 연식</label>
               <Input
                 className={styles.input}
+                type="number"
                 value={carYear}
                 readOnly={!detailChange}
                 onChange={
@@ -204,6 +249,8 @@ const DetailPage = () => {
               <label className={styles.label}>주행 거리 (km)</label>
               <Input
                 className={styles.input}
+                type="number"
+                step="0.01"
                 value={sumDist}
                 readOnly={!detailChange}
                 onChange={
@@ -254,6 +301,7 @@ const DetailPage = () => {
               lastLatitude={lastLatitude}
               lastLongitude={lastLongitude}
               status={getEnglishStatus(safeStatus)}
+              useWebSocket={true}
             />
           </CardContent>
         </Card>
