@@ -16,8 +16,8 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
 
-    /* Ignore deprecations for baseUrl and paths */
-    "ignoreDeprecations": "6.0",
+    /* TypeScript 7.0 deprecation 경고 무시 */
+    "ignoreDeprecations": "5.0",
 
     /* Path mapping */
     "baseUrl": ".",

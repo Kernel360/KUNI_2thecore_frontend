@@ -1,6 +1,5 @@
 import { Client, IMessage } from '@stomp/stompjs';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import SockJS from 'sockjs-client';
 import { TokenManager } from './token-manager';
 
 export interface UseStompOptions {
@@ -26,7 +25,8 @@ export interface UseStompReturn {
 
 /**
  * Spring STOMP WebSocket 연결을 위한 커스텀 훅
- * - SockJS + STOMP 프로토콜 사용
+ * - 네이티브 WebSocket + STOMP 프로토콜 사용
+ * - 백엔드는 SockJS 없이 순수 WebSocket만 지원
  * - JWT 토큰 자동 전송
  * - 자동 재연결 지원
  */
@@ -45,17 +45,14 @@ export function useStomp(options: UseStompOptions): UseStompReturn {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    // SockJS는 HTTP/http URL을 받아야 함 (ws:// 프로토콜 자동 변환)
-    const httpUrl = url
-      .replace(/^ws:\/\//, 'http://')
-      .replace(/^ws:\/\//, 'http://');
-    const sock = new SockJS(httpUrl);
+    if (!url) return;
 
     // JWT 액세스 토큰 가져오기
     const accessToken = TokenManager.getAccessToken();
 
     const stompClient = new Client({
-      webSocketFactory: () => sock as any,
+      // 네이티브 WebSocket 사용 (백엔드가 SockJS 미사용)
+      brokerURL: url,
       reconnectDelay,
       debug: debug ? str => console.log('[STOMP]', str) : undefined,
 
