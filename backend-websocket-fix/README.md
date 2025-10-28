@@ -12,7 +12,7 @@ WebSocket connection to 'ws://43.203.110.104:8080/ws' failed
 
 `WebSocketConfig.java`에서 `.setAllowedOriginPatterns("*")`만 설정되어 있고, **`.setAllowedOrigins()`가 명시적으로 설정되지 않음**.
 
-Spring WebSocket은 HTTP CORS와 별도로 WebSocket CORS를 설정해야 하며, `.setAllowedOriginPatterns("*")`만으로는 부족합니다.
+Spring WebSocket은 https CORS와 별도로 WebSocket CORS를 설정해야 하며, `.setAllowedOriginPatterns("*")`만으로는 부족합니다.
 
 ## ✅ 해결 방법
 
@@ -32,10 +32,10 @@ registry.addEndpoint("/ws").setAllowedOriginPatterns("*");
 registry.addEndpoint("/ws")
         .setAllowedOriginPatterns("*")
         .setAllowedOrigins(  // ✅ 이 부분 추가
-                "http://localhost:3000",
-                "http://localhost:3001",
-                "http://2thecore20250809.s3-website.ap-northeast-2.amazonaws.com",
-                "http://2thecore-fe.s3-website.ap-northeast-2.amazonaws.com"
+                "https://localhost:3000",
+                "https://localhost:3001",
+                "https://2thecore20250809.s3-website.ap-northeast-2.amazonaws.com",
+                "https://2thecore-fe.s3-website.ap-northeast-2.amazonaws.com"
         );
 ```
 
@@ -60,11 +60,11 @@ Authorization:Bearer eyJhbGc...
 
 ## 📌 참고사항
 
-- Spring Security의 HTTP CORS 설정 (`SecurityConfig.java`)과는 **별도**로 WebSocket CORS 설정 필요
+- Spring Security의 https CORS 설정 (`SecurityConfig.java`)과는 **별도**로 WebSocket CORS 설정 필요
 - 프로덕션 환경 배포 시 S3 URL도 반드시 포함해야 함
 - `.setAllowedOriginPatterns("*")`와 `.setAllowedOrigins()`를 **둘 다** 설정해야 함
 
 ## 🔗 관련 문서
 
-- Spring WebSocket CORS: https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#websocket-server-allowed-origins
-- STOMP over WebSocket: https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#websocket-stomp
+- Spring WebSocket CORS: httpss://docs.spring.io/spring-framework/docs/current/reference/html/web.html#websocket-server-allowed-origins
+- STOMP over WebSocket: httpss://docs.spring.io/spring-framework/docs/current/reference/html/web.html#websocket-stomp

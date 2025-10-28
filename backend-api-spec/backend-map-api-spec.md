@@ -44,7 +44,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pblVzZ
 
 - **Method**: GET (axios)
 - **Path**: `/api/car/locations`
-- **설명**: 운행 중인 차량 위도 경도를 통해 지도 위에서 조회
+- **설명**: status 필터링으로 차량 위도 경도를 통해 지도 위에서 조회
 - **상태**: 완료
 - **request**:{
   "status" : String // 운행, 대기, 수리 중 입력 가능하고

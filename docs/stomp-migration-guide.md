@@ -21,7 +21,7 @@ ws.send(
 ```typescript
 // src/lib/use-stomp.ts - Spring STOMP 표준 방식
 const client = new Client({
-  webSocketFactory: () => new SockJS('http://43.203.110.104:8080/ws'),
+  webSocketFactory: () => new SockJS('https://43.203.110.104:8080/ws'),
 });
 client.subscribe('/location/cars/12가1234', callback);
 ```

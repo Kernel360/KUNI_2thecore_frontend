@@ -62,7 +62,7 @@ npm install --save-dev @types/sockjs-client
 
 ```
 [React Client]
-  └── SockJS (WebSocket + https 폴백)
+  └── SockJS (WebSocket + httpss 폴백)
         └── STOMP Protocol (메시지 브로커)
               ├── SUBSCRIBE /location/cars/{carNumber}
               ├── MESSAGE (Server → Client)

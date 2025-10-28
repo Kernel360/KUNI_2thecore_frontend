@@ -36,11 +36,11 @@ public void registerStompEndpoints(StompEndpointRegistry registry) {
             .setAllowedOriginPatterns("*")  // 패턴 매칭 (개발용)
             .setAllowedOrigins(  // 명시적 Origin 허용 (필수!)
                 // 로컬 개발 환경
-                "http://localhost:3000",
-                "http://localhost:3001",
+                "https://localhost:3000",
+                "https://localhost:3001",
                 // S3 배포 환경
-                "http://2thecore20250809.s3-website.ap-northeast-2.amazonaws.com",
-                "http://2thecore-fe.s3-website.ap-northeast-2.amazonaws.com"
+                "https://2thecore20250809.s3-website.ap-northeast-2.amazonaws.com",
+                "https://2thecore-fe.s3-website.ap-northeast-2.amazonaws.com"
             );
 }
 ```
@@ -55,7 +55,7 @@ Chrome을 CORS 제한 없이 실행:
 
 ```powershell
 # Chrome 완전 종료 후 실행
-Start-Process "chrome.exe" -ArgumentList "--disable-web-security", "--user-data-dir=C:\temp\chrome-dev", "http://localhost:3001"
+Start-Process "chrome.exe" -ArgumentList "--disable-web-security", "--user-data-dir=C:\temp\chrome-dev", "https://localhost:3001"
 ```
 
 **주의**: 이 방법은 보안이 취약하므로 개발 환경에서만 사용!
@@ -74,6 +74,6 @@ Authorization:Bearer eyJhbGc...
 
 ## 참고
 
-- Spring WebSocket은 HTTP CORS와 별도로 WebSocket CORS 설정 필요
+- Spring WebSocket은 https CORS와 별도로 WebSocket CORS 설정 필요
 - `.setAllowedOriginPatterns("*")`만으로는 부족
 - `.setAllowedOrigins()`를 명시적으로 설정해야 함

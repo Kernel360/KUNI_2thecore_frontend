@@ -126,7 +126,7 @@
 
 ```bash
 # 백엔드 서버 확인
-curl -I http://43.203.110.104:8080/ws
+curl -I https://43.203.110.104:8080/ws
 # 응답: 101 Switching Protocols (성공)
 ```
 

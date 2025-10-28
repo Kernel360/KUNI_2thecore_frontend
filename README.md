@@ -46,9 +46,9 @@
 
     ```env
     VITE_KAKAO_MAP_API_KEY=여러분의_카카오맵_API_키
-    VITE_CAR_BASE_URL=[http://52.78.122.150:8080/api](http://52.78.122.150:8080/api)
-    VITE_EMULATOR_BASE_URL=[http://15.165.171.174:8081/api](http://15.165.171.174:8081/api)
-    VITE_ANALYSIS_API_BASE_URL=[http://192.168.1.60:5000/api](http://192.168.1.60:5000/api)
+    VITE_CAR_BASE_URL=[https://52.78.122.150:8080/api](https://52.78.122.150:8080/api)
+    VITE_EMULATOR_BASE_URL=[https://15.165.171.174:8081/api](https://15.165.171.174:8081/api)
+    VITE_ANALYSIS_API_BASE_URL=[https://192.168.1.60:5000/api](https://192.168.1.60:5000/api)
     VITE_WEBSOCKET_URL=ws://43.203.110.104:8080/ws
     ```
 
@@ -59,7 +59,7 @@
     ```bash
     pnpm dev
     ```
-    서버는 http://localhost:3000 에서 실행됩니다.
+    서버는 https://localhost:3000 에서 실행됩니다.
 
 ### 주요 명령어
 
@@ -127,7 +127,7 @@ Spring STOMP 백엔드와 실시간 차량 위치 데이터를 주고받기 위�
 ### 주요 특징
 
 - **STOMP 프로토콜**: Spring `@EnableWebSocketMessageBroker`와 완벽 호환
-- **SockJS 폴백**: WebSocket 미지원 환경에서 HTTP 폴백 제공
+- **SockJS 폴백**: WebSocket 미지원 환경에서 https 폴백 제공
 - **자동 재연결**: 연결 끊김 시 5초 간격으로 재시도
 - **성능 최적화**: Token Bucket + Throttling으로 메시지 빈도 제어
 

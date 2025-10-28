@@ -10,7 +10,7 @@ export async function getAddressFromCoords(
   longitude: number
 ): Promise<string> {
   const NEXT_PUBLIC_KAKAO_MAP_API_KEY = '카카오RESTAPI키';
-  const url = `http://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}`;
+  const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}`;
   const res = await fetch(url, {
     headers: { Authorization: `KakaoAK ${NEXT_PUBLIC_KAKAO_MAP_API_KEY}` },
   });

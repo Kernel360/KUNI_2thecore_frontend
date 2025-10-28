@@ -1,7 +1,7 @@
 /**
  * JWT 토큰 관리 유틸리티
  * - Access Token: 로컬스토리지에 저장 (10분 유효)
- * - Refresh Token: 백엔드에서 HttpOnly 쿠키로 자동 관리 (7일 유효)
+ * - Refresh Token: 백엔드에서 httpsOnly 쿠키로 자동 관리 (7일 유효)
  */
 export class TokenManager {
   private static readonly ACCESS_TOKEN_KEY = 'accessToken';
