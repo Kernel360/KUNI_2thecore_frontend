@@ -1,16 +1,14 @@
 import react from '@vitejs/plugin-react';
-import path from 'path';
 import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
-// https://vite.dev/config/
+// http://vite.dev/config/
 export default defineConfig({
   base: './',
-  plugins: [react()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
+  plugins: [
+    react(),
+    tsconfigPaths(), // tsconfig.json의 paths를 Vite가 자동 인식
+  ],
   server: {
     port: 3000,
     open: true,
@@ -25,5 +23,7 @@ export default defineConfig({
     'process.env.NODE_ENV': JSON.stringify(
       process.env.NODE_ENV || 'development'
     ),
+    // sockjs-client를 위한 global 폴리필
+    global: 'globalThis',
   },
 });

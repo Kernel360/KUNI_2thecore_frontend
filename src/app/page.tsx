@@ -1,4 +1,4 @@
-import DataLanking from '@/components/data-lanking/data-lanking';
+import DataRanking from '@/components/data-ranking/data-ranking';
 import CarClustererMap from '@/components/map/car-clusterer-map';
 import KakaoMapScript from '@/components/map/kakao-map-script';
 import MapModal from '@/components/map/map-modal';
@@ -13,7 +13,7 @@ export default function Home() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   return (
     <div className="flex flex-col">
-      <DataLanking />
+      <DataRanking />
       <div className="flex flex-row gap-6 p-4 w-[98%] mx-auto">
         <>
           <StatusContainer

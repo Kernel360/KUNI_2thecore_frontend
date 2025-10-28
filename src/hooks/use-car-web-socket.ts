@@ -1,5 +1,5 @@
-import { useThrottledCallback } from '@/hooks/useThrottledCallback';
-import { useTokenBucketRateLimiter } from '@/hooks/useTokenBucketRateLimiter';
+import { useThrottledCallback } from '@/hooks/use-throttled-callback';
+import { useTokenBucketRateLimiter } from '@/hooks/use-token-bucket-rate-limiter';
 import { TokenManager } from '@/lib/token-manager';
 import {
   useWebSocket,
