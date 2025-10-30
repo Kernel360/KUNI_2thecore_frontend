@@ -4,7 +4,7 @@
 
 ### 1.1 Kakao Developers 앱 등록
 
-1. [Kakao Developers](https://developers.kakao.com/) 접속
+1. [Kakao Developers](http://developers.kakao.com/) 접속
 2. 애플리케이션 등록
 3. `JavaScript 키`와 `REST API 키` 발급
 4. 플랫폼 설정에서 사이트 도메인 추가
@@ -105,7 +105,7 @@ export const searchAddressByKeyword = async (
 ): Promise<AddressSearchResponse> => {
   try {
     const response = await axios.get(
-      'https://dapi.kakao.com/v2/local/search/address.json',
+      'http://dapi.kakao.com/v2/local/search/address.json',
       {
         headers: {
           Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,

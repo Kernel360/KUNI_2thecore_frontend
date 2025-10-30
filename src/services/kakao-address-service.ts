@@ -21,7 +21,7 @@ export const searchAddressByKeyword = async (
     const currentOrigin = window.location.origin;
 
     const response = await axios.get(
-      'https://dapi.kakao.com/v2/local/search/address.json',
+      'http://dapi.kakao.com/v2/local/search/address.json',
       {
         headers: {
           Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,

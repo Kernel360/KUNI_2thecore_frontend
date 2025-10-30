@@ -21,7 +21,7 @@
 | **Routing**       | React Router DOM                  | 클라이언트 사이드 라우팅을 구현합니다.                                     |
 | **Forms**         | React Hook Form, Zod              | 효율적인 폼 상태 관리 및 스키마 기반 유효성 검사를 수행합니다.             |
 | **Data Fetching** | Axios, React Query                | 서버와의 비동기 통신 및 데이터 캐싱/관리를 담당합니다.                     |
-| **WebSocket**     | STOMP.js, SockJS                  | Spring STOMP 백엔드와 실시간 양방향 통신을 구현합니다.                     |
+| **WebSocket**     | STOMP.js, SockJS                  | Spring STOMP 백엔드와 실시간 양방향 통신을 구현합니다.                    |
 | **Charts/Maps**   | Recharts, Kakao Maps API          | 데이터 시각화 및 지도 기능을 구현합니다.                                   |
 | **CI/CD**         | Jenkins, AWS S3                   | Jenkins 파이프라인을 통해 빌드 및 S3 버킷으로의 자동 배포를 수행합니다.    |
 | **Formatting**    | Prettier                          | 코드 포맷팅을 자동화합니다.                                                |
@@ -46,9 +46,9 @@
 
     ```env
     VITE_KAKAO_MAP_API_KEY=여러분의_카카오맵_API_키
-    VITE_CAR_BASE_URL=[https://52.78.122.150:8080/api](https://52.78.122.150:8080/api)
-    VITE_EMULATOR_BASE_URL=[https://15.165.171.174:8081/api](https://15.165.171.174:8081/api)
-    VITE_ANALYSIS_API_BASE_URL=[https://192.168.1.60:5000/api](https://192.168.1.60:5000/api)
+    VITE_CAR_BASE_URL=[http://52.78.122.150:8080/api](http://52.78.122.150:8080/api)
+    VITE_EMULATOR_BASE_URL=[http://15.165.171.174:8081/api](http://15.165.171.174:8081/api)
+    VITE_ANALYSIS_API_BASE_URL=[http://192.168.1.60:5000/api](http://192.168.1.60:5000/api)
     VITE_WEBSOCKET_URL=ws://43.203.110.104:8080/ws
     ```
 
@@ -59,7 +59,7 @@
     ```bash
     pnpm dev
     ```
-    서버는 https://localhost:3000 에서 실행됩니다.
+    서버는 http://localhost:3000 에서 실행됩니다.
 
 ### 주요 명령어
 
@@ -80,7 +80,7 @@ src/
 │   ├── map/             # 지도 관련 컴포넌트
 │   └── ...
 ├── hooks/               # 커스텀 React 훅
-│   ├── use-carStompWebSocket.ts  # STOMP 차량 WebSocket 훅
+│   ├── useCarStompWebSocket.ts  # STOMP 차량 WebSocket 훅
 │   └── ...
 ├── lib/                 # API 클라이언트, 토큰 관리 등 라이브러리
 │   ├── api.ts           # Axios 인스턴스 (JWT 자동 관리)
@@ -127,7 +127,7 @@ Spring STOMP 백엔드와 실시간 차량 위치 데이터를 주고받기 위�
 ### 주요 특징
 
 - **STOMP 프로토콜**: Spring `@EnableWebSocketMessageBroker`와 완벽 호환
-- **SockJS 폴백**: WebSocket 미지원 환경에서 https 폴백 제공
+- **SockJS 폴백**: WebSocket 미지원 환경에서 HTTP 폴백 제공
 - **자동 재연결**: 연결 끊김 시 5초 간격으로 재시도
 - **성능 최적화**: Token Bucket + Throttling으로 메시지 빈도 제어
 

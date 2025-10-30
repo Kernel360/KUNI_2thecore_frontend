@@ -240,7 +240,9 @@ export default function Map({
   // If parent passed `cars` (single-page car view), derive drivingCarNumbers from it
   useEffect(() => {
     if (!cars || cars.length === 0) return;
-    const drivingCars = cars.filter(c => c.status === 'driving').map(c => c.carNumber);
+    const drivingCars = cars
+      .filter(c => c.status === 'driving')
+      .map(c => c.carNumber);
     setDrivingCarNumbers(drivingCars);
   }, [cars]);
 
