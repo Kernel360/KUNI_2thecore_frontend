@@ -6,7 +6,7 @@ import { useThrottledCallback } from './use-throttled-callback';
 import { useTokenBucketRateLimiter } from './use-token-bucket-rate-limiter';
 
 const WEBSOCKET_URL =
-  import.meta.env.VITE_WEBSOCKET_URL || 'wss://43.203.110.104:8080/wss';
+  import.meta.env.VITE_WEBSOCKET_URL || 'wss://43.203.110.104/wss';
 
 /**
  * 개별 차량 위치 구독용 STOMP WebSocket 훅 (Detail 페이지용)
