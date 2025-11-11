@@ -64,25 +64,34 @@ export function useStomp(options: UseStompOptions): UseStompReturn {
         : {},
 
       onConnect: () => {
-        if (debug) console.log('✅ STOMP 연결 성공');
+        if (debug) console.log('✅ STOMP 연결 성공', { url });
         setConnected(true);
         onConnect?.();
       },
 
       onDisconnect: () => {
-        if (debug) console.log('🔴 STOMP 연결 종료');
+        if (debug) console.log('🔴 STOMP 연결 종료', { url });
         setConnected(false);
         onDisconnect?.();
       },
 
       onStompError: frame => {
-        console.error('❌ STOMP 에러:', frame.headers['message']);
-        console.error('상세:', frame.body);
+        console.error('❌ STOMP 에러:', {
+          url,
+          message: frame.headers['message'],
+          body: frame.body,
+          headers: frame.headers,
+        });
         onError?.(frame);
       },
 
       onWebSocketError: event => {
-        console.error('❌ WebSocket 에러:', event);
+        console.error('❌ WebSocket 에러:', {
+          url,
+          readyState: (event.target as any)?.readyState,
+          error: event,
+          type: event.type,
+        });
         onError?.(event);
       },
     });
