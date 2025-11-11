@@ -12,7 +12,7 @@ const API_BASE_URL =
 const EMULATOR_API_BASE_URL =
   import.meta.env.VITE_EMULATOR_BASE_URL || 'https://3.37.93.107:8081/api';
 const ANALYSIS_API_BASE_URL =
-  import.meta.env.VITE_ANALYSIS_API_BASE_URL || 'https://54.180.89.182:5000/api';
+  import.meta.env.VITE_ANALYSIS_API_BASE_URL || 'http://172.30.2.174:5000/api';
 
 // 페이징 응답 타입 (차량 목록 등에서 사용)
 export interface PageResponse<T> {
@@ -100,7 +100,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
           console.warn('리프레시 토큰 만료 - 자동 로그아웃 처리');
           TokenManager.clearTokens();
           if (typeof window !== 'undefined') {
-            window.location.href = '/login';
+            window.location.href = '/auth/login';
           }
           return Promise.reject(
             new ApiError('인증이 만료되었습니다. 다시 로그인해주세요.', 401)
@@ -144,7 +144,7 @@ const createApiInstance = (baseURL: string): AxiosInstance => {
             console.warn('새 액세스 토큰 3회 확인 실패 - 자동 로그아웃 처리');
             TokenManager.clearTokens();
             if (typeof window !== 'undefined') {
-              window.location.href = '/login';
+              window.location.href = '/auth/login';
             }
             break;
           }

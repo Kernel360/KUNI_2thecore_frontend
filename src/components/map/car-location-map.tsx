@@ -1,3 +1,5 @@
+import { useSingleCarStompWebSocket } from '@/services/websocket-service';
+import { CarLocationData } from '@/types/websocket';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Map from './map';
 
@@ -8,6 +10,7 @@ export default function CarLocationMap({
   lastLongitude,
   carNumber,
   status,
+  useWebSocket = false,
 }: {
   width: string;
   height: string;
@@ -15,44 +18,105 @@ export default function CarLocationMap({
   lastLongitude?: string;
   carNumber: string;
   status: 'driving' | 'maintenance' | 'idle';
+  useWebSocket?: boolean;
 }) {
-  const [mapReady, setMapReady] = useState(false);
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
   const infowindowRef = useRef<any>(null);
+  const [mapReady, setMapReady] = useState(false);
+  const [currentZoom, setCurrentZoom] = useState<number | null>(null);
 
-  const loadCarLocation = useCallback(async () => {
-    // props로 받은 위치 정보가 있는지 확인만 하면 됨
-    return carNumber && lastLatitude && lastLongitude && status;
-  }, [carNumber, lastLatitude, lastLongitude, status]);
+  // props 초기값 표시
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: lastLatitude,
+    longitude: lastLongitude,
+    status,
+  });
+
+  // STOMP WebSocket 실시간 위치 업데이트 (운행 중인 차량만, 줌레벨 8이하만)
+  const handleLocationUpdate = useCallback(
+    (carData: CarLocationData) => {
+      const newStatus =
+        carData.status === '운행'
+          ? 'driving'
+          : carData.status === '대기'
+            ? 'idle'
+            : 'maintenance';
+
+      setCurrentLocation({
+        latitude: carData.lastLatitude,
+        longitude: carData.lastLongitude,
+        status: newStatus,
+      });
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`📍 차량 ${carNumber} 실시간 위치 업데이트:`, carData);
+      }
+    },
+    [carNumber]
+  );
+
+  const enabled =
+    useWebSocket &&
+    currentZoom !== null &&
+    currentZoom <= 8 &&
+    status === 'driving';
+
+  const { isConnected: wsConnected } = useSingleCarStompWebSocket(
+    carNumber,
+    handleLocationUpdate,
+    enabled
+  );
 
   const handleMapLoad = useCallback((mapInstance: any) => {
     mapRef.current = mapInstance;
     setMapReady(true);
+    try {
+      setCurrentZoom(mapInstance.getLevel());
+      // 줌 변화 감지
+      window.kakao.maps.event.addListener(mapInstance, 'zoom_changed', () => {
+        setCurrentZoom(mapInstance.getLevel());
+      });
+    } catch (e) {
+      // ignore
+    }
   }, []);
 
-  // 차량 위치 마커 업데이트
+  // props 변경 시 현재 위치 업데이트 (initial)
   useEffect(() => {
-    console.log('CarLocationMap useEffect triggered:', {
-      mapReady,
-      lastLatitude,
-      lastLongitude,
-      carNumber,
+    setCurrentLocation({
+      latitude: lastLatitude,
+      longitude: lastLongitude,
       status,
-      hasMap: !!mapRef.current,
     });
+  }, [lastLatitude, lastLongitude, status]);
+
+  // 마커, 인포위도우 업데이트
+  useEffect(() => {
+    const { latitude, longitude, status: currentStatus } = currentLocation;
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('CarLocationMap useEffect triggered:', {
+        mapReady,
+        latitude,
+        longitude,
+        carNumber,
+        status: currentStatus,
+        hasMap: !!mapRef.current,
+        useWebSocket,
+        wsConnected,
+        currentZoom,
+      });
+    }
 
     if (
       !mapRef.current ||
       !mapReady ||
-      !lastLatitude ||
-      !lastLongitude ||
+      !latitude ||
+      !longitude ||
       !carNumber ||
-      !status
+      !currentStatus
     ) {
-      console.log(
-        'CarLocationMap useEffect early return - missing required data'
-      );
       return;
     }
 
@@ -65,47 +129,32 @@ export default function CarLocationMap({
     }
 
     const position = new window.kakao.maps.LatLng(
-      parseFloat(lastLatitude),
-      parseFloat(lastLongitude)
+      parseFloat(latitude),
+      parseFloat(longitude)
     );
 
-    console.log('CarLocationMap creating marker at position:', {
-      lat: parseFloat(lastLatitude),
-      lng: parseFloat(lastLongitude),
-      status,
-      carNumber,
-    });
-
-    // 상태별 마커 이미지 설정 (car-clusterer-map과 동일한 방식)
     const statusToImage = {
       driving: '/car_green.png',
       maintenance: '/car_red.png',
       idle: '/car_yellow.png',
-    };
+    } as const;
 
     const markerImage = new window.kakao.maps.MarkerImage(
-      statusToImage[status],
+      statusToImage[currentStatus as keyof typeof statusToImage],
       new window.kakao.maps.Size(32, 32),
       { offset: new window.kakao.maps.Point(16, 32) }
     );
 
-    console.log('CarLocationMap marker image created:', statusToImage[status]);
-
-    // 새 마커 생성
     const marker = new window.kakao.maps.Marker({
       position: position,
       image: markerImage,
       title: carNumber,
     });
 
-    console.log('CarLocationMap marker created, setting to map');
     marker.setMap(mapRef.current);
     markerRef.current = marker;
 
-    // 인포윈도우 생성
-    const infowindow = new window.kakao.maps.InfoWindow({
-      zIndex: 1,
-    });
+    const infowindow = new window.kakao.maps.InfoWindow({ zIndex: 1 });
     infowindowRef.current = infowindow;
 
     // 주소 조회 및 인포윈도우 표시
@@ -113,27 +162,25 @@ export default function CarLocationMap({
     geocoder.coord2Address(
       position.getLng(),
       position.getLat(),
-      (result: any, status: any) => {
-        if (status === window.kakao.maps.services.Status.OK) {
+      (result: any, statusCode: any) => {
+        if (statusCode === window.kakao.maps.services.Status.OK) {
           const roadAddress = result[0].road_address?.address_name || '';
-
           const content = `
-            <div style="padding: 8px;">
-              <h4 style="margin: 0 0 5px 0;">${carNumber}</h4>
-              <p style="margin: 0 0 5px 0; font-size: 12px;">${roadAddress}</p>
-            </div>
-          `;
-
+          <div style="padding: 8px;">
+            <h4 style="margin: 0 0 5px 0;">${carNumber}</h4>
+            <p style="margin: 0 0 5px 0; font-size: 12px;">${roadAddress}</p>
+          </div>
+        `;
           infowindow.setContent(content);
           infowindow.open(mapRef.current, marker);
         }
       }
     );
 
-    // 지도 중심을 차량 위치로 이동하고 확대
+    // 차량 위치가 변경될 때 지도의 중심을 따라가도록 설정
     mapRef.current.setLevel(3);
     mapRef.current.setCenter(position);
-  }, [mapReady, lastLatitude, lastLongitude, carNumber, status]);
+  }, [mapReady, currentLocation, carNumber, wsConnected, currentZoom]);
 
   return (
     <div style={{ width, height }}>

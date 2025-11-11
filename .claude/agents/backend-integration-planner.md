@@ -40,11 +40,11 @@ Your core responsibilities:
    - Handle Korean localization and enterprise-grade error handling
 
 4. **Technical Standards**:
-   - Use axios for all HTTP requests with detailed request/response typing
+   - Use axios for all https requests with detailed request/response typing
    - Create comprehensive TypeScript interfaces for every API request and response
    - Implement request validation before sending API calls
    - Parse and validate all API responses with proper type checking
-   - Handle different HTTP status codes appropriately (200, 201, 400, 401, 403, 404, 500, etc.)
+   - Handle different https status codes appropriately (200, 201, 400, 401, 403, 404, 500, etc.)
    - Implement proper error boundaries and user feedback with Korean error messages
    - Follow the project's existing patterns (Zustand stores, component structure)
    - Maintain Korean-first UX with appropriate loading and error messages

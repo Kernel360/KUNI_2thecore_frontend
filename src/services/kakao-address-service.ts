@@ -19,13 +19,13 @@ export const searchAddressByKeyword = async (
 
     // 현재 도메인을 동적으로 감지
     const currentOrigin = window.location.origin;
-    
+
     const response = await axios.get(
-      'https://dapi.kakao.com/v2/local/search/address.json',
+      'http://dapi.kakao.com/v2/local/search/address.json',
       {
         headers: {
           Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
-          'KA': `sdk/1.0 os/javascript lang/ko-KR device/WebBrowser origin/${currentOrigin}`, // 브라우저 환경을 위한 KA 헤더
+          KA: `sdk/1.0 os/javascript lang/ko-KR device/WebBrowser origin/${currentOrigin}`, // 브라우저 환경을 위한 KA 헤더
         },
         params: {
           query,
@@ -52,7 +52,7 @@ export const getCoordinatesFromAddress = async (
 ): Promise<Coordinates | null> => {
   try {
     const result = await searchAddressByKeyword(address);
-    
+
     if (result.documents.length > 0) {
       const firstResult = result.documents[0];
       return {

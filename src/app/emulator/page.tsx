@@ -204,6 +204,7 @@ export default function LocalEmulator() {
               <TableCell className={styles.tableCell}>
                 <div className="flex items-center space-x-2">
                   <Switch
+                    className={styles.switch}
                     id={`powerStatus-${car.carNumber}`}
                     checked={switchStates[car.carNumber] || false}
                     onCheckedChange={checked =>

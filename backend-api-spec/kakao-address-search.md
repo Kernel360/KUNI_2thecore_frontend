@@ -3,12 +3,14 @@
 ## 1. 준비 단계
 
 ### 1.1 Kakao Developers 앱 등록
-1. [Kakao Developers](https://developers.kakao.com/) 접속
+
+1. [Kakao Developers](http://developers.kakao.com/) 접속
 2. 애플리케이션 등록
 3. `JavaScript 키`와 `REST API 키` 발급
 4. 플랫폼 설정에서 사이트 도메인 추가
 
 ### 1.2 환경변수 설정
+
 ```bash
 # .env.local
 REACT_APP_KAKAO_JAVASCRIPT_KEY=your_javascript_key_here
@@ -16,10 +18,11 @@ REACT_APP_KAKAO_REST_API_KEY=your_rest_api_key_here
 ```
 
 ### 1.3 HTML에 스크립트 추가
+
 ```html
 <!-- public/index.html의 head 태그 안에 추가 -->
-<script 
-  type="text/javascript" 
+<script
+  type="text/javascript"
   src="//dapi.kakao.com/v2/maps/sdk.js?appkey=%REACT_APP_KAKAO_JAVASCRIPT_KEY%&libraries=services&autoload=false"
 ></script>
 ```
@@ -27,6 +30,7 @@ REACT_APP_KAKAO_REST_API_KEY=your_rest_api_key_here
 ## 2. 타입 정의
 
 ### 2.1 전역 타입 선언
+
 ```typescript
 // src/types/kakao.d.ts
 declare global {
@@ -88,6 +92,7 @@ export interface AddressSearchResponse {
 ## 3. API 서비스 구현
 
 ### 3.1 REST API 방식 (권장)
+
 ```typescript
 // src/services/kakaoAddressService.ts
 import axios from 'axios';
@@ -100,7 +105,7 @@ export const searchAddressByKeyword = async (
 ): Promise<AddressSearchResponse> => {
   try {
     const response = await axios.get(
-      'https://dapi.kakao.com/v2/local/search/address.json',
+      'http://dapi.kakao.com/v2/local/search/address.json',
       {
         headers: {
           Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
@@ -125,7 +130,7 @@ export const getCoordinatesFromAddress = async (
 ): Promise<Coordinates | null> => {
   try {
     const result = await searchAddressByKeyword(address);
-    
+
     if (result.documents.length > 0) {
       const firstResult = result.documents[0];
       return {
@@ -142,6 +147,7 @@ export const getCoordinatesFromAddress = async (
 ```
 
 ### 3.2 JavaScript SDK 방식 (지도가 있는 경우)
+
 ```typescript
 // src/services/kakaoGeocodingService.ts
 import { Coordinates } from '../types/address';
@@ -156,9 +162,12 @@ export const geocodeAddressWithSDK = (
     }
 
     const geocoder = new window.kakao.maps.services.Geocoder();
-    
+
     geocoder.addressSearch(address, (result: any, status: any) => {
-      if (status === window.kakao.maps.services.Status.OK && result.length > 0) {
+      if (
+        status === window.kakao.maps.services.Status.OK &&
+        result.length > 0
+      ) {
         resolve({
           latitude: parseFloat(result[0].y),
           longitude: parseFloat(result[0].x),
@@ -174,6 +183,7 @@ export const geocodeAddressWithSDK = (
 ## 4. 커스텀 훅 구현
 
 ### 4.1 주소 검색 훅
+
 ```typescript
 // src/hooks/useAddressSearch.ts
 import { useState, useCallback } from 'react';
@@ -193,7 +203,7 @@ export const useAddressSearch = () => {
 
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await searchAddressByKeyword(query);
       setResults(response.documents);
@@ -221,6 +231,7 @@ export const useAddressSearch = () => {
 ```
 
 ### 4.2 지오코딩 훅
+
 ```typescript
 // src/hooks/useGeocoding.ts
 import { useState, useCallback } from 'react';
@@ -235,10 +246,10 @@ export const useGeocoding = () => {
   const geocodeAddress = useCallback(async (address: string) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const coords = await getCoordinatesFromAddress(address);
-      
+
       if (coords) {
         setCoordinates(coords);
       } else {
@@ -263,6 +274,7 @@ export const useGeocoding = () => {
 ## 5. React 컴포넌트 구현
 
 ### 5.1 주소 검색 컴포넌트
+
 ```tsx
 // src/components/AddressSearch.tsx
 import React, { useState, useRef, useEffect } from 'react';
@@ -341,7 +353,7 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
           fontSize: '16px',
         }}
       />
-      
+
       {loading && (
         <div className="loading" style={{ padding: '8px', textAlign: 'center' }}>
           검색 중...
@@ -407,6 +419,7 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
 ```
 
 ### 5.2 메인 컴포넌트
+
 ```tsx
 // src/components/LocationSelector.tsx
 import React, { useState } from 'react';
@@ -421,7 +434,9 @@ interface LocationData {
 }
 
 export const LocationSelector: React.FC = () => {
-  const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(
+    null
+  );
   const { coordinates, loading, error, geocodeAddress } = useGeocoding();
 
   const handleAddressSelect = async (addressResult: AddressSearchResult) => {
@@ -437,7 +452,7 @@ export const LocationSelector: React.FC = () => {
     };
 
     setSelectedLocation(locationData);
-    
+
     // 서버로 전송하는 예시
     await sendLocationToServer(locationData);
   };
@@ -475,9 +490,9 @@ export const LocationSelector: React.FC = () => {
   return (
     <div style={{ maxWidth: '500px', margin: '0 auto', padding: '20px' }}>
       <h2>위치 선택</h2>
-      
+
       <div style={{ marginBottom: '20px' }}>
-        <AddressSearch 
+        <AddressSearch
           onAddressSelect={handleAddressSelect}
           placeholder="주소를 입력하세요 (예: 강남역, 서울시 강남구...)"
         />
@@ -496,29 +511,49 @@ export const LocationSelector: React.FC = () => {
       )}
 
       {selectedLocation && (
-        <div 
-          style={{ 
-            border: '1px solid #ddd', 
-            borderRadius: '4px', 
+        <div
+          style={{
+            border: '1px solid #ddd',
+            borderRadius: '4px',
             padding: '20px',
             marginTop: '20px',
-            backgroundColor: '#f9f9f9'
+            backgroundColor: '#f9f9f9',
           }}
         >
           <h3>선택된 위치 정보</h3>
-          <p><strong>주소:</strong> {selectedLocation.address}</p>
-          <p><strong>위도:</strong> {selectedLocation.coordinates.latitude}</p>
-          <p><strong>경도:</strong> {selectedLocation.coordinates.longitude}</p>
-          
+          <p>
+            <strong>주소:</strong> {selectedLocation.address}
+          </p>
+          <p>
+            <strong>위도:</strong> {selectedLocation.coordinates.latitude}
+          </p>
+          <p>
+            <strong>경도:</strong> {selectedLocation.coordinates.longitude}
+          </p>
+
           {selectedLocation.fullAddressInfo.road_address && (
-            <p><strong>도로명 주소:</strong> {selectedLocation.fullAddressInfo.road_address.address_name}</p>
+            <p>
+              <strong>도로명 주소:</strong>{' '}
+              {selectedLocation.fullAddressInfo.road_address.address_name}
+            </p>
           )}
-          
-          <p><strong>지역 정보:</strong></p>
+
+          <p>
+            <strong>지역 정보:</strong>
+          </p>
           <ul style={{ marginLeft: '20px' }}>
-            <li>시도: {selectedLocation.fullAddressInfo.address.region_1depth_name}</li>
-            <li>구군: {selectedLocation.fullAddressInfo.address.region_2depth_name}</li>
-            <li>동면: {selectedLocation.fullAddressInfo.address.region_3depth_name}</li>
+            <li>
+              시도:{' '}
+              {selectedLocation.fullAddressInfo.address.region_1depth_name}
+            </li>
+            <li>
+              구군:{' '}
+              {selectedLocation.fullAddressInfo.address.region_2depth_name}
+            </li>
+            <li>
+              동면:{' '}
+              {selectedLocation.fullAddressInfo.address.region_3depth_name}
+            </li>
           </ul>
         </div>
       )}
@@ -528,6 +563,7 @@ export const LocationSelector: React.FC = () => {
 ```
 
 ### 5.3 App.tsx
+
 ```tsx
 // src/App.tsx
 import React, { useEffect } from 'react';

@@ -2,12 +2,12 @@
 
 - 모든 사용자 요청은 JWT Access Token을 통해 인증됩니다.(일부 필터에서 제외한 것 제외)
 - Access Token 만료 시 Refresh Token을 사용하여 자동 재발급이 가능합니다.
-- Refresh Token은 HttpOnly 쿠키로 저장되어 클라이언트 JS에서 접근할 수 없습니다.
+- Refresh Token은 httpsOnly 쿠키로 저장되어 클라이언트 JS에서 접근할 수 없습니다.
 
 2. 토큰 정의
 
 - Access Token : 유효기간(10분), 저장 위치(JS)
-- Refresh Token : 유효기간(7일), 저장 위치(HttpOnly 쿠키, Redis)
+- Refresh Token : 유효기간(7일), 저장 위치(httpsOnly 쿠키, Redis)
 
 3. API 동작 흐름
    IF) 인증 필요 API 요청이 들어왔을 때
