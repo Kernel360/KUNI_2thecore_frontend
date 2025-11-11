@@ -6,7 +6,7 @@ import { useThrottledCallback } from './use-throttled-callback';
 import { useTokenBucketRateLimiter } from './use-token-bucket-rate-limiter';
 
 const WEBSOCKET_URL =
-  import.meta.env.VITE_WEBSOCKET_URL || 'ws://43.203.110.104:8080/ws';
+  import.meta.env.VITE_WEBSOCKET_URL || 'ws://43.203.110.104/ws';
 
 /**
  * 개별 차량 위치 구독용 STOMP WebSocket 훅 (Detail 페이지용)
@@ -69,26 +69,22 @@ export function useSingleCarStompWebSocket(
     unsubscribe(destination);
   }, [carNumber, unsubscribe]);
 
-  // 자동 구독/정리
+  // 자동 구독 (차량 번호 변경 시 새로운 구독만 추가, 기존 구독 유지)
   useEffect(() => {
     if (connected && enabled && carNumber) {
       subscribeToCarLocation();
     }
+    // cleanup 없음: 차량 번호 바뀌어도 이전 구독 유지
+  }, [connected, enabled, carNumber, subscribeToCarLocation]);
 
+  // 컴포넌트 unmount 시에만 모든 구독 해제 및 연결 종료
+  useEffect(() => {
     return () => {
-      unsubscribeFromCarLocation();
       if (enabled) {
-        disconnect();
+        disconnect(); // disconnect가 내부에서 모든 구독 해제
       }
     };
-  }, [
-    connected,
-    enabled,
-    carNumber,
-    subscribeToCarLocation,
-    unsubscribeFromCarLocation,
-    disconnect,
-  ]);
+  }, [disconnect, enabled]);
 
   return {
     isConnected: connected,
@@ -167,26 +163,22 @@ export function useMultipleCarStompWebSocket(
     }
   }, [carNumbers, unsubscribe]);
 
-  // 자동 구독/정리
+  // 자동 구독 (차량 목록 변경 시 새로운 구독만 추가, 기존 구독 유지)
   useEffect(() => {
     if (connected && enabled && carNumbers.length > 0) {
       subscribeToMultipleCars();
     }
+    // cleanup 없음: 차량 목록 바뀌어도 이전 구독 유지
+  }, [connected, enabled, carNumbers, subscribeToMultipleCars]);
 
+  // 컴포넌트 unmount 시에만 모든 구독 해제 및 연결 종료
+  useEffect(() => {
     return () => {
-      unsubscribeFromMultipleCars();
       if (enabled) {
-        disconnect();
+        disconnect(); // disconnect가 내부에서 모든 구독 해제
       }
     };
-  }, [
-    connected,
-    enabled,
-    carNumbers,
-    subscribeToMultipleCars,
-    unsubscribeFromMultipleCars,
-    disconnect,
-  ]);
+  }, [disconnect, enabled]);
 
   return {
     isConnected: connected,

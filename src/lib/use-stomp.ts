@@ -23,13 +23,6 @@ export interface UseStompReturn {
   disconnect: () => void;
 }
 
-/**
- * Spring STOMP WebSocket 연결을 위한 커스텀 훅
- * - 네이티브 WebSocket + STOMP 프로토콜 사용
- * - 백엔드는 SockJS 없이 순수 WebSocket만 지원
- * - JWT 토큰 자동 전송
- * - 자동 재연결 지원
- */
 export function useStomp(options: UseStompOptions): UseStompReturn {
   const {
     url,
@@ -50,18 +43,32 @@ export function useStomp(options: UseStompOptions): UseStompReturn {
     // JWT 액세스 토큰 가져오기
     const accessToken = TokenManager.getAccessToken();
 
+    if (debug) {
+      console.log('🔌 STOMP 연결 시도:', {
+        url,
+        hasToken: !!accessToken,
+        tokenPreview: accessToken ? `${accessToken.slice(0, 20)}...` : 'none',
+      });
+    }
+
     const stompClient = new Client({
-      // 네이티브 WebSocket 사용 (백엔드가 SockJS 미사용)
+      // 네이티브 WebSocket 사용 (쿼리 파라미터 없이)
       brokerURL: url,
       reconnectDelay,
       debug: debug ? str => console.log('[STOMP]', str) : undefined,
 
-      // STOMP 연결 시 Authorization 헤더에 액세스 토큰 포함
-      connectHeaders: accessToken
-        ? {
-            Authorization: `Bearer ${accessToken}`,
-          }
-        : {},
+      // STOMP CONNECT 프레임 헤더에만 토큰 포함
+      connectHeaders: {
+        get Authorization() {
+          const token = TokenManager.getAccessToken();
+          return token ? `Bearer ${token}` : '';
+        },
+      },
+
+      // WebSocket 생성 시 추가 옵션
+      beforeConnect: () => {
+        if (debug) console.log('🔄 WebSocket 연결 직전...');
+      },
 
       onConnect: () => {
         if (debug) console.log('✅ STOMP 연결 성공', { url });
@@ -86,13 +93,43 @@ export function useStomp(options: UseStompOptions): UseStompReturn {
       },
 
       onWebSocketError: event => {
+        const ws = event.target as any;
         console.error('❌ WebSocket 에러:', {
           url,
-          readyState: (event.target as any)?.readyState,
+          readyState: ws?.readyState,
+          readyStateText:
+            ['연결중', '연결됨', '닫는중', '닫힘'][ws?.readyState] ||
+            '알수없음',
           error: event,
           type: event.type,
         });
+        console.error('💡 확인 필요:', {
+          '1. 백엔드 서버': `${url} 엔드포인트가 작동 중인가?`,
+          '2. CORS 설정': '백엔드에서 현재 오리진을 허용하는가?',
+          '3. SSL 인증서': 'wss:// 사용 시 유효한 인증서가 있는가?',
+          '4. 방화벽': 'WebSocket 연결이 차단되지 않았는가?',
+        });
         onError?.(event);
+      },
+
+      onWebSocketClose: event => {
+        console.warn('🔌 WebSocket 닫힘:', {
+          url,
+          code: event.code,
+          reason: event.reason || '이유 없음',
+          wasClean: event.wasClean,
+          reconnectDelay: `${reconnectDelay}ms`,
+          commonCodes: {
+            1000: '정상 종료',
+            1001: '엔드포인트 없음',
+            1006: '비정상 종료 (연결 실패)',
+            1011: '서버 오류',
+            1015: 'TLS 핸드셰이크 실패',
+          },
+        });
+        if (debug && reconnectDelay > 0) {
+          console.log(`⏱️ ${reconnectDelay}ms 후 재연결 시도...`);
+        }
       },
     });
 
@@ -100,13 +137,13 @@ export function useStomp(options: UseStompOptions): UseStompReturn {
     stompClient.activate();
     clientRef.current = stompClient;
 
-    // Cleanup: 컴포넌트 unmount 시 연결 종료
+    // Cleanup: URL 변경 시 또는 컴포넌트 unmount 시 연결 종료
     return () => {
       if (debug) console.log('🧹 STOMP 연결 정리 중...');
       subscriptionsRef.current.clear();
       stompClient.deactivate();
     };
-  }, [url, reconnectDelay, debug, onConnect, onDisconnect, onError]);
+  }, [url]); // URL만 의존성에 포함 (다른 props 변경 시 재연결 안 함)
 
   /**
    * STOMP 채널 구독
@@ -117,7 +154,12 @@ export function useStomp(options: UseStompOptions): UseStompReturn {
     (destination: string, callback: (message: IMessage) => void) => {
       const client = clientRef.current;
 
-      if (!client || !connected) {
+      if (!client) {
+        console.warn('⚠️ STOMP 클라이언트가 없습니다.');
+        return;
+      }
+
+      if (!connected) {
         console.warn('⚠️ STOMP 연결 대기 중... 구독 실패:', destination);
         return;
       }
@@ -129,9 +171,10 @@ export function useStomp(options: UseStompOptions): UseStompReturn {
       }
 
       try {
+        if (debug) console.log('📡 구독 시도:', destination);
         const subscription = client.subscribe(destination, callback);
         subscriptionsRef.current.set(destination, subscription);
-        if (debug) console.log('📡 구독 시작:', destination);
+        if (debug) console.log('✅ 구독 성공:', destination);
       } catch (error) {
         console.error('❌ 구독 실패:', destination, error);
       }

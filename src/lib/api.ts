@@ -13,7 +13,7 @@ const EMULATOR_API_BASE_URL =
   import.meta.env.VITE_EMULATOR_BASE_URL || 'https://3.37.93.107:8081/api';
 const ANALYSIS_API_BASE_URL =
   import.meta.env.VITE_ANALYSIS_API_BASE_URL ||
-  'https://54.180.89.182:5000/api';
+  'http://172.30.2.174:5000/api';
 
 // 페이징 응답 타입 (차량 목록 등에서 사용)
 export interface PageResponse<T> {

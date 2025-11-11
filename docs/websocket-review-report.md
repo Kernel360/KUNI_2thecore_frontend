@@ -13,7 +13,7 @@
 
 ```typescript
 // ❌ 기존 구현: Native WebSocket API 사용
-const ws = new WebSocket('wss://43.203.110.104:8080/wss');
+const ws = new WebSocket('ws://43.203.110.104:8080/ws');
 ws.send(
   JSON.stringify({ type: 'subscribe', channel: '/location/cars/12가1234' })
 );
